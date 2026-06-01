@@ -1,0 +1,12 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f4f4;
+  color: #111;
+}
+
+.memory {
+  min-height: 100vh;
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
