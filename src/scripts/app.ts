@@ -1,28 +1,19 @@
-import primaryButtonUrl from '../assets/images/primary-button.png';
-import controllerUrl from '../assets/images/stadia-controller.png';
+import { renderStartScreen } from './ui/render-start-screen';
 
 export function initApp(): void {
   const app = document.querySelector<HTMLDivElement>('#app');
 
   if (!app) return;
 
-  app.innerHTML = `
-    <main class="start-screen">
-      <img
-        class="start-screen__controller"
-        src="${controllerUrl}"
-        alt=""
-        aria-hidden="true"
-      />
+  app.innerHTML = renderStartScreen();
+  app.addEventListener('click', handleAppClick);
+}
 
-      <section class="start-screen__content">
-        <p class="start-screen__eyebrow">It’s play time.</p>
-        <h1 class="start-screen__title">Ready to play?</h1>
+function handleAppClick(event: MouseEvent): void {
+  const target = event.target as HTMLElement;
+  const playButton = target.closest('[data-action="start-game"]');
 
-        <button class="start-screen__button" type="button" aria-label="Start game">
-          <img src="${primaryButtonUrl}" alt="Play" />
-        </button>
-      </section>
-    </main>
-  `;
+  if (!playButton) return;
+
+  console.log('Start game clicked');
 }
