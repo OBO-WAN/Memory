@@ -22,7 +22,7 @@ export function renderSettingsScreen(): string {
             options: [
               ['code-vibes', 'Code vibes theme', true],
               ['gaming', 'Gaming theme', false],
-              ['da-projects', 'D A Projects theme', false],
+              ['da-projects', 'DA Projects theme', false],
               ['foods', 'Foods theme', false],
             ],
           })}

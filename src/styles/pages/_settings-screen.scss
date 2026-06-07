@@ -1,41 +1,20 @@
 @use '../abstracts/variables' as *;
 
 .settings-screen {
+  width: 100%;
   min-height: 100svh;
-  display: grid;
-  place-items: center;
-  padding: clamp(24px, 5vw, 64px);
-  background: $color-settings-bg;
+  background: $color-settings-page;
 }
 
 .settings-screen__panel {
-  width: min(100%, 1100px);
-  min-height: 760px;
+  width: 100%;
+  min-height: 100svh;
   display: grid;
-  grid-template-columns: minmax(260px, 360px) minmax(420px, 1fr);
+  grid-template-columns: minmax(280px, 380px) minmax(420px, 1fr);
+  align-items: center;
   gap: clamp(48px, 8vw, 120px);
-  padding: clamp(48px, 7vw, 96px);
-  background: $color-settings-panel;
-}
-
-.settings-screen__header {
-  margin-bottom: 56px;
-}
-
-.settings-screen__title {
-  font-family: $font-heading;
-  font-size: 54px;
-  font-weight: 700;
-  line-height: normal;
-  color: $color-ui-dark;
-}
-
-.settings-screen__title-line {
-  display: block;
-  width: 240px;
-  height: 4px;
-  margin-top: 4px;
-  background: $color-accent-yellow;
+  padding: clamp(40px, 7vw, 96px);
+  background: $color-settings-page;
 }
 
 .settings-screen__left {
@@ -43,16 +22,50 @@
   flex-direction: column;
 }
 
+.settings-screen__header {
+  margin-bottom: clamp(40px, 6vw, 56px);
+}
+
+.settings-screen__title {
+  font-family: $font-heading;
+  font-size: clamp(44px, 4vw, 54px);
+  font-weight: 700;
+  line-height: normal;
+  color: $color-ui-dark;
+}
+
+.settings-screen__title-line {
+  position: relative;
+  display: block;
+  width: min(100%, 240px);
+  height: 4px;
+  margin-top: 4px;
+  background: $color-accent-yellow;
+}
+
+.settings-screen__title-line::before {
+  content: '';
+  position: absolute;
+  left: -11px;
+  top: 50%;
+  width: 16px;
+  height: 16px;
+  background: $color-accent-yellow;
+  transform: translateY(-50%) rotate(45deg);
+}
+
 .settings-screen__right {
   display: flex;
   flex-direction: column;
+  align-items: center;
   justify-content: center;
-  gap: 48px;
+  gap: clamp(32px, 5vw, 48px);
 }
 
 .settings-screen__preview {
   width: min(100%, 460px);
-  align-self: center;
+  height: auto;
+  display: block;
 }
 
 .settings-summary {
@@ -61,22 +74,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 22px;
-  align-self: center;
-  padding: 16px 24px;
+  gap: clamp(14px, 2vw, 22px);
+  padding: 16px clamp(18px, 3vw, 24px);
   background: $color-settings-panel;
 }
 
 .settings-summary__item {
   font-family: $font-body;
-  font-size: 20px;
+  font-size: clamp(16px, 1.6vw, 20px);
   font-weight: 400;
+  line-height: normal;
   color: $color-ui-dark;
+  white-space: nowrap;
 }
 
 .settings-summary__separator {
   width: 8px;
   height: 54px;
+  flex-shrink: 0;
   transform: skewX(-18deg);
   background: $color-accent-yellow;
 }
@@ -89,22 +104,78 @@
   font-family: $font-heading;
   font-size: 20px;
   font-weight: 700;
+  line-height: normal;
   color: $color-ui-dark;
   cursor: pointer;
+  transition:
+    transform 180ms ease,
+    filter 180ms ease;
 }
 
-@media (max-width: 900px) {
+.settings-summary__start:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.03);
+}
+
+.settings-summary__start:active {
+  transform: translateY(0);
+}
+
+.settings-summary__start:focus-visible {
+  outline: 3px solid $color-ui-dark;
+  outline-offset: 4px;
+}
+
+@media (max-width: 960px) {
   .settings-screen__panel {
     grid-template-columns: 1fr;
-    min-height: auto;
+    align-items: start;
+    gap: 48px;
+    padding: 40px 24px;
   }
 
   .settings-screen__right {
-    align-items: flex-start;
+    align-items: stretch;
   }
 
   .settings-screen__preview,
   .settings-summary {
-    align-self: stretch;
+    align-self: center;
+  }
+}
+
+@media (max-width: 620px) {
+  .settings-screen__panel {
+    padding: 32px 20px;
+  }
+
+  .settings-summary {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .settings-summary__separator {
+    height: 36px;
+  }
+
+  .settings-summary__start {
+    width: 100%;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 961px) {
+  .settings-screen__panel {
+    align-items: start;
+    padding-block: 32px;
+  }
+
+  .settings-screen__header {
+    margin-bottom: 32px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-summary__start {
+    transition-duration: 1ms;
   }
 }
