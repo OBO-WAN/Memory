@@ -2,6 +2,7 @@ import primaryButtonUrl from '../../assets/images/primary-button.png';
 import primaryButtonHoverUrl from '../../assets/images/primary-button-hover.png';
 import controllerUrl from '../../assets/images/stadia-controller.png';
 
+
 export function renderStartScreen(): string {
   return `
     <main class="start-screen">
@@ -19,7 +20,7 @@ export function renderStartScreen(): string {
         <button
           class="start-screen__button"
           type="button"
-          data-action="start-game"
+          data-action="open-settings"
           aria-label="Start game"
         >
           <img

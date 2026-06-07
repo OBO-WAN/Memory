@@ -1,0 +1,110 @@
+@use '../abstracts/variables' as *;
+
+.settings-screen {
+  min-height: 100svh;
+  display: grid;
+  place-items: center;
+  padding: clamp(24px, 5vw, 64px);
+  background: $color-settings-bg;
+}
+
+.settings-screen__panel {
+  width: min(100%, 1100px);
+  min-height: 760px;
+  display: grid;
+  grid-template-columns: minmax(260px, 360px) minmax(420px, 1fr);
+  gap: clamp(48px, 8vw, 120px);
+  padding: clamp(48px, 7vw, 96px);
+  background: $color-settings-panel;
+}
+
+.settings-screen__header {
+  margin-bottom: 56px;
+}
+
+.settings-screen__title {
+  font-family: $font-heading;
+  font-size: 54px;
+  font-weight: 700;
+  line-height: normal;
+  color: $color-ui-dark;
+}
+
+.settings-screen__title-line {
+  display: block;
+  width: 240px;
+  height: 4px;
+  margin-top: 4px;
+  background: $color-accent-yellow;
+}
+
+.settings-screen__left {
+  display: flex;
+  flex-direction: column;
+}
+
+.settings-screen__right {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 48px;
+}
+
+.settings-screen__preview {
+  width: min(100%, 460px);
+  align-self: center;
+}
+
+.settings-summary {
+  width: min(100%, 546px);
+  min-height: 81px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22px;
+  align-self: center;
+  padding: 16px 24px;
+  background: $color-settings-panel;
+}
+
+.settings-summary__item {
+  font-family: $font-body;
+  font-size: 20px;
+  font-weight: 400;
+  color: $color-ui-dark;
+}
+
+.settings-summary__separator {
+  width: 8px;
+  height: 54px;
+  transform: skewX(-18deg);
+  background: $color-accent-yellow;
+}
+
+.settings-summary__start {
+  min-width: 114px;
+  min-height: 54px;
+  border: 0;
+  background: $color-accent-yellow;
+  font-family: $font-heading;
+  font-size: 20px;
+  font-weight: 700;
+  color: $color-ui-dark;
+  cursor: pointer;
+}
+
+@media (max-width: 900px) {
+  .settings-screen__panel {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  .settings-screen__right {
+    align-items: flex-start;
+  }
+
+  .settings-screen__preview,
+  .settings-summary {
+    align-self: stretch;
+  }
+}
