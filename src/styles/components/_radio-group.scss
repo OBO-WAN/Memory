@@ -1,9 +1,13 @@
 @use '../abstracts/variables' as *;
 
 .settings-group {
-  margin: 0 0 56px;
+  margin: 0 0 clamp(40px, 5vw, 56px);
   padding: 0;
   border: 0;
+}
+
+.settings-group:last-child {
+  margin-bottom: 0;
 }
 
 .settings-group__legend {
@@ -14,6 +18,7 @@
   font-family: $font-body;
   font-size: 24px;
   font-weight: 700;
+  line-height: normal;
   color: $color-ui-dark;
 }
 
@@ -28,6 +33,7 @@
 .settings-group__icon img {
   max-width: 100%;
   max-height: 100%;
+  display: block;
 }
 
 .settings-group__options {
@@ -40,9 +46,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
+  width: fit-content;
   font-family: $font-body;
   font-size: 20px;
   font-weight: 700;
+  line-height: normal;
   color: $color-ui-dark;
   cursor: pointer;
 }
@@ -56,13 +64,23 @@
 .radio-option__control {
   width: 24px;
   height: 24px;
+  flex-shrink: 0;
   border: 3px solid $color-ui-dark;
   border-radius: 50%;
+  background: transparent;
+  transition:
+    background 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .radio-option__input:checked + .radio-option__control {
-  box-shadow: inset 0 0 0 5px $color-settings-panel;
   background: $color-ui-dark;
+  box-shadow: inset 0 0 0 5px $color-settings-panel;
+}
+
+.radio-option__input:focus-visible + .radio-option__control {
+  outline: 3px solid $color-accent-yellow;
+  outline-offset: 4px;
 }
 
 .radio-option__text {
@@ -73,4 +91,39 @@
   width: 50px;
   height: 18px;
   margin-left: 12px;
+  flex-shrink: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-8px);
+  transition:
+    opacity 180ms ease,
+    visibility 180ms ease,
+    transform 180ms ease;
+}
+
+.radio-option__input:checked ~ .radio-option__marker {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+@media (max-width: 620px) {
+  .settings-group__options {
+    padding-left: 0;
+  }
+
+  .radio-option {
+    font-size: 18px;
+  }
+
+  .radio-option__marker {
+    margin-left: 4px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .radio-option__control,
+  .radio-option__marker {
+    transition-duration: 1ms;
+  }
 }

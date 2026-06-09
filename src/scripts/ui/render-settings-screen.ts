@@ -1,11 +1,37 @@
 import codingVibesUrl from '../../assets/images/themes/coding-vibes.svg';
+import gamingThemeUrl from '../../assets/images/themes/gameTheme.svg';
+import daThemeUrl from '../../assets/images/themes/DAtheme.svg';
+import foodsThemeUrl from '../../assets/images/themes/foodsTheme.svg';
 
 import paletteIconUrl from '../../assets/icons/palette.svg';
 import chessPawnIconUrl from '../../assets/icons/chess-pawn.svg';
 import styleIconUrl from '../../assets/icons/style.svg';
 import markerUrl from '../../assets/icons/line-with-diamond.svg';
 
+export type ThemeOption = 'code-vibes' | 'gaming' | 'da-projects' | 'foods';
+
+export const themePreviewMap: Record<ThemeOption, { src: string; alt: string }> = {
+  'code-vibes': {
+    src: codingVibesUrl,
+    alt: 'Coding vibes theme preview',
+  },
+  gaming: {
+    src: gamingThemeUrl,
+    alt: 'Gaming theme preview',
+  },
+  'da-projects': {
+    src: daThemeUrl,
+    alt: 'DA Projects theme preview',
+  },
+  foods: {
+    src: foodsThemeUrl,
+    alt: 'Foods theme preview',
+  },
+};
+
 export function renderSettingsScreen(): string {
+  const initialTheme = themePreviewMap['code-vibes'];
+
   return `
     <main class="settings-screen">
       <section class="settings-screen__panel">
@@ -52,8 +78,8 @@ export function renderSettingsScreen(): string {
         <div class="settings-screen__right">
           <img
             class="settings-screen__preview"
-            src="${codingVibesUrl}"
-            alt="Coding vibes theme preview"
+            src="${initialTheme.src}"
+            alt="${initialTheme.alt}"
           />
 
           <div class="settings-summary">
@@ -95,9 +121,11 @@ function renderSettingsGroup(config: SettingsGroupConfig): string {
       </legend>
 
       <div class="settings-group__options">
-        ${config.options.map(([value, label, checked]) =>
-          renderRadioOption(config.name, value, label, checked)
-        ).join('')}
+        ${config.options
+          .map(([value, label, checked]) =>
+            renderRadioOption(config.name, value, label, checked),
+          )
+          .join('')}
       </div>
     </fieldset>
   `;
@@ -107,7 +135,7 @@ function renderRadioOption(
   name: string,
   value: string,
   label: string,
-  checked: boolean
+  checked: boolean,
 ): string {
   return `
     <label class="radio-option">
@@ -120,7 +148,12 @@ function renderRadioOption(
       />
       <span class="radio-option__control"></span>
       <span class="radio-option__text">${label}</span>
-      ${checked ? `<img class="radio-option__marker" src="${markerUrl}" alt="" aria-hidden="true" />` : ''}
+      <img
+        class="radio-option__marker"
+        src="${markerUrl}"
+        alt=""
+        aria-hidden="true"
+      />
     </label>
   `;
 }

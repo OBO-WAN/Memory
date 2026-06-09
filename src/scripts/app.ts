@@ -1,5 +1,8 @@
 import { renderStartScreen } from './ui/render-start-screen';
-import { renderSettingsScreen } from './ui/render-settings-screen';
+import {
+  renderSettingsScreen,
+  themePreviewMap,
+} from './ui/render-settings-screen';
 
 export function initApp(): void {
   const app = document.querySelector<HTMLDivElement>('#app');
@@ -8,6 +11,7 @@ export function initApp(): void {
 
   renderStartView(app);
   app.addEventListener('click', handleAppClick);
+  app.addEventListener('change', handleAppChange);
 }
 
 function renderStartView(app: HTMLDivElement): void {
@@ -38,4 +42,26 @@ function handleAppClick(event: MouseEvent): void {
   if (action === 'start-game') {
     console.log('Start game from settings');
   }
+}
+
+function handleAppChange(event: Event): void {
+  if (!(event.target instanceof HTMLInputElement)) return;
+
+  const input = event.target;
+
+  if (input.name !== 'theme') return;
+
+  const selectedPreview =
+    themePreviewMap[input.value as keyof typeof themePreviewMap];
+
+  if (!selectedPreview) return;
+
+  const previewImage = document.querySelector<HTMLImageElement>(
+    '.settings-screen__preview',
+  );
+
+  if (!previewImage) return;
+
+  previewImage.src = selectedPreview.src;
+  previewImage.alt = selectedPreview.alt;
 }
