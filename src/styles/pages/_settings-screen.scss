@@ -169,11 +169,44 @@
 
 @media (max-width: 620px) {
   .settings-screen__panel {
+    gap: 32px;
     padding: 32px 20px;
   }
 
+  .settings-screen__left {
+    width: min(100%, 360px);
+    margin-inline: auto;
+    align-items: stretch;
+    text-align: left;
+  }
+
+  .settings-screen__header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 32px;
+    text-align: center;
+  }
+
+  .settings-screen__title-line {
+    margin-inline: auto;
+  }
+
+  .settings-screen__right {
+    width: min(100%, 460px);
+    margin-inline: auto;
+    align-items: stretch;
+  }
+
+  .settings-screen__preview {
+    width: 100%;
+    margin-inline: auto;
+  }
+
   .settings-summary {
-    justify-content: flex-start;
+    width: 100%;
+    justify-content: center;
+    text-align: center;
   }
 
   .settings-summary__separator {

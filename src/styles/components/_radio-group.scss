@@ -108,11 +108,30 @@
 }
 
 @media (max-width: 620px) {
+  .settings-group {
+    width: 100%;
+    margin-bottom: 36px;
+  }
+
+  .settings-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .settings-group__legend {
+    justify-content: flex-start;
+    margin-bottom: 12px;
+    text-align: left;
+  }
+
   .settings-group__options {
-    padding-left: 0;
+    width: 100%;
+    gap: 10px;
+    padding-left: 8px;
+    justify-items: start;
   }
 
   .radio-option {
+    justify-content: flex-start;
     font-size: 18px;
   }
 
