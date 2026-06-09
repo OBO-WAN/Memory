@@ -1,8 +1,10 @@
+import { renderGameScreen } from './ui/render-game-screen';
+import { renderSettingsScreen, themePreviewMap } from './ui/render-settings-screen';
+import type { ThemeOption } from './ui/render-settings-screen';
 import { renderStartScreen } from './ui/render-start-screen';
-import {
-  renderSettingsScreen,
-  themePreviewMap,
-} from './ui/render-settings-screen';
+
+const SETTINGS_ACTION = 'open-settings';
+const START_GAME_ACTION = 'start-game';
 
 export function initApp(): void {
   const app = document.querySelector<HTMLDivElement>('#app');
@@ -23,9 +25,16 @@ function renderSettingsView(app: HTMLDivElement): void {
   updateSettingsSummary();
 }
 
+function renderGameView(app: HTMLDivElement): void {
+  const settings = getSelectedSettings();
+
+  if (!settings) return;
+
+  app.innerHTML = renderGameScreen(settings);
+}
+
 function handleAppClick(event: MouseEvent): void {
-  const target = event.target as HTMLElement;
-  const actionElement = target.closest<HTMLElement>('[data-action]');
+  const actionElement = getActionElement(event);
 
   if (!actionElement) return;
 
@@ -35,13 +44,13 @@ function handleAppClick(event: MouseEvent): void {
 
   const action = actionElement.dataset.action;
 
-  if (action === 'open-settings') {
+  if (action === SETTINGS_ACTION) {
     renderSettingsView(app);
     return;
   }
 
-  if (action === 'start-game') {
-    console.log('Start game from settings');
+  if (action === START_GAME_ACTION) {
+    renderGameView(app);
   }
 }
 
@@ -55,6 +64,30 @@ function handleAppChange(event: Event): void {
   }
 
   updateSettingsSummary();
+}
+
+function getActionElement(event: MouseEvent): HTMLElement | null {
+  const target = event.target;
+
+  if (!(target instanceof HTMLElement)) return null;
+
+  return target.closest<HTMLElement>('[data-action]');
+}
+
+function getSelectedSettings():
+  | { theme: ThemeOption; player: string; boardSize: number }
+  | null {
+  const theme = getSelectedInput('theme')?.value as ThemeOption | undefined;
+  const player = getSelectedInput('player')?.value;
+  const boardSize = Number(getSelectedInput('boardSize')?.value);
+
+  if (!theme || !player || !boardSize) return null;
+
+  return {
+    theme,
+    player,
+    boardSize,
+  };
 }
 
 function updateThemePreview(input: HTMLInputElement): void {
@@ -134,9 +167,5 @@ function updateStartButtonState(): void {
 
   if (!startButton) return;
 
-  const hasTheme = Boolean(getSelectedInput('theme'));
-  const hasPlayer = Boolean(getSelectedInput('player'));
-  const hasBoardSize = Boolean(getSelectedInput('boardSize'));
-
-  startButton.disabled = !(hasTheme && hasPlayer && hasBoardSize);
+  startButton.disabled = !getSelectedSettings();
 }
