@@ -46,10 +46,10 @@ export function renderSettingsScreen(): string {
             title: 'Game themes',
             name: 'theme',
             options: [
-              ['code-vibes', 'Code vibes theme', true],
-              ['gaming', 'Gaming theme', false],
-              ['da-projects', 'DA Projects theme', false],
-              ['foods', 'Foods theme', false],
+              ['code-vibes', 'Code vibes theme'],
+              ['gaming', 'Gaming theme'],
+              ['da-projects', 'DA Projects theme'],
+              ['foods', 'Foods theme'],
             ],
           })}
 
@@ -58,8 +58,8 @@ export function renderSettingsScreen(): string {
             title: 'Choose player',
             name: 'player',
             options: [
-              ['blue', 'Blue', true],
-              ['orange', 'Orange', false],
+              ['blue', 'Blue'],
+              ['orange', 'Orange'],
             ],
           })}
 
@@ -68,9 +68,9 @@ export function renderSettingsScreen(): string {
             title: 'Board size',
             name: 'boardSize',
             options: [
-              ['16', '16 cards', true],
-              ['24', '24 cards', false],
-              ['36', '36 cards', false],
+              ['16', '16 cards'],
+              ['24', '24 cards'],
+              ['36', '36 cards'],
             ],
           })}
         </div>
@@ -83,16 +83,25 @@ export function renderSettingsScreen(): string {
           />
 
           <div class="settings-summary">
-            <span class="settings-summary__item">Game theme</span>
+            <span class="settings-summary__item" data-summary="theme">
+              Game theme
+            </span>
             <span class="settings-summary__separator"></span>
-            <span class="settings-summary__item">Player</span>
+
+            <span class="settings-summary__item" data-summary="player">
+              Player
+            </span>
             <span class="settings-summary__separator"></span>
-            <span class="settings-summary__item">Board size</span>
+
+            <span class="settings-summary__item" data-summary="boardSize">
+              Board size
+            </span>
 
             <button
               class="settings-summary__start"
               type="button"
               data-action="start-game"
+              disabled
             >
               Start
             </button>
@@ -107,7 +116,7 @@ interface SettingsGroupConfig {
   icon: string;
   title: string;
   name: string;
-  options: [string, string, boolean][];
+  options: [string, string][];
 }
 
 function renderSettingsGroup(config: SettingsGroupConfig): string {
@@ -122,21 +131,14 @@ function renderSettingsGroup(config: SettingsGroupConfig): string {
 
       <div class="settings-group__options">
         ${config.options
-          .map(([value, label, checked]) =>
-            renderRadioOption(config.name, value, label, checked),
-          )
+          .map(([value, label]) => renderRadioOption(config.name, value, label))
           .join('')}
       </div>
     </fieldset>
   `;
 }
 
-function renderRadioOption(
-  name: string,
-  value: string,
-  label: string,
-  checked: boolean,
-): string {
+function renderRadioOption(name: string, value: string, label: string): string {
   return `
     <label class="radio-option">
       <input
@@ -144,7 +146,6 @@ function renderRadioOption(
         type="radio"
         name="${name}"
         value="${value}"
-        ${checked ? 'checked' : ''}
       />
       <span class="radio-option__control"></span>
       <span class="radio-option__text">${label}</span>

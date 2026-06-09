@@ -20,6 +20,7 @@ function renderStartView(app: HTMLDivElement): void {
 
 function renderSettingsView(app: HTMLDivElement): void {
   app.innerHTML = renderSettingsScreen();
+  updateSettingsSummary();
 }
 
 function handleAppClick(event: MouseEvent): void {
@@ -49,8 +50,14 @@ function handleAppChange(event: Event): void {
 
   const input = event.target;
 
-  if (input.name !== 'theme') return;
+  if (input.name === 'theme') {
+    updateThemePreview(input);
+  }
 
+  updateSettingsSummary();
+}
+
+function updateThemePreview(input: HTMLInputElement): void {
   const selectedPreview =
     themePreviewMap[input.value as keyof typeof themePreviewMap];
 
@@ -64,4 +71,72 @@ function handleAppChange(event: Event): void {
 
   previewImage.src = selectedPreview.src;
   previewImage.alt = selectedPreview.alt;
+}
+
+function updateSettingsSummary(): void {
+  updateSummaryItem('theme', getThemeSummary());
+  updateSummaryItem('player', getPlayerSummary());
+  updateSummaryItem('boardSize', getBoardSizeSummary());
+  updateStartButtonState();
+}
+
+function updateSummaryItem(name: string, text: string): void {
+  const summaryItem = document.querySelector<HTMLElement>(
+    `[data-summary="${name}"]`,
+  );
+
+  if (!summaryItem) return;
+
+  summaryItem.textContent = text;
+}
+
+function getThemeSummary(): string {
+  const selectedTheme = getSelectedInput('theme');
+
+  if (!selectedTheme) return 'Game theme';
+
+  return getSelectedOptionText(selectedTheme);
+}
+
+function getPlayerSummary(): string {
+  const selectedPlayer = getSelectedInput('player');
+
+  if (!selectedPlayer) return 'Player';
+
+  return `${getSelectedOptionText(selectedPlayer)} Player`;
+}
+
+function getBoardSizeSummary(): string {
+  const selectedBoardSize = getSelectedInput('boardSize');
+
+  if (!selectedBoardSize) return 'Board size';
+
+  return `Board-${selectedBoardSize.value} Cards`;
+}
+
+function getSelectedInput(name: string): HTMLInputElement | null {
+  return document.querySelector<HTMLInputElement>(
+    `input[name="${name}"]:checked`,
+  );
+}
+
+function getSelectedOptionText(input: HTMLInputElement): string {
+  const option = input.closest('.radio-option');
+  const optionText = option?.querySelector('.radio-option__text');
+
+  return optionText?.textContent?.trim() ?? '';
+}
+
+function updateStartButtonState(): void {
+  const startButton = document.querySelector<HTMLButtonElement>(
+    '.settings-summary__start',
+  );
+
+  if (!startButton) return;
+
+  const hasTheme = Boolean(getSelectedInput('theme'));
+  const hasPlayer = Boolean(getSelectedInput('player'));
+  const hasBoardSize = Boolean(getSelectedInput('boardSize'));
+
+  startButton.disabled = !(hasTheme && hasPlayer && hasBoardSize);
 }

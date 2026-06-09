@@ -70,6 +70,7 @@
 
 .settings-summary {
   width: min(100%, 546px);
+  max-width: 100%;
   min-height: 81px;
   display: flex;
   align-items: center;
@@ -77,6 +78,7 @@
   gap: clamp(14px, 2vw, 22px);
   padding: 16px clamp(18px, 3vw, 24px);
   background: $color-settings-panel;
+  box-sizing: border-box;
 }
 
 .settings-summary__item {
@@ -126,7 +128,18 @@
   outline-offset: 4px;
 }
 
-@media (max-width: 960px) {
+.settings-summary__start:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+.settings-summary__start:disabled:hover {
+  transform: none;
+  filter: grayscale(1);
+}
+
+@media (max-width: 1180px) {
   .settings-screen__panel {
     grid-template-columns: 1fr;
     align-items: start;
@@ -135,12 +148,22 @@
   }
 
   .settings-screen__right {
-    align-items: stretch;
+    align-items: center;
   }
 
   .settings-screen__preview,
   .settings-summary {
     align-self: center;
+  }
+
+  .settings-summary {
+    width: min(100%, 546px);
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .settings-summary__start {
+    margin-left: auto;
   }
 }
 
@@ -150,7 +173,6 @@
   }
 
   .settings-summary {
-    flex-wrap: wrap;
     justify-content: flex-start;
   }
 
@@ -160,10 +182,11 @@
 
   .settings-summary__start {
     width: 100%;
+    margin-left: 0;
   }
 }
 
-@media (max-height: 760px) and (min-width: 961px) {
+@media (max-height: 760px) and (min-width: 1181px) {
   .settings-screen__panel {
     align-items: start;
     padding-block: 32px;
