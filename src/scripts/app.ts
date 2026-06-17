@@ -120,6 +120,12 @@ function openExitDialog(
     closeExitDialog(app);
   });
 
+  dialog.addEventListener('click', (event) => {
+  if (event.target !== dialog) return;
+
+  closeExitDialog(app);
+  });
+
   dialog.showModal();
 
   dialog
