@@ -46,8 +46,8 @@
 .settings-screen__title-line::before {
   content: '';
   position: absolute;
-  left: -11px;
   top: 50%;
+  left: -11px;
   width: 16px;
   height: 16px;
   background: $color-accent-yellow;
@@ -78,7 +78,6 @@
   gap: clamp(14px, 2vw, 22px);
   padding: 16px clamp(18px, 3vw, 24px);
   background: $color-settings-panel;
-  box-sizing: border-box;
 }
 
 .settings-summary__item {
@@ -94,33 +93,43 @@
   width: 8px;
   height: 54px;
   flex-shrink: 0;
-  transform: skewX(-18deg);
   background: $color-accent-yellow;
+  transform: skewX(-18deg);
 }
 
 .settings-summary__start {
-  min-width: 114px;
-  min-height: 54px;
+  min-width: 140px;
+  min-height: 64px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 24px;
   border: 0;
+  appearance: none;
   background: $color-accent-yellow;
+  color: $color-ui-dark;
   font-family: $font-heading;
   font-size: 20px;
   font-weight: 700;
-  line-height: normal;
-  color: $color-ui-dark;
+  line-height: 1;
   cursor: pointer;
   transition:
-    transform 180ms ease,
-    filter 180ms ease;
+    background-color 220ms ease,
+    color 220ms ease,
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.settings-summary__start:hover {
-  transform: translateY(-2px);
-  filter: brightness(1.03);
+.settings-summary__start-icon {
+  width: 24px;
+  height: 24px;
+  display: block;
+  flex-shrink: 0;
+  transition: transform 220ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.settings-summary__start:active {
-  transform: translateY(0);
+.settings-summary__start:active:not(:disabled) {
+  transform: translateY(0) scale(0.98);
 }
 
 .settings-summary__start:focus-visible {
@@ -129,14 +138,21 @@
 }
 
 .settings-summary__start:disabled {
-  opacity: 0.35;
+  background: #dbdbd6;
+  color: #a3a1a1;
   cursor: not-allowed;
-  filter: grayscale(1);
+  transform: none;
 }
 
-.settings-summary__start:disabled:hover {
-  transform: none;
-  filter: grayscale(1);
+@media (hover: hover) and (pointer: fine) {
+  .settings-summary__start:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+
+  .settings-summary__start:hover:not(:disabled)
+    .settings-summary__start-icon {
+    transform: rotate(-8deg);
+  }
 }
 
 @media (max-width: 1180px) {
@@ -231,7 +247,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .settings-summary__start {
+  .settings-summary__start,
+  .settings-summary__start-icon {
     transition-duration: 1ms;
   }
 }
