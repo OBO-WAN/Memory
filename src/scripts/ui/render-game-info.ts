@@ -34,8 +34,9 @@ export function renderGameInfo(settings: GameInfoSettings): string {
       <button
         class="game-info__exit"
         type="button"
-        data-action="open-settings"
+        data-action="open-exit-dialog"
         aria-label="Exit game"
+        aria-haspopup="dialog"
       >
         <img
           class="game-info__exit-image"

@@ -1,10 +1,27 @@
+import { renderExitDialog } from './ui/render-exit-dialog';
 import { renderGameScreen } from './ui/render-game-screen';
-import { renderSettingsScreen, themePreviewMap } from './ui/render-settings-screen';
+import {
+  renderSettingsScreen,
+  themePreviewMap,
+} from './ui/render-settings-screen';
 import type { ThemeOption } from './ui/render-settings-screen';
 import { renderStartScreen } from './ui/render-start-screen';
 
-const SETTINGS_ACTION = 'open-settings';
-const START_GAME_ACTION = 'start-game';
+const ACTIONS = {
+  openSettings: 'open-settings',
+  startGame: 'start-game',
+  openExitDialog: 'open-exit-dialog',
+  closeExitDialog: 'close-exit-dialog',
+  confirmExit: 'confirm-exit',
+} as const;
+
+interface SelectedSettings {
+  theme: ThemeOption;
+  player: string;
+  boardSize: number;
+}
+
+let exitDialogTrigger: HTMLElement | null = null;
 
 export function initApp(): void {
   const app = document.querySelector<HTMLDivElement>('#app');
@@ -21,6 +38,7 @@ function renderStartView(app: HTMLDivElement): void {
 }
 
 function renderSettingsView(app: HTMLDivElement): void {
+  exitDialogTrigger = null;
   app.innerHTML = renderSettingsScreen();
   updateSettingsSummary();
 }
@@ -35,22 +53,32 @@ function renderGameView(app: HTMLDivElement): void {
 
 function handleAppClick(event: MouseEvent): void {
   const actionElement = getActionElement(event);
-
-  if (!actionElement) return;
-
   const app = document.querySelector<HTMLDivElement>('#app');
 
-  if (!app) return;
+  if (!actionElement || !app) return;
 
   const action = actionElement.dataset.action;
 
-  if (action === SETTINGS_ACTION) {
-    renderSettingsView(app);
-    return;
-  }
+  switch (action) {
+    case ACTIONS.openSettings:
+      renderSettingsView(app);
+      break;
 
-  if (action === START_GAME_ACTION) {
-    renderGameView(app);
+    case ACTIONS.startGame:
+      renderGameView(app);
+      break;
+
+    case ACTIONS.openExitDialog:
+      openExitDialog(app, actionElement);
+      break;
+
+    case ACTIONS.closeExitDialog:
+      closeExitDialog(app);
+      break;
+
+    case ACTIONS.confirmExit:
+      renderSettingsView(app);
+      break;
   }
 }
 
@@ -74,9 +102,43 @@ function getActionElement(event: MouseEvent): HTMLElement | null {
   return target.closest<HTMLElement>('[data-action]');
 }
 
-function getSelectedSettings():
-  | { theme: ThemeOption; player: string; boardSize: number }
-  | null {
+function openExitDialog(
+  app: HTMLDivElement,
+  trigger: HTMLElement,
+): void {
+  if (app.querySelector('.exit-dialog')) return;
+
+  exitDialogTrigger = trigger;
+  app.insertAdjacentHTML('beforeend', renderExitDialog());
+
+  const dialog = app.querySelector<HTMLDialogElement>('.exit-dialog');
+
+  if (!dialog) return;
+
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+    closeExitDialog(app);
+  });
+
+  dialog.showModal();
+
+  dialog
+    .querySelector<HTMLButtonElement>('[data-action="close-exit-dialog"]')
+    ?.focus();
+}
+
+function closeExitDialog(app: HTMLDivElement): void {
+  const dialog = app.querySelector<HTMLDialogElement>('.exit-dialog');
+
+  if (!dialog) return;
+
+  dialog.close();
+  dialog.remove();
+  exitDialogTrigger?.focus();
+  exitDialogTrigger = null;
+}
+
+function getSelectedSettings(): SelectedSettings | null {
   const theme = getSelectedInput('theme')?.value as ThemeOption | undefined;
   const player = getSelectedInput('player')?.value;
   const boardSize = Number(getSelectedInput('boardSize')?.value);
