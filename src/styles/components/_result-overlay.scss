@@ -1,0 +1,175 @@
+.result-overlay {
+  --result-color: #08d4bd;
+
+  width: 100%;
+  max-width: none;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 12px solid #e5e5e5;
+  overflow: hidden;
+  background: #303131;
+  color: #ffffff;
+}
+
+.result-overlay--blue {
+  --result-color: #2ca8ff;
+}
+
+.result-overlay--orange {
+  --result-color: #ff861f;
+}
+
+.result-overlay::backdrop {
+  background: #303131;
+}
+
+.result-overlay[open] {
+  display: grid;
+  place-items: center;
+  animation: result-overlay-enter 420ms ease-out both;
+}
+
+.result-overlay__content {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: clamp(18px, 3vh, 32px);
+  text-align: center;
+}
+
+.result-overlay__eyebrow {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2.1rem);
+  font-weight: 500;
+}
+
+.result-overlay__title {
+  margin: 0;
+  color: var(--result-color);
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.result-overlay__title--draw {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(4rem, 10vw, 7.5rem);
+  text-shadow:
+    0 3px 0 #bafff7,
+    0 8px 0 #009f8e,
+    0 14px 24px rgba(0, 0, 0, 0.38);
+}
+
+.result-overlay__player-icon,
+.result-overlay__balance-icon {
+  display: block;
+  width: clamp(130px, 20vw, 210px);
+  height: auto;
+  color: var(--result-color);
+}
+
+.result-overlay__balance-icon {
+  width: clamp(170px, 24vw, 250px);
+}
+
+.result-overlay__button {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(42px, 9vh, 90px);
+  z-index: 2;
+  min-width: 154px;
+  padding: 13px 20px;
+  border: 2px solid #14b9a7;
+  background: rgba(69, 98, 94, 0.56);
+  color: #ffffff;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  transform: translateX(-50%);
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.result-overlay__button:hover {
+  background: rgba(20, 185, 167, 0.34);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+.result-overlay__button:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 4px;
+}
+
+.result-overlay__confetti {
+  position: absolute;
+  inset: 0 0 auto;
+  height: 31%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.result-overlay__confetti span {
+  position: absolute;
+  left: var(--confetti-left);
+  top: var(--confetti-top);
+  width: 16px;
+  height: 8px;
+  background: var(--confetti-color);
+  transform: rotate(var(--confetti-rotation));
+  animation: confetti-float 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes result-overlay-enter {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes confetti-float {
+  from {
+    translate: 0 0;
+  }
+
+  to {
+    translate: 0 10px;
+  }
+}
+
+@media (max-height: 650px) {
+  .result-overlay__content {
+    gap: 14px;
+    transform: scale(0.84);
+  }
+
+  .result-overlay__button {
+    bottom: 24px;
+  }
+}
+
+@media (max-width: 520px) {
+  .result-overlay {
+    border-width: 7px;
+  }
+
+  .result-overlay__confetti span {
+    width: 11px;
+    height: 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .result-overlay[open],
+  .result-overlay__button,
+  .result-overlay__confetti span {
+    animation-duration: 1ms;
+    transition-duration: 1ms;
+  }
+}

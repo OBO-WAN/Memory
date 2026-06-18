@@ -1,6 +1,7 @@
 import { renderExitDialog } from './ui/render-exit-dialog';
 import { renderGameOver } from './ui/render-game-over';
 import { renderGameScreen } from './ui/render-game-screen';
+import { renderResultOverlay } from './ui/render-result-overlay';
 import {
   renderSettingsScreen,
   themePreviewMap,
@@ -15,10 +16,12 @@ const ACTIONS = {
   openExitDialog: 'open-exit-dialog',
   closeExitDialog: 'close-exit-dialog',
   confirmExit: 'confirm-exit',
+  backToStart: 'back-to-start',
 } as const;
 
 const FLIP_BACK_DELAY = 900;
 const GAME_OVER_DELAY = 650;
+const GAME_OVER_DISPLAY_DURATION = 2500;
 
 type Player = 'blue' | 'orange';
 
@@ -39,6 +42,7 @@ let totalPairs = 0;
 let isCheckingPair = false;
 let flipBackTimer: number | null = null;
 let gameOverTimer: number | null = null;
+let resultOverlayTimer: number | null = null;
 
 export function initApp(): void {
   const app = document.querySelector<HTMLDivElement>('#app');
@@ -100,6 +104,10 @@ function handleAppClick(event: MouseEvent): void {
 
     case ACTIONS.confirmExit:
       renderSettingsView(app);
+      break;
+
+    case ACTIONS.backToStart:
+      renderStartView(app);
       break;
   }
 }
@@ -272,6 +280,45 @@ function openGameOver(app: HTMLDivElement): void {
   });
 
   dialog.showModal();
+  scheduleResultOverlay(app);
+}
+
+function scheduleResultOverlay(app: HTMLDivElement): void {
+  resultOverlayTimer = window.setTimeout(() => {
+    resultOverlayTimer = null;
+    closeGameOver(app);
+    openResultOverlay(app);
+  }, GAME_OVER_DISPLAY_DURATION);
+}
+
+function closeGameOver(app: HTMLDivElement): void {
+  const dialog = app.querySelector<HTMLDialogElement>('.game-over');
+
+  if (!dialog) return;
+
+  dialog.close();
+  dialog.remove();
+}
+
+function openResultOverlay(app: HTMLDivElement): void {
+  if (app.querySelector('.result-overlay')) return;
+
+  app.insertAdjacentHTML('beforeend', renderResultOverlay(scores));
+
+  const dialog =
+    app.querySelector<HTMLDialogElement>('.result-overlay');
+
+  if (!dialog) return;
+
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+  });
+
+  dialog.showModal();
+
+  dialog
+    .querySelector<HTMLButtonElement>('[data-action="back-to-start"]')
+    ?.focus();
 }
 
 function resetCardTurn(): void {
@@ -288,6 +335,11 @@ function resetGameInteraction(): void {
   if (gameOverTimer !== null) {
     window.clearTimeout(gameOverTimer);
     gameOverTimer = null;
+  }
+
+  if (resultOverlayTimer !== null) {
+    window.clearTimeout(resultOverlayTimer);
+    resultOverlayTimer = null;
   }
 
   resetCardTurn();
