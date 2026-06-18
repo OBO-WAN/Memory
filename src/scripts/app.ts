@@ -1,4 +1,5 @@
 import { renderExitDialog } from './ui/render-exit-dialog';
+import { renderGameOver } from './ui/render-game-over';
 import { renderGameScreen } from './ui/render-game-screen';
 import {
   renderSettingsScreen,
@@ -14,9 +15,12 @@ const ACTIONS = {
   openExitDialog: 'open-exit-dialog',
   closeExitDialog: 'close-exit-dialog',
   confirmExit: 'confirm-exit',
+  playAgain: 'play-again',
+  backToSettings: 'back-to-settings',
 } as const;
 
 const FLIP_BACK_DELAY = 900;
+const GAME_OVER_DELAY = 650;
 
 type Player = 'blue' | 'orange';
 
@@ -26,12 +30,18 @@ interface SelectedSettings {
   boardSize: number;
 }
 
+type Scores = Record<Player, number>;
+
+let activeSettings: SelectedSettings | null = null;
 let exitDialogTrigger: HTMLElement | null = null;
 let firstFlippedCard: HTMLButtonElement | null = null;
+let currentPlayer: Player = 'blue';
+let scores: Scores = createEmptyScores();
+let matchedPairs = 0;
+let totalPairs = 0;
 let isCheckingPair = false;
 let flipBackTimer: number | null = null;
-let selectedPlayer: Player = 'blue';
-let score = 0;
+let gameOverTimer: number | null = null;
 
 export function initApp(): void {
   const app = document.querySelector<HTMLDivElement>('#app');
@@ -50,17 +60,20 @@ function renderStartView(app: HTMLDivElement): void {
 
 function renderSettingsView(app: HTMLDivElement): void {
   resetGameState();
+  activeSettings = null;
   exitDialogTrigger = null;
   app.innerHTML = renderSettingsScreen();
   updateSettingsSummary();
 }
 
-function renderGameView(app: HTMLDivElement): void {
-  const settings = getSelectedSettings();
-
+function renderGameView(
+  app: HTMLDivElement,
+  settings = getSelectedSettings(),
+): void {
   if (!settings) return;
 
-  resetGameState(settings.player);
+  activeSettings = settings;
+  resetGameState(settings);
   app.innerHTML = renderGameScreen(settings);
 }
 
@@ -70,9 +83,7 @@ function handleAppClick(event: MouseEvent): void {
 
   if (!actionElement || !app) return;
 
-  const action = actionElement.dataset.action;
-
-  switch (action) {
+  switch (actionElement.dataset.action) {
     case ACTIONS.openSettings:
       renderSettingsView(app);
       break;
@@ -82,7 +93,7 @@ function handleAppClick(event: MouseEvent): void {
       break;
 
     case ACTIONS.flipCard:
-      flipCard(actionElement);
+      flipCard(app, actionElement);
       break;
 
     case ACTIONS.openExitDialog:
@@ -94,7 +105,12 @@ function handleAppClick(event: MouseEvent): void {
       break;
 
     case ACTIONS.confirmExit:
+    case ACTIONS.backToSettings:
       renderSettingsView(app);
+      break;
+
+    case ACTIONS.playAgain:
+      renderGameView(app, activeSettings);
       break;
   }
 }
@@ -119,7 +135,10 @@ function getActionElement(event: MouseEvent): HTMLElement | null {
   return target.closest<HTMLElement>('[data-action]');
 }
 
-function flipCard(actionElement: HTMLElement): void {
+function flipCard(
+  app: HTMLDivElement,
+  actionElement: HTMLElement,
+): void {
   if (!(actionElement instanceof HTMLButtonElement)) return;
   if (!canFlipCard(actionElement)) return;
 
@@ -130,7 +149,7 @@ function flipCard(actionElement: HTMLElement): void {
     return;
   }
 
-  resolveCardPair(firstFlippedCard, actionElement);
+  resolveCardPair(app, firstFlippedCard, actionElement);
 }
 
 function canFlipCard(card: HTMLButtonElement): boolean {
@@ -148,15 +167,14 @@ function revealCard(card: HTMLButtonElement): void {
 }
 
 function resolveCardPair(
+  app: HTMLDivElement,
   firstCard: HTMLButtonElement,
   secondCard: HTMLButtonElement,
 ): void {
   isCheckingPair = true;
 
   if (cardsMatch(firstCard, secondCard)) {
-    markCardsAsMatched(firstCard, secondCard);
-    incrementSelectedPlayerScore();
-    resetCardTurn();
+    handleMatchingPair(app, firstCard, secondCard);
     return;
   }
 
@@ -170,6 +188,21 @@ function cardsMatch(
   return firstCard.dataset.pairId === secondCard.dataset.pairId;
 }
 
+function handleMatchingPair(
+  app: HTMLDivElement,
+  firstCard: HTMLButtonElement,
+  secondCard: HTMLButtonElement,
+): void {
+  markCardsAsMatched(firstCard, secondCard);
+  incrementCurrentPlayerScore();
+  matchedPairs += 1;
+  resetCardTurn();
+
+  if (matchedPairs === totalPairs) {
+    scheduleGameOver(app);
+  }
+}
+
 function markCardsAsMatched(
   firstCard: HTMLButtonElement,
   secondCard: HTMLButtonElement,
@@ -180,6 +213,18 @@ function markCardsAsMatched(
   });
 }
 
+function incrementCurrentPlayerScore(): void {
+  scores[currentPlayer] += 1;
+
+  const scoreElement = document.querySelector<HTMLElement>(
+    `[data-score="${currentPlayer}"]`,
+  );
+
+  if (!scoreElement) return;
+
+  scoreElement.textContent = String(scores[currentPlayer]);
+}
+
 function scheduleCardsToFlipBack(
   firstCard: HTMLButtonElement,
   secondCard: HTMLButtonElement,
@@ -188,6 +233,7 @@ function scheduleCardsToFlipBack(
     hideCard(firstCard);
     hideCard(secondCard);
     flipBackTimer = null;
+    switchCurrentPlayer();
     resetCardTurn();
   }, FLIP_BACK_DELAY);
 }
@@ -195,6 +241,52 @@ function scheduleCardsToFlipBack(
 function hideCard(card: HTMLButtonElement): void {
   card.classList.remove('is-flipped');
   card.setAttribute('aria-pressed', 'false');
+}
+
+function switchCurrentPlayer(): void {
+  currentPlayer = currentPlayer === 'blue' ? 'orange' : 'blue';
+  updateCurrentPlayerMarker();
+}
+
+function updateCurrentPlayerMarker(): void {
+  const currentMarker = document.querySelector<HTMLImageElement>(
+    '.game-info__current-marker',
+  );
+  const playerMarker = document.querySelector<HTMLImageElement>(
+    `.game-info__score--${currentPlayer} .game-info__player-marker`,
+  );
+
+  if (!currentMarker || !playerMarker) return;
+
+  currentMarker.src = playerMarker.src;
+  currentMarker.alt = `${currentPlayer} player`;
+}
+
+function scheduleGameOver(app: HTMLDivElement): void {
+  gameOverTimer = window.setTimeout(() => {
+    gameOverTimer = null;
+    openGameOver(app);
+  }, GAME_OVER_DELAY);
+}
+
+function openGameOver(app: HTMLDivElement): void {
+  if (app.querySelector('.game-over')) return;
+
+  app.insertAdjacentHTML('beforeend', renderGameOver(scores));
+
+  const dialog = app.querySelector<HTMLDialogElement>('.game-over');
+
+  if (!dialog) return;
+
+  dialog.addEventListener('cancel', (event) => {
+    event.preventDefault();
+  });
+
+  dialog.showModal();
+
+  dialog
+    .querySelector<HTMLButtonElement>('[data-action="play-again"]')
+    ?.focus();
 }
 
 function resetCardTurn(): void {
@@ -208,25 +300,27 @@ function resetGameInteraction(): void {
     flipBackTimer = null;
   }
 
+  if (gameOverTimer !== null) {
+    window.clearTimeout(gameOverTimer);
+    gameOverTimer = null;
+  }
+
   resetCardTurn();
 }
 
-function resetGameState(player: Player = 'blue'): void {
+function resetGameState(settings?: SelectedSettings): void {
   resetGameInteraction();
-  selectedPlayer = player;
-  score = 0;
+  currentPlayer = settings?.player ?? 'blue';
+  scores = createEmptyScores();
+  matchedPairs = 0;
+  totalPairs = settings ? settings.boardSize / 2 : 0;
 }
 
-function incrementSelectedPlayerScore(): void {
-  score += 1;
-
-  const scoreElement = document.querySelector<HTMLElement>(
-    `[data-score="${selectedPlayer}"]`,
-  );
-
-  if (!scoreElement) return;
-
-  scoreElement.textContent = String(score);
+function createEmptyScores(): Scores {
+  return {
+    blue: 0,
+    orange: 0,
+  };
 }
 
 function openExitDialog(
@@ -277,7 +371,9 @@ function getSelectedSettings(): SelectedSettings | null {
   const theme = getSelectedInput('theme')?.value as
     | ThemeOption
     | undefined;
-  const player = getSelectedInput('player')?.value as Player | undefined;
+  const player = getSelectedInput('player')?.value as
+    | Player
+    | undefined;
   const boardSize = Number(getSelectedInput('boardSize')?.value);
 
   if (!theme || !player || !boardSize) return null;
