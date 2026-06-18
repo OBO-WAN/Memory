@@ -1,3 +1,6 @@
+import finalScoreTitleUrl from '../../assets/images/game-over/final-score-title.svg';
+import gameOverTitleUrl from '../../assets/images/game-over/game-over-title.svg';
+
 type Player = 'blue' | 'orange';
 type Scores = Record<Player, number>;
 type Result = Player | 'draw';
@@ -8,44 +11,31 @@ export function renderGameOver(scores: Scores): string {
   return `
     <dialog
       class="game-over"
-      aria-labelledby="game-over-title"
-      aria-describedby="game-over-result"
+      aria-label="${getResultText(result)}"
     >
-      <section class="game-over__panel">
-        <h2 id="game-over-title" class="game-over__title">
-          Game over
-        </h2>
+      <section class="game-over__content">
+        <img
+          class="game-over__title"
+          src="${gameOverTitleUrl}"
+          alt="Game over"
+        />
 
-        <p
-          id="game-over-result"
-          class="game-over__result game-over__result--${result}"
-        >
-          ${getResultText(result)}
-        </p>
+        <div class="game-over__summary">
+          <img
+            class="game-over__final-score-title"
+            src="${finalScoreTitleUrl}"
+            alt="Final score"
+          />
 
-        <p class="game-over__label">Final Score</p>
-
-        <div class="game-over__score" aria-label="Final score">
-          ${renderPlayerScore('blue', scores.blue)}
-          ${renderPlayerScore('orange', scores.orange)}
-        </div>
-
-        <div class="game-over__actions">
-          <button
-            class="game-over__button game-over__button--primary"
-            type="button"
-            data-action="play-again"
+          <div
+            class="game-over__score"
+            aria-label="Blue ${scores.blue}, Orange ${scores.orange}. ${getResultText(result)}"
           >
-            Play again
-          </button>
-
-          <button
-            class="game-over__button"
-            type="button"
-            data-action="back-to-settings"
-          >
-            Settings
-          </button>
+            <div class="game-over__score-content">
+              ${renderPlayerScore('blue', scores.blue, result)}
+              ${renderPlayerScore('orange', scores.orange, result)}
+            </div>
+          </div>
         </div>
       </section>
     </dialog>
@@ -59,26 +49,29 @@ function getResult(scores: Scores): Result {
 }
 
 function getResultText(result: Result): string {
-  if (result === 'draw') return "It's a draw!";
+  if (result === 'draw') return "It's a draw.";
 
-  const playerName =
-    result.charAt(0).toUpperCase() + result.slice(1);
-
-  return `${playerName} wins!`;
+  return `${capitalize(result)} wins.`;
 }
 
 function renderPlayerScore(
   player: Player,
   score: number,
+  result: Result,
 ): string {
-  const playerName =
-    player.charAt(0).toUpperCase() + player.slice(1);
+  const winnerClass = result === player ? ' is-winner' : '';
 
   return `
-    <span class="game-over__player game-over__player--${player}">
+    <span
+      class="game-over__player game-over__player--${player}${winnerClass}"
+    >
       <span class="game-over__marker" aria-hidden="true"></span>
-      <span>${playerName}</span>
+      <span>${capitalize(player)}</span>
       <strong>${score}</strong>
     </span>
   `;
+}
+
+function capitalize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }

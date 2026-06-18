@@ -15,8 +15,6 @@ const ACTIONS = {
   openExitDialog: 'open-exit-dialog',
   closeExitDialog: 'close-exit-dialog',
   confirmExit: 'confirm-exit',
-  playAgain: 'play-again',
-  backToSettings: 'back-to-settings',
 } as const;
 
 const FLIP_BACK_DELAY = 900;
@@ -32,7 +30,6 @@ interface SelectedSettings {
 
 type Scores = Record<Player, number>;
 
-let activeSettings: SelectedSettings | null = null;
 let exitDialogTrigger: HTMLElement | null = null;
 let firstFlippedCard: HTMLButtonElement | null = null;
 let currentPlayer: Player = 'blue';
@@ -60,19 +57,16 @@ function renderStartView(app: HTMLDivElement): void {
 
 function renderSettingsView(app: HTMLDivElement): void {
   resetGameState();
-  activeSettings = null;
   exitDialogTrigger = null;
   app.innerHTML = renderSettingsScreen();
   updateSettingsSummary();
 }
 
-function renderGameView(
-  app: HTMLDivElement,
-  settings = getSelectedSettings(),
-): void {
+function renderGameView(app: HTMLDivElement): void {
+  const settings = getSelectedSettings();
+
   if (!settings) return;
 
-  activeSettings = settings;
   resetGameState(settings);
   app.innerHTML = renderGameScreen(settings);
 }
@@ -105,12 +99,7 @@ function handleAppClick(event: MouseEvent): void {
       break;
 
     case ACTIONS.confirmExit:
-    case ACTIONS.backToSettings:
       renderSettingsView(app);
-      break;
-
-    case ACTIONS.playAgain:
-      renderGameView(app, activeSettings);
       break;
   }
 }
@@ -283,10 +272,6 @@ function openGameOver(app: HTMLDivElement): void {
   });
 
   dialog.showModal();
-
-  dialog
-    .querySelector<HTMLButtonElement>('[data-action="play-again"]')
-    ?.focus();
 }
 
 function resetCardTurn(): void {
