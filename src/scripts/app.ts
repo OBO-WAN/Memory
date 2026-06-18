@@ -16,13 +16,22 @@ const ACTIONS = {
   confirmExit: 'confirm-exit',
 } as const;
 
+const FLIP_BACK_DELAY = 900;
+
+type Player = 'blue' | 'orange';
+
 interface SelectedSettings {
   theme: ThemeOption;
-  player: string;
+  player: Player;
   boardSize: number;
 }
 
 let exitDialogTrigger: HTMLElement | null = null;
+let firstFlippedCard: HTMLButtonElement | null = null;
+let isCheckingPair = false;
+let flipBackTimer: number | null = null;
+let selectedPlayer: Player = 'blue';
+let score = 0;
 
 export function initApp(): void {
   const app = document.querySelector<HTMLDivElement>('#app');
@@ -35,10 +44,12 @@ export function initApp(): void {
 }
 
 function renderStartView(app: HTMLDivElement): void {
+  resetGameState();
   app.innerHTML = renderStartScreen();
 }
 
 function renderSettingsView(app: HTMLDivElement): void {
+  resetGameState();
   exitDialogTrigger = null;
   app.innerHTML = renderSettingsScreen();
   updateSettingsSummary();
@@ -49,6 +60,7 @@ function renderGameView(app: HTMLDivElement): void {
 
   if (!settings) return;
 
+  resetGameState(settings.player);
   app.innerHTML = renderGameScreen(settings);
 }
 
@@ -107,16 +119,114 @@ function getActionElement(event: MouseEvent): HTMLElement | null {
   return target.closest<HTMLElement>('[data-action]');
 }
 
-function flipCard(card: HTMLElement): void {
-  if (
-    card.classList.contains('is-flipped') ||
-    card.classList.contains('is-matched')
-  ) {
+function flipCard(actionElement: HTMLElement): void {
+  if (!(actionElement instanceof HTMLButtonElement)) return;
+  if (!canFlipCard(actionElement)) return;
+
+  revealCard(actionElement);
+
+  if (!firstFlippedCard) {
+    firstFlippedCard = actionElement;
     return;
   }
 
+  resolveCardPair(firstFlippedCard, actionElement);
+}
+
+function canFlipCard(card: HTMLButtonElement): boolean {
+  return (
+    !isCheckingPair &&
+    card !== firstFlippedCard &&
+    !card.classList.contains('is-flipped') &&
+    !card.classList.contains('is-matched')
+  );
+}
+
+function revealCard(card: HTMLButtonElement): void {
   card.classList.add('is-flipped');
   card.setAttribute('aria-pressed', 'true');
+}
+
+function resolveCardPair(
+  firstCard: HTMLButtonElement,
+  secondCard: HTMLButtonElement,
+): void {
+  isCheckingPair = true;
+
+  if (cardsMatch(firstCard, secondCard)) {
+    markCardsAsMatched(firstCard, secondCard);
+    incrementSelectedPlayerScore();
+    resetCardTurn();
+    return;
+  }
+
+  scheduleCardsToFlipBack(firstCard, secondCard);
+}
+
+function cardsMatch(
+  firstCard: HTMLButtonElement,
+  secondCard: HTMLButtonElement,
+): boolean {
+  return firstCard.dataset.pairId === secondCard.dataset.pairId;
+}
+
+function markCardsAsMatched(
+  firstCard: HTMLButtonElement,
+  secondCard: HTMLButtonElement,
+): void {
+  [firstCard, secondCard].forEach((card) => {
+    card.classList.add('is-matched');
+    card.disabled = true;
+  });
+}
+
+function scheduleCardsToFlipBack(
+  firstCard: HTMLButtonElement,
+  secondCard: HTMLButtonElement,
+): void {
+  flipBackTimer = window.setTimeout(() => {
+    hideCard(firstCard);
+    hideCard(secondCard);
+    flipBackTimer = null;
+    resetCardTurn();
+  }, FLIP_BACK_DELAY);
+}
+
+function hideCard(card: HTMLButtonElement): void {
+  card.classList.remove('is-flipped');
+  card.setAttribute('aria-pressed', 'false');
+}
+
+function resetCardTurn(): void {
+  firstFlippedCard = null;
+  isCheckingPair = false;
+}
+
+function resetGameInteraction(): void {
+  if (flipBackTimer !== null) {
+    window.clearTimeout(flipBackTimer);
+    flipBackTimer = null;
+  }
+
+  resetCardTurn();
+}
+
+function resetGameState(player: Player = 'blue'): void {
+  resetGameInteraction();
+  selectedPlayer = player;
+  score = 0;
+}
+
+function incrementSelectedPlayerScore(): void {
+  score += 1;
+
+  const scoreElement = document.querySelector<HTMLElement>(
+    `[data-score="${selectedPlayer}"]`,
+  );
+
+  if (!scoreElement) return;
+
+  scoreElement.textContent = String(score);
 }
 
 function openExitDialog(
@@ -167,7 +277,7 @@ function getSelectedSettings(): SelectedSettings | null {
   const theme = getSelectedInput('theme')?.value as
     | ThemeOption
     | undefined;
-  const player = getSelectedInput('player')?.value;
+  const player = getSelectedInput('player')?.value as Player | undefined;
   const boardSize = Number(getSelectedInput('boardSize')?.value);
 
   if (!theme || !player || !boardSize) return null;
