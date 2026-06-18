@@ -10,6 +10,7 @@ import { renderStartScreen } from './ui/render-start-screen';
 const ACTIONS = {
   openSettings: 'open-settings',
   startGame: 'start-game',
+  flipCard: 'flip-card',
   openExitDialog: 'open-exit-dialog',
   closeExitDialog: 'close-exit-dialog',
   confirmExit: 'confirm-exit',
@@ -68,6 +69,10 @@ function handleAppClick(event: MouseEvent): void {
       renderGameView(app);
       break;
 
+    case ACTIONS.flipCard:
+      flipCard(actionElement);
+      break;
+
     case ACTIONS.openExitDialog:
       openExitDialog(app, actionElement);
       break;
@@ -102,6 +107,18 @@ function getActionElement(event: MouseEvent): HTMLElement | null {
   return target.closest<HTMLElement>('[data-action]');
 }
 
+function flipCard(card: HTMLElement): void {
+  if (
+    card.classList.contains('is-flipped') ||
+    card.classList.contains('is-matched')
+  ) {
+    return;
+  }
+
+  card.classList.add('is-flipped');
+  card.setAttribute('aria-pressed', 'true');
+}
+
 function openExitDialog(
   app: HTMLDivElement,
   trigger: HTMLElement,
@@ -121,15 +138,17 @@ function openExitDialog(
   });
 
   dialog.addEventListener('click', (event) => {
-  if (event.target !== dialog) return;
+    if (event.target !== dialog) return;
 
-  closeExitDialog(app);
+    closeExitDialog(app);
   });
 
   dialog.showModal();
 
   dialog
-    .querySelector<HTMLButtonElement>('[data-action="close-exit-dialog"]')
+    .querySelector<HTMLButtonElement>(
+      '[data-action="close-exit-dialog"]',
+    )
     ?.focus();
 }
 
@@ -145,7 +164,9 @@ function closeExitDialog(app: HTMLDivElement): void {
 }
 
 function getSelectedSettings(): SelectedSettings | null {
-  const theme = getSelectedInput('theme')?.value as ThemeOption | undefined;
+  const theme = getSelectedInput('theme')?.value as
+    | ThemeOption
+    | undefined;
   const player = getSelectedInput('player')?.value;
   const boardSize = Number(getSelectedInput('boardSize')?.value);
 

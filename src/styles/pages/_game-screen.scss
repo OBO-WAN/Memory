@@ -1,120 +1,19 @@
-@use "../abstracts/variables" as *;
+@use '../abstracts/variables' as *;
 
 .game-screen {
+  --game-screen-bg: #303131;
+  --game-screen-text: #ffffff;
+
   width: 100%;
   min-height: 100svh;
   padding: clamp(24px, 4vw, 40px);
-  background: #303131;
-  color: #ffffff;
+  overflow-x: hidden;
+  background: var(--game-screen-bg);
+  color: var(--game-screen-text);
 }
 
-.game-screen__header {
-  width: min(100%, 1080px);
-  margin: 0 auto clamp(40px, 6vw, 64px);
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  gap: 24px;
-}
-
-.game-screen__score {
-  justify-self: start;
-  display: flex;
-  gap: 16px;
-  padding: 14px 20px;
-  background: rgba(36, 107, 94, 0.7);
-}
-
-.game-screen__player {
-  font-family: $font-body;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.game-screen__player--blue {
-  color: #2ca8ff;
-}
-
-.game-screen__player--orange {
-  color: #ff8617;
-}
-
-.game-screen__current-player {
-  justify-self: center;
-  font-family: $font-body;
-  font-size: 20px;
-  font-weight: 700;
-}
-
-.game-screen__exit {
-  justify-self: end;
-  min-height: 48px;
-  padding: 0 24px;
-  border: 2px solid #00c9ad;
-  background: rgba(36, 107, 94, 0.55);
-  color: #ffffff;
-  font-family: $font-body;
-  font-size: 18px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-.game-board {
-  width: min(100%, 480px);
-  margin: 0 auto;
-  display: grid;
-  gap: 12px;
-}
-
-.game-board--16 {
-  grid-template-columns: repeat(4, 1fr);
-}
-
-.game-board--24 {
-  width: min(100%, 620px);
-  grid-template-columns: repeat(6, 1fr);
-}
-
-.game-board--36 {
-  width: min(100%, 720px);
-  grid-template-columns: repeat(6, 1fr);
-}
-
-.game-card {
-  aspect-ratio: 1;
-  border: 0;
-  background: linear-gradient(180deg, #08d8c1 0%, #05a895 100%);
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-}
-
-.game-card__icon {
-  width: 48%;
-  aspect-ratio: 1;
-  display: grid;
-  place-items: center;
-  border: 3px solid rgba(255, 255, 255, 0.25);
-  border-radius: 8px;
-  color: rgba(255, 255, 255, 0.45);
-  font-family: $font-body;
-  font-weight: 700;
-}
-
-@media (max-width: 760px) {
-  .game-screen__header {
-    grid-template-columns: 1fr;
-    justify-items: center;
-  }
-
-  .game-screen__score,
-  .game-screen__current-player,
-  .game-screen__exit {
-    justify-self: center;
-  }
-
-  .game-board--24,
-  .game-board--36 {
-    grid-template-columns: repeat(4, 1fr);
+@media (max-width: 620px) {
+  .game-screen {
+    padding: 20px 12px 32px;
   }
 }

@@ -1,0 +1,112 @@
+@use '../abstracts/variables' as *;
+
+.game-board {
+  --board-columns: 4;
+  --card-gap: 12px;
+
+  width: min(100%, 516px);
+  margin-inline: auto;
+  display: grid;
+  grid-template-columns: repeat(var(--board-columns), minmax(0, 1fr));
+  gap: var(--card-gap);
+}
+
+.game-board--24,
+.game-board--36 {
+  --board-columns: 6;
+  width: min(100%, 780px);
+}
+
+.game-card {
+  width: 100%;
+  aspect-ratio: 1;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+.game-card__inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.game-card__face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.game-card__face--back {
+  background: #08cdb7;
+}
+
+.game-card__face--front {
+  padding: 12%;
+  background: #edf5f3;
+  transform: rotateY(180deg);
+}
+
+.game-card__back-image,
+.game-card__logo {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.game-card__logo {
+  width: 72%;
+  height: 72%;
+}
+
+.game-card.is-flipped .game-card__inner,
+.game-card.is-matched .game-card__inner {
+  transform: rotateY(180deg);
+}
+
+.game-card.is-matched .game-card__face--front {
+  border: 5px solid #4dd5bc;
+  box-shadow: 6px 6px 8px rgba(77, 213, 188, 0.3);
+}
+
+.game-card:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 4px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .game-card:not(.is-flipped):not(.is-matched):hover
+    .game-card__inner {
+    transform: translateY(-4px);
+  }
+}
+
+@media (max-width: 760px) {
+  .game-board--24,
+  .game-board--36 {
+    --board-columns: 4;
+    width: min(100%, 516px);
+  }
+}
+
+@media (max-width: 420px) {
+  .game-board {
+    --card-gap: 8px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .game-card__inner {
+    transition-duration: 1ms;
+  }
+}
