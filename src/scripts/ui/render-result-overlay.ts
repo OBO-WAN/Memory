@@ -1,3 +1,14 @@
+import backButtonUrl from '../../assets/images/result-overlay/back-button.svg';
+import drawTitleUrl from '../../assets/images/result-overlay/draw-green.svg';
+import bluePlayerTitleUrl from '../../assets/images/result-overlay/blue-player.svg';
+import bluePlayerIconUrl from '../../assets/images/result-overlay/player-blue.svg';
+import confettiUrl from '../../assets/images/result-overlay/confetti.svg';
+import itsATitleUrl from '../../assets/images/result-overlay/its-a.svg';
+import orangePlayerTitleUrl from '../../assets/images/result-overlay/orange-player.svg';
+import orangePlayerIconUrl from '../../assets/images/result-overlay/player.svg';
+import scaleIconUrl from '../../assets/images/result-overlay/scale-icon.svg';
+import winnerTitleUrl from '../../assets/images/result-overlay/winner-title.svg';
+
 type Player = 'blue' | 'orange';
 type Scores = Record<Player, number>;
 type Result = Player | 'draw';
@@ -14,164 +25,105 @@ export function renderResultOverlay(scores: Scores): string {
         ? renderDrawResult()
         : renderWinnerResult(result)}
 
-      <button
-        class="result-overlay__button"
-        type="button"
-        data-action="back-to-start"
-      >
-        Back to start
-      </button>
+      ${renderBackButton()}
     </dialog>
   `;
 }
 
 function renderWinnerResult(winner: Player): string {
+  const playerIcon =
+    winner === 'orange'
+      ? orangePlayerIconUrl
+      : bluePlayerIconUrl;
+
   return `
-    <div class="result-overlay__confetti" aria-hidden="true">
-      ${renderConfetti()}
-    </div>
+    <img
+      class="result-overlay__confetti"
+      src="${confettiUrl}"
+      alt=""
+      aria-hidden="true"
+    />
 
     <section class="result-overlay__content">
-      <p class="result-overlay__eyebrow">The winner is</p>
+      <img
+        class="result-overlay__winner-title"
+        src="${winnerTitleUrl}"
+        alt="The winner is"
+      />
 
-      <h2
-        id="result-overlay-title"
-        class="result-overlay__title"
-      >
-        ${winner.toUpperCase()} PLAYER
-      </h2>
+      ${renderWinnerName(winner)}
 
-      ${renderPlayerIcon()}
+      <img
+        class="result-overlay__player-icon"
+        src="${playerIcon}"
+        alt=""
+        aria-hidden="true"
+      />
     </section>
+  `;
+}
+
+function renderWinnerName(winner: Player): string {
+  const titleUrl =
+    winner === 'orange'
+      ? orangePlayerTitleUrl
+      : bluePlayerTitleUrl;
+
+  return `
+    <img
+      id="result-overlay-title"
+      class="result-overlay__winner-name-image"
+      src="${titleUrl}"
+      alt="${capitalize(winner)} player"
+    />
   `;
 }
 
 function renderDrawResult(): string {
   return `
-    <section class="result-overlay__content">
-      <p class="result-overlay__eyebrow">It’s a</p>
+    <section class="result-overlay__content result-overlay__content--draw">
+      <img
+        class="result-overlay__draw-eyebrow"
+        src="${itsATitleUrl}"
+        alt="It’s a"
+      />
 
-      <h2
+      <img
         id="result-overlay-title"
-        class="result-overlay__title result-overlay__title--draw"
-      >
-        DRAW
-      </h2>
+        class="result-overlay__draw-title"
+        src="${drawTitleUrl}"
+        alt="Draw"
+      />
 
-      ${renderBalanceIcon()}
+      <img
+        class="result-overlay__scale-icon"
+        src="${scaleIconUrl}"
+        alt=""
+        aria-hidden="true"
+      />
     </section>
   `;
 }
 
-function renderPlayerIcon(): string {
+function renderBackButton(): string {
   return `
-    <svg
-      class="result-overlay__player-icon"
-      viewBox="0 0 160 210"
-      aria-hidden="true"
-      focusable="false"
+    <button
+      class="result-overlay__back-button"
+      type="button"
+      data-action="back-to-start"
+      aria-label="Back to start"
     >
-      <circle
-        cx="80"
-        cy="48"
-        r="34"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="18"
-      />
-      <path
-        d="M28 86H132"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="18"
-        stroke-linecap="round"
-      />
-      <path
-        d="M57 88C54 126 41 143 27 159V191H133V159C119 143 106 126 103 88"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="18"
-        stroke-linejoin="round"
-      />
-    </svg>
+      <img src="${backButtonUrl}" alt="" aria-hidden="true" />
+    </button>
   `;
-}
-
-function renderBalanceIcon(): string {
-  return `
-    <svg
-      class="result-overlay__balance-icon"
-      viewBox="0 0 220 210"
-      aria-hidden="true"
-      focusable="false"
-    >
-      <path
-        d="M110 32V180M55 70H165M83 180H137"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="14"
-        stroke-linecap="round"
-      />
-      <path
-        d="M44 70L20 118H68L44 70ZM176 70L152 118H200L176 70Z"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="10"
-        stroke-linejoin="round"
-      />
-      <circle
-        cx="110"
-        cy="54"
-        r="18"
-        fill="currentColor"
-      />
-    </svg>
-  `;
-}
-
-function renderConfetti(): string {
-  const pieces = [
-    ['7%', '6%', '-12deg', '#33aef3'],
-    ['13%', '12%', '18deg', '#ffc400'],
-    ['18%', '4%', '-4deg', '#ff1018'],
-    ['24%', '9%', '72deg', '#ff1018'],
-    ['31%', '5%', '12deg', '#33aef3'],
-    ['37%', '12%', '-22deg', '#00b83f'],
-    ['43%', '7%', '28deg', '#ffc400'],
-    ['49%', '3%', '8deg', '#00b83f'],
-    ['56%', '9%', '-14deg', '#ff1018'],
-    ['63%', '5%', '22deg', '#ffc400'],
-    ['70%', '11%', '-32deg', '#33aef3'],
-    ['78%', '4%', '18deg', '#ff1018'],
-    ['86%', '9%', '-8deg', '#00b83f'],
-    ['92%', '5%', '25deg', '#33aef3'],
-    ['11%', '19%', '35deg', '#00b83f'],
-    ['22%', '17%', '-24deg', '#ffc400'],
-    ['34%', '21%', '48deg', '#ff1018'],
-    ['46%', '18%', '-18deg', '#33aef3'],
-    ['58%', '20%', '28deg', '#00b83f'],
-    ['71%', '18%', '-40deg', '#ffc400'],
-    ['84%', '20%', '36deg', '#ff1018'],
-  ];
-
-  return pieces
-    .map(
-      ([left, top, rotation, color]) => `
-        <span
-          style="
-            --confetti-left: ${left};
-            --confetti-top: ${top};
-            --confetti-rotation: ${rotation};
-            --confetti-color: ${color};
-          "
-        ></span>
-      `,
-    )
-    .join('');
 }
 
 function getResult(scores: Scores): Result {
   if (scores.blue === scores.orange) return 'draw';
 
   return scores.blue > scores.orange ? 'blue' : 'orange';
+}
+
+function capitalize(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
