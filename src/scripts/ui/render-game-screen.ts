@@ -24,6 +24,7 @@ export function renderGameScreen(
   return `
     <main class="game-screen game-screen--${settings.theme}">
       ${renderGameInfo({
+        theme: settings.theme,
         player: currentPlayer,
       })}
 

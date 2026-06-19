@@ -1,10 +1,15 @@
 import blueMarkerUrl from '../../assets/icons/player-marker-blue.svg';
 import orangeMarkerUrl from '../../assets/icons/player-marker-orange.svg';
 import exitButtonUrl from '../../assets/icons/exit.svg';
+import gamingBlueMarkerUrl from '../../assets/icons/chess-pawn-blue.svg';
+import gamingOrangeMarkerUrl from '../../assets/icons/chess-pawn-orange.svg';
+
+import type { ThemeOption } from './render-settings-screen';
 
 type Player = 'blue' | 'orange';
 
 interface GameInfoSettings {
+  theme: ThemeOption;
   player: Player;
   bluePoints?: number;
   orangePoints?: number;
@@ -18,8 +23,18 @@ export function renderGameInfo(settings: GameInfoSettings): string {
   return `
     <header class="game-info">
       <div class="game-info__points">
-        ${renderScore('blue', blueMarkerUrl, bluePoints)}
-        ${renderScore('orange', orangeMarkerUrl, orangePoints)}
+        ${renderScore(
+          'blue',
+          getScoreMarker(settings.theme, 'blue'),
+          blueMarkerUrl,
+          bluePoints,
+        )}
+        ${renderScore(
+          'orange',
+          getScoreMarker(settings.theme, 'orange'),
+          orangeMarkerUrl,
+          orangePoints,
+        )}
       </div>
 
       <div class="game-info__current-player">
@@ -53,16 +68,37 @@ function getPlayerMarker(player: Player): string {
   return player === 'orange' ? orangeMarkerUrl : blueMarkerUrl;
 }
 
+function getScoreMarker(
+  theme: ThemeOption,
+  player: Player,
+): string {
+  if (theme !== 'gaming') {
+    return getPlayerMarker(player);
+  }
+
+  return player === 'orange'
+    ? gamingOrangeMarkerUrl
+    : gamingBlueMarkerUrl;
+}
+
 function renderScore(
   player: Player,
-  markerUrl: string,
+  scoreMarkerUrl: string,
+  stateMarkerUrl: string,
   points: number,
 ): string {
   return `
     <div class="game-info__score game-info__score--${player}">
       <img
+        class="game-info__score-marker"
+        src="${scoreMarkerUrl}"
+        alt=""
+        aria-hidden="true"
+      />
+
+      <img
         class="game-info__player-marker"
-        src="${markerUrl}"
+        src="${stateMarkerUrl}"
         alt=""
         aria-hidden="true"
       />

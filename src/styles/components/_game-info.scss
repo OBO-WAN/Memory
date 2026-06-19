@@ -50,12 +50,20 @@
   color: var(--player-orange);
 }
 
-.game-info__player-marker {
+.game-info__score-marker {
   width: 26px;
   height: 22px;
   display: block;
   flex-shrink: 0;
   object-fit: contain;
+}
+
+.game-info__player-marker {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
 }
 
 .game-info__score-value {
@@ -109,6 +117,42 @@
     opacity 260ms ease;
 }
 
+/* Gaming theme: score counter only */
+
+.game-screen--gaming .game-info__points {
+  min-width: 182px;
+  min-height: 56px;
+  padding: 10px 16px;
+  gap: 28px;
+  border: 0;
+  border-radius: 12px;
+  background: #ffffff;
+}
+
+.game-screen--gaming .game-info__score {
+  gap: 7px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.game-screen--gaming .game-info__score--orange {
+  order: 1;
+  color: #ea6900;
+}
+
+.game-screen--gaming .game-info__score--blue {
+  order: 2;
+  color: #097fc5;
+}
+
+.game-screen--gaming .game-info__score-marker {
+  width: 22px;
+  height: 28px;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .game-info__exit:hover {
     transform: translateY(-2px);
@@ -145,6 +189,11 @@
   .game-info__exit {
     width: 220px;
   }
+
+  .game-screen--gaming .game-info__points {
+    min-width: 182px;
+    padding-inline: 16px;
+  }
 }
 
 @media (max-width: 760px) {
@@ -169,6 +218,11 @@
 
   .game-info__exit {
     width: min(100%, 280px);
+  }
+
+  .game-screen--gaming .game-info__points {
+    width: 182px;
+    min-width: 182px;
   }
 }
 
@@ -195,6 +249,16 @@
   .game-info__current-marker {
     width: 34px;
     height: 28px;
+  }
+
+  .game-screen--gaming .game-info__points {
+    gap: 28px;
+    padding-inline: 16px;
+  }
+
+  .game-screen--gaming .game-info__score {
+    gap: 7px;
+    font-size: 30px;
   }
 }
 
