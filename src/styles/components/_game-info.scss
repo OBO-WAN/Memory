@@ -7,7 +7,7 @@
   --game-info-text: #ffffff;
   --player-blue: #2bb1ff;
   --player-orange: #f58e39;
-  --game-info-exit-width: 280px;
+  --game-info-exit-width: 207px;
 
   width: min(calc(100% - 32px), 1000px);
   min-height: 92px;
@@ -219,6 +219,14 @@
   stroke-width: 2;
 }
 
+.game-screen--gaming
+  .game-info__exit-image
+  > svg
+  > g
+  > path {
+  transition: fill 220ms ease;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .game-info__exit:hover {
     transform: translateY(-2px);
@@ -235,6 +243,15 @@
     filter:
       brightness(1.08)
       drop-shadow(0 6px 10px rgba(231, 28, 79, 0.22));
+  }
+
+  .game-screen--gaming
+    .game-info__exit:hover
+    .game-info__exit-image
+    > svg
+    > g
+    > path {
+    fill: #e71c4f;
   }
 }
 

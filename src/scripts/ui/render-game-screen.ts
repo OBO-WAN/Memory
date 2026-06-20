@@ -1,8 +1,13 @@
-import cardBackUrl from '../../assets/images/cards/code-vibes/card-back.svg';
+import codeVibesCardBackUrl from '../../assets/images/cards/code-vibes/card-back.svg';
+import gamingCardBackUrl from '../../assets/images/cards/game-theme/card-back.svg';
 
 import { codeVibesCards } from '../data/code-vibes-cards';
+import { gamingCards } from '../data/gaming-cards';
 import { createCardDeck } from '../game/create-card-deck';
-import type { MemoryCard } from '../types/card.types';
+import type {
+  CardDefinition,
+  MemoryCard,
+} from '../types/card.types';
 import { renderGameInfo } from './render-game-info';
 import type { ThemeOption } from './render-settings-screen';
 
@@ -15,10 +20,9 @@ interface GameScreenSettings {
 export function renderGameScreen(
   settings: GameScreenSettings,
 ): string {
-  const cards = createCardDeck(
-    codeVibesCards,
-    settings.boardSize,
-  );
+  const definitions = getCardDefinitions(settings.theme);
+  const cards = createCardDeck(definitions, settings.boardSize);
+  const cardBackUrl = getCardBackUrl(settings.theme);
   const currentPlayer = getCurrentPlayer(settings.player);
 
   return `
@@ -32,10 +36,20 @@ export function renderGameScreen(
         class="game-board game-board--${settings.boardSize}"
         aria-label="Memory game board"
       >
-        ${cards.map(renderGameCard).join('')}
+        ${cards.map((card, index) => renderGameCard(card, index, cardBackUrl)).join('')}
       </section>
     </main>
   `;
+}
+
+function getCardDefinitions(theme: ThemeOption): CardDefinition[] {
+  return theme === 'gaming' ? gamingCards : codeVibesCards;
+}
+
+function getCardBackUrl(theme: ThemeOption): string {
+  return theme === 'gaming'
+    ? gamingCardBackUrl
+    : codeVibesCardBackUrl;
 }
 
 function getCurrentPlayer(player: string): 'blue' | 'orange' {
@@ -45,6 +59,7 @@ function getCurrentPlayer(player: string): 'blue' | 'orange' {
 function renderGameCard(
   card: MemoryCard,
   index: number,
+  cardBackUrl: string,
 ): string {
   return `
     <button

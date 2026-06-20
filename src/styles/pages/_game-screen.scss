@@ -12,6 +12,10 @@
   color: var(--game-screen-text);
 }
 
+.game-screen--gaming {
+  --game-screen-bg: #254e61;
+}
+
 @media (max-width: 620px) {
   .game-screen {
     padding: 20px 12px 32px;

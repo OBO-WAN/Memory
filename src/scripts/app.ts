@@ -36,6 +36,7 @@ type Scores = Record<Player, number>;
 let exitDialogTrigger: HTMLElement | null = null;
 let firstFlippedCard: HTMLButtonElement | null = null;
 let currentPlayer: Player = 'blue';
+let currentTheme: ThemeOption = 'code-vibes';
 let scores: Scores = createEmptyScores();
 let matchedPairs = 0;
 let totalPairs = 0;
@@ -372,6 +373,7 @@ function resetGameInteraction(): void {
 function resetGameState(settings?: SelectedSettings): void {
   resetGameInteraction();
   currentPlayer = settings?.player ?? 'blue';
+  currentTheme = settings?.theme ?? 'code-vibes';
   scores = createEmptyScores();
   matchedPairs = 0;
   totalPairs = settings ? settings.boardSize / 2 : 0;
@@ -391,7 +393,7 @@ function openExitDialog(
   if (app.querySelector('.exit-dialog')) return;
 
   exitDialogTrigger = trigger;
-  app.insertAdjacentHTML('beforeend', renderExitDialog());
+  app.insertAdjacentHTML('beforeend', renderExitDialog(currentTheme));
 
   const dialog = app.querySelector<HTMLDialogElement>('.exit-dialog');
 
