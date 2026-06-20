@@ -246,17 +246,41 @@ function switchCurrentPlayer(): void {
 }
 
 function updateCurrentPlayerMarker(): void {
-  const currentMarker = document.querySelector<HTMLImageElement>(
+  const currentMarker = document.querySelector<HTMLElement>(
     '.game-info__current-marker',
   );
+
+  if (!currentMarker) return;
+
+  if (currentMarker instanceof HTMLImageElement) {
+    updateImagePlayerMarker(currentMarker);
+    return;
+  }
+
+  updateGamingPlayerMarker(currentMarker);
+}
+
+function updateImagePlayerMarker(
+  currentMarker: HTMLImageElement,
+): void {
   const playerMarker = document.querySelector<HTMLImageElement>(
     `.game-info__score--${currentPlayer} .game-info__player-marker`,
   );
 
-  if (!currentMarker || !playerMarker) return;
+  if (!playerMarker) return;
 
   currentMarker.src = playerMarker.src;
   currentMarker.alt = `${currentPlayer} player`;
+}
+
+function updateGamingPlayerMarker(
+  currentMarker: HTMLElement,
+): void {
+  currentMarker.dataset.currentPlayer = currentPlayer;
+  currentMarker.setAttribute(
+    'aria-label',
+    `${currentPlayer} player`,
+  );
 }
 
 function scheduleGameOver(app: HTMLDivElement): void {
