@@ -127,7 +127,7 @@ function handleAppChange(event: Event): void {
 function getActionElement(event: MouseEvent): HTMLElement | null {
   const target = event.target;
 
-  if (!(target instanceof HTMLElement)) return null;
+  if (!(target instanceof Element)) return null;
 
   return target.closest<HTMLElement>('[data-action]');
 }
