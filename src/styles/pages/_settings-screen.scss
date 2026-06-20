@@ -155,16 +155,33 @@
   }
 }
 
-@media (max-width: 1180px) {
-  .settings-screen__panel {
-    grid-template-columns: 1fr;
-    align-items: start;
-    gap: 48px;
-    padding: 40px 24px;
+@media (max-width: 1080px) {
+  .settings-screen {
+    overflow-x: clip;
   }
 
+  .settings-screen__panel {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: clamp(32px, 5vw, 48px);
+    width: min(100%, 900px);
+    margin-inline: auto;
+    padding: clamp(32px, 5vw, 56px) clamp(24px, 4vw, 40px);
+  }
+
+  .settings-screen__left,
   .settings-screen__right {
+    width: 100%;
+    min-width: 0;
     align-items: center;
+  }
+
+  .settings-screen__header {
+    margin-bottom: clamp(32px, 5vw, 48px);
+  }
+
+  .settings-screen__title {
+    font-size: clamp(42px, 6vw, 54px);
   }
 
   .settings-screen__preview,
@@ -183,16 +200,43 @@
   }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 768px) {
   .settings-screen__panel {
-    gap: 32px;
-    padding: 32px 20px;
+    width: min(100%, 640px);
+    gap: 36px;
   }
 
   .settings-screen__left {
-    width: min(100%, 360px);
+    align-items: stretch;
+  }
+
+  .settings-screen__right {
+    width: min(100%, 520px);
     margin-inline: auto;
     align-items: stretch;
+    gap: 32px;
+  }
+
+  .settings-summary {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .settings-summary__start {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 520px) {
+  .settings-screen__panel {
+    gap: 28px;
+    padding: 28px 20px;
+  }
+
+  .settings-screen__left {
+    width: min(100%, 380px);
+    margin-inline: auto;
     text-align: left;
   }
 
@@ -202,6 +246,10 @@
     align-items: center;
     margin-bottom: 32px;
     text-align: center;
+  }
+
+  .settings-screen__title {
+    font-size: clamp(38px, 11vw, 46px);
   }
 
   .settings-screen__title-line {
@@ -221,6 +269,8 @@
 
   .settings-summary {
     width: 100%;
+    gap: 12px;
+    padding: 14px;
     justify-content: center;
     text-align: center;
   }
@@ -235,7 +285,25 @@
   }
 }
 
-@media (max-height: 760px) and (min-width: 1181px) {
+@media (max-width: 390px) {
+  .settings-screen__panel {
+    padding: 24px 16px;
+  }
+
+  .settings-screen__title {
+    font-size: 38px;
+  }
+
+  .settings-summary__item {
+    font-size: 15px;
+  }
+
+  .settings-summary__start {
+    min-height: 56px;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 1081px) {
   .settings-screen__panel {
     align-items: start;
     padding-block: 32px;
