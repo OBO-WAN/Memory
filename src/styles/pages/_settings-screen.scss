@@ -73,7 +73,7 @@
   max-width: 100%;
   min-height: 81px;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: flex-start;
   gap: clamp(14px, 2vw, 22px);
@@ -100,8 +100,9 @@
 
 .settings-summary__start {
   min-width: 140px;
-  margin-left: auto;
   min-height: 64px;
+  flex-shrink: 0;
+  margin-left: auto;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -192,13 +193,9 @@
   }
 
   .settings-summary {
-    width: min(100%, 546px);
-    flex-wrap: wrap;
+    width: min(100%, 680px);
+    flex-wrap: nowrap;
     justify-content: flex-start;
-  }
-
-  .settings-summary__start {
-    margin-left: auto;
   }
 }
 
@@ -221,6 +218,7 @@
 
   .settings-summary {
     width: 100%;
+    flex-wrap: wrap;
     justify-content: center;
     text-align: center;
   }
