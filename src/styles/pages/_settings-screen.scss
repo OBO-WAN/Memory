@@ -69,12 +69,13 @@
 }
 
 .settings-summary {
-  width: min(100%, 546px);
+  width: min(100%, 680px);
   max-width: 100%;
   min-height: 81px;
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: clamp(14px, 2vw, 22px);
   padding: 16px clamp(18px, 3vw, 24px);
   background: $color-settings-panel;
@@ -99,6 +100,7 @@
 
 .settings-summary__start {
   min-width: 140px;
+  margin-left: auto;
   min-height: 64px;
   display: inline-flex;
   align-items: center;

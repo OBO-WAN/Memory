@@ -120,9 +120,74 @@
   }
 }
 
+
+@media (min-width: 769px) and (max-width: 1080px) {
+  .settings-group {
+    width: min(100%, 420px);
+    margin-inline: auto;
+  }
+
+  .settings-group__options {
+    width: 100%;
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .settings-group__options {
     grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), max-content));
+  }
+}
+
+
+@media (min-width: 521px) and (max-width: 768px) {
+  .settings-group {
+    width: min(100%, 520px);
+    margin-inline: auto;
+  }
+
+  .settings-group__legend {
+    margin-bottom: 14px;
+    font-size: 22px;
+  }
+
+  .settings-group__options {
+    width: 100%;
+    padding-left: 44px;
+    column-gap: 28px;
+    row-gap: 12px;
+  }
+
+  .settings-group:first-of-type .settings-group__options {
+    grid-template-columns: 1fr;
+  }
+
+  .settings-group:not(:first-of-type) .settings-group__options {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .radio-option {
+    width: max-content;
+    max-width: 100%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 24px max-content 40px;
+    gap: 10px;
+    font-size: 18px;
+  }
+
+  .settings-group:first-of-type .radio-option {
+    max-width: 340px;
+  }
+
+  .radio-option__text {
+    min-width: 0;
+  }
+
+  .radio-option__marker {
+    width: 40px;
+    margin-left: 0;
+    justify-self: start;
   }
 }
 
