@@ -366,3 +366,95 @@
     transition-duration: 1ms;
   }
 }
+
+@media (max-width: 768px) {
+  .game-info {
+    --game-info-exit-width: 164px;
+
+    width: min(calc(100% - 24px), 560px);
+    min-height: 0;
+    margin-bottom: 28px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 14px;
+    padding: 12px;
+  }
+
+  .game-info__points {
+    justify-self: center;
+    min-width: 220px;
+    min-height: 52px;
+    gap: 20px;
+    padding: 8px 16px;
+  }
+
+  .game-info__score {
+    gap: 8px;
+    font-size: 24px;
+  }
+
+  .game-info__score-marker {
+    width: 22px;
+    height: 19px;
+  }
+
+  .game-info__current-player {
+    justify-self: center;
+    gap: 12px;
+    font-size: 22px;
+  }
+
+  .game-info__current-title {
+    width: 235px;
+    height: 26px;
+  }
+
+  .game-info__current-marker {
+    width: 34px;
+    height: 32px;
+  }
+
+  .game-info__exit {
+    justify-self: center;
+  }
+
+  .game-screen--gaming .game-info {
+    --game-info-exit-width: 164px;
+
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .game-screen--gaming .game-info__points {
+    min-width: 218px;
+    min-height: 48px;
+    gap: 22px;
+    padding: 8px 14px;
+  }
+
+  .game-screen--gaming .game-info__score {
+    gap: 6px;
+    font-size: 24px;
+  }
+
+  .game-screen--gaming .game-info__score-marker {
+    width: 18px;
+    height: 23px;
+  }
+
+  .game-screen--gaming .game-info__current-player {
+    gap: 10px;
+  }
+
+  .game-screen--gaming .game-info__current-title {
+    width: 235px;
+    max-width: calc(100vw - 92px);
+    height: 26px;
+  }
+
+  .game-screen--gaming .game-info__current-marker {
+    width: 34px;
+    height: 33px;
+  }
+}
+

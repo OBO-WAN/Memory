@@ -158,3 +158,96 @@
     transition-duration: 1ms;
   }
 }
+
+.game-over--gaming,
+.game-over--gaming::backdrop {
+  background: #254e61;
+}
+
+.game-over--gaming .game-over__content {
+  gap: clamp(72px, 11vh, 132px);
+}
+
+.game-over--gaming .game-over__title {
+  width: min(calc(100vw - 48px), 933px);
+}
+
+.game-over--gaming .game-over__summary {
+  gap: 18px;
+}
+
+.game-over--gaming .game-over__final-score-title {
+  width: min(48vw, 191px);
+  min-width: 150px;
+}
+
+.game-over--gaming .game-over__score {
+  width: auto;
+  min-height: 50px;
+  padding: 0;
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.game-over--gaming .game-over__score-content {
+  width: auto;
+  gap: 24px;
+  padding: 10px 14px;
+}
+
+.game-over--gaming .game-over__player {
+  gap: 6px;
+  font-family: 'Orbitron', sans-serif;
+  font-size: 30px;
+  font-weight: 700;
+  opacity: 1;
+  transform: none;
+}
+
+.game-over--gaming .game-over__player--orange {
+  color: #ea6900;
+}
+
+.game-over--gaming .game-over__player--blue {
+  color: #097fc5;
+}
+
+.game-over--gaming .game-over__pawn {
+  width: 22px;
+  height: 28px;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 768px) {
+  .game-over--gaming .game-over__content {
+    gap: clamp(52px, 9vh, 84px);
+  }
+
+  .game-over--gaming .game-over__title {
+    width: min(calc(100vw - 32px), 700px);
+  }
+
+  .game-over--gaming .game-over__summary {
+    gap: 14px;
+  }
+
+  .game-over--gaming .game-over__final-score-title {
+    width: min(52vw, 170px);
+    min-width: 136px;
+  }
+
+  .game-over--gaming .game-over__score-content {
+    gap: 20px;
+    padding: 8px 12px;
+  }
+
+  .game-over--gaming .game-over__player {
+    font-size: 26px;
+  }
+
+  .game-over--gaming .game-over__pawn {
+    width: 20px;
+    height: 25px;
+  }
+}
+

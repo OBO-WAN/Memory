@@ -294,7 +294,10 @@ function scheduleGameOver(app: HTMLDivElement): void {
 function openGameOver(app: HTMLDivElement): void {
   if (app.querySelector('.game-over')) return;
 
-  app.insertAdjacentHTML('beforeend', renderGameOver(scores));
+  app.insertAdjacentHTML(
+    'beforeend',
+    renderGameOver(scores, currentTheme),
+  );
 
   const dialog = app.querySelector<HTMLDialogElement>('.game-over');
 
