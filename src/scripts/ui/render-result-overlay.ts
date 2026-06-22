@@ -9,7 +9,10 @@ import codeVibesOrangePlayerIconUrl from '../../assets/images/result-overlay/pla
 import codeVibesScaleIconUrl from '../../assets/images/result-overlay/scale-icon.svg';
 import codeVibesWinnerTitleUrl from '../../assets/images/result-overlay/winner-title.svg';
 import gamingBluePlayerTitleUrl from '../../assets/images/result-overlay/game-theme/blue-player.svg';
+import gamingDrawTitleUrl from '../../assets/images/result-overlay/game-theme/draw.svg';
+import gamingItsATitleUrl from '../../assets/images/result-overlay/game-theme/its-a.svg';
 import gamingOrangePlayerTitleUrl from '../../assets/images/result-overlay/game-theme/orange-player.svg';
+import gamingScaleIconUrl from '../../assets/images/result-overlay/game-theme/scale-icon.svg';
 import gamingTrophyUrl from '../../assets/images/result-overlay/game-theme/trophy.svg';
 import gamingWinnerTitleUrl from '../../assets/images/result-overlay/game-theme/winner-title.svg';
 
@@ -40,7 +43,7 @@ function renderResult(
   result: Result,
   theme: ThemeOption,
 ): string {
-  if (result === 'draw') return renderDrawResult();
+  if (result === 'draw') return renderDrawResult(theme);
 
   return theme === 'gaming'
     ? renderGamingWinnerResult(result)
@@ -135,25 +138,56 @@ function renderWinnerName(
   `;
 }
 
-function renderDrawResult(): string {
+function renderDrawResult(theme: ThemeOption): string {
+  return theme === 'gaming'
+    ? renderGamingDrawResult()
+    : renderCodeVibesDrawResult();
+}
+
+function renderCodeVibesDrawResult(): string {
+  return renderDrawContent(
+    codeVibesItsATitleUrl,
+    codeVibesDrawTitleUrl,
+    codeVibesScaleIconUrl,
+    '',
+  );
+}
+
+function renderGamingDrawResult(): string {
+  return renderDrawContent(
+    gamingItsATitleUrl,
+    gamingDrawTitleUrl,
+    gamingScaleIconUrl,
+    ' result-overlay__content--gaming-draw',
+  );
+}
+
+function renderDrawContent(
+  eyebrowUrl: string,
+  titleUrl: string,
+  scaleUrl: string,
+  modifierClass: string,
+): string {
   return `
-    <section class="result-overlay__content result-overlay__content--draw">
+    <section
+      class="result-overlay__content result-overlay__content--draw${modifierClass}"
+    >
       <img
         class="result-overlay__draw-eyebrow"
-        src="${codeVibesItsATitleUrl}"
+        src="${eyebrowUrl}"
         alt="It’s a"
       />
 
       <img
         id="result-overlay-title"
         class="result-overlay__draw-title"
-        src="${codeVibesDrawTitleUrl}"
+        src="${titleUrl}"
         alt="Draw"
       />
 
       <img
         class="result-overlay__scale-icon"
-        src="${codeVibesScaleIconUrl}"
+        src="${scaleUrl}"
         alt=""
         aria-hidden="true"
       />

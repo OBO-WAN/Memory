@@ -286,3 +286,55 @@
   }
 }
 
+.result-overlay--gaming .result-overlay__content--gaming-draw {
+  gap: 0;
+  transform: none;
+}
+
+.result-overlay--gaming .result-overlay__content--gaming-draw
+  .result-overlay__draw-eyebrow {
+  width: min(24vw, 79px);
+  min-width: 0;
+  margin-bottom: 34px;
+}
+
+.result-overlay--gaming .result-overlay__content--gaming-draw
+  .result-overlay__draw-title {
+  width: min(calc(100vw - 40px), 488px);
+  margin-bottom: 26px;
+}
+
+.result-overlay--gaming .result-overlay__content--gaming-draw
+  .result-overlay__scale-icon {
+  width: min(48vw, 350px);
+}
+
+@media (max-width: 768px) {
+  .result-overlay--gaming .result-overlay__content--gaming-draw {
+    transform: translateY(-12px);
+  }
+
+  .result-overlay--gaming .result-overlay__content--gaming-draw
+    .result-overlay__draw-eyebrow {
+    width: min(23vw, 72px);
+    margin-bottom: 24px;
+  }
+
+  .result-overlay--gaming .result-overlay__content--gaming-draw
+    .result-overlay__draw-title {
+    width: min(calc(100vw - 32px), 420px);
+    margin-bottom: 20px;
+  }
+
+  .result-overlay--gaming .result-overlay__content--gaming-draw
+    .result-overlay__scale-icon {
+    width: min(58vw, 280px);
+  }
+}
+
+@media (max-height: 650px) {
+  .result-overlay--gaming .result-overlay__content--gaming-draw {
+    transform: scale(0.78) translateY(-16px);
+  }
+}
+
