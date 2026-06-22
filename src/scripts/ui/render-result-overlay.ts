@@ -1,45 +1,62 @@
 import backButtonUrl from '../../assets/images/result-overlay/back-button.svg';
-import drawTitleUrl from '../../assets/images/result-overlay/draw-green.svg';
-import bluePlayerTitleUrl from '../../assets/images/result-overlay/blue-player.svg';
-import bluePlayerIconUrl from '../../assets/images/result-overlay/player-blue.svg';
-import confettiUrl from '../../assets/images/result-overlay/confetti.svg';
-import itsATitleUrl from '../../assets/images/result-overlay/its-a.svg';
-import orangePlayerTitleUrl from '../../assets/images/result-overlay/orange-player.svg';
-import orangePlayerIconUrl from '../../assets/images/result-overlay/player.svg';
-import scaleIconUrl from '../../assets/images/result-overlay/scale-icon.svg';
-import winnerTitleUrl from '../../assets/images/result-overlay/winner-title.svg';
+import codeVibesDrawTitleUrl from '../../assets/images/result-overlay/draw-green.svg';
+import codeVibesBluePlayerTitleUrl from '../../assets/images/result-overlay/blue-player.svg';
+import codeVibesBluePlayerIconUrl from '../../assets/images/result-overlay/player-blue.svg';
+import codeVibesConfettiUrl from '../../assets/images/result-overlay/confetti.svg';
+import codeVibesItsATitleUrl from '../../assets/images/result-overlay/its-a.svg';
+import codeVibesOrangePlayerTitleUrl from '../../assets/images/result-overlay/orange-player.svg';
+import codeVibesOrangePlayerIconUrl from '../../assets/images/result-overlay/player.svg';
+import codeVibesScaleIconUrl from '../../assets/images/result-overlay/scale-icon.svg';
+import codeVibesWinnerTitleUrl from '../../assets/images/result-overlay/winner-title.svg';
+import gamingBluePlayerTitleUrl from '../../assets/images/result-overlay/game-theme/blue-player.svg';
+import gamingOrangePlayerTitleUrl from '../../assets/images/result-overlay/game-theme/orange-player.svg';
+import gamingTrophyUrl from '../../assets/images/result-overlay/game-theme/trophy.svg';
+import gamingWinnerTitleUrl from '../../assets/images/result-overlay/game-theme/winner-title.svg';
+
+import type { ThemeOption } from './render-settings-screen';
 
 type Player = 'blue' | 'orange';
 type Scores = Record<Player, number>;
 type Result = Player | 'draw';
 
-export function renderResultOverlay(scores: Scores): string {
+export function renderResultOverlay(
+  scores: Scores,
+  theme: ThemeOption,
+): string {
   const result = getResult(scores);
 
   return `
     <dialog
-      class="result-overlay result-overlay--${result}"
+      class="result-overlay result-overlay--${theme} result-overlay--${result}"
       aria-labelledby="result-overlay-title"
     >
-      ${result === 'draw'
-        ? renderDrawResult()
-        : renderWinnerResult(result)}
-
+      ${renderResult(result, theme)}
       ${renderBackButton()}
     </dialog>
   `;
 }
 
-function renderWinnerResult(winner: Player): string {
+function renderResult(
+  result: Result,
+  theme: ThemeOption,
+): string {
+  if (result === 'draw') return renderDrawResult();
+
+  return theme === 'gaming'
+    ? renderGamingWinnerResult(result)
+    : renderCodeVibesWinnerResult(result);
+}
+
+function renderCodeVibesWinnerResult(winner: Player): string {
   const playerIcon =
     winner === 'orange'
-      ? orangePlayerIconUrl
-      : bluePlayerIconUrl;
+      ? codeVibesOrangePlayerIconUrl
+      : codeVibesBluePlayerIconUrl;
 
   return `
     <img
       class="result-overlay__confetti"
-      src="${confettiUrl}"
+      src="${codeVibesConfettiUrl}"
       alt=""
       aria-hidden="true"
     />
@@ -47,11 +64,11 @@ function renderWinnerResult(winner: Player): string {
     <section class="result-overlay__content">
       <img
         class="result-overlay__winner-title"
-        src="${winnerTitleUrl}"
+        src="${codeVibesWinnerTitleUrl}"
         alt="The winner is"
       />
 
-      ${renderWinnerName(winner)}
+      ${renderCodeVibesWinnerName(winner)}
 
       <img
         class="result-overlay__player-icon"
@@ -63,12 +80,51 @@ function renderWinnerResult(winner: Player): string {
   `;
 }
 
-function renderWinnerName(winner: Player): string {
+function renderGamingWinnerResult(winner: Player): string {
+  return `
+    <section
+      class="result-overlay__content result-overlay__content--gaming-winner"
+    >
+      <img
+        class="result-overlay__winner-title result-overlay__winner-title--gaming"
+        src="${gamingWinnerTitleUrl}"
+        alt="The winner is"
+      />
+
+      ${renderGamingWinnerName(winner)}
+
+      <img
+        class="result-overlay__trophy"
+        src="${gamingTrophyUrl}"
+        alt=""
+        aria-hidden="true"
+      />
+    </section>
+  `;
+}
+
+function renderCodeVibesWinnerName(winner: Player): string {
   const titleUrl =
     winner === 'orange'
-      ? orangePlayerTitleUrl
-      : bluePlayerTitleUrl;
+      ? codeVibesOrangePlayerTitleUrl
+      : codeVibesBluePlayerTitleUrl;
 
+  return renderWinnerName(titleUrl, winner);
+}
+
+function renderGamingWinnerName(winner: Player): string {
+  const titleUrl =
+    winner === 'orange'
+      ? gamingOrangePlayerTitleUrl
+      : gamingBluePlayerTitleUrl;
+
+  return renderWinnerName(titleUrl, winner);
+}
+
+function renderWinnerName(
+  titleUrl: string,
+  winner: Player,
+): string {
   return `
     <img
       id="result-overlay-title"
@@ -84,20 +140,20 @@ function renderDrawResult(): string {
     <section class="result-overlay__content result-overlay__content--draw">
       <img
         class="result-overlay__draw-eyebrow"
-        src="${itsATitleUrl}"
+        src="${codeVibesItsATitleUrl}"
         alt="It’s a"
       />
 
       <img
         id="result-overlay-title"
         class="result-overlay__draw-title"
-        src="${drawTitleUrl}"
+        src="${codeVibesDrawTitleUrl}"
         alt="Draw"
       />
 
       <img
         class="result-overlay__scale-icon"
-        src="${scaleIconUrl}"
+        src="${codeVibesScaleIconUrl}"
         alt=""
         aria-hidden="true"
       />

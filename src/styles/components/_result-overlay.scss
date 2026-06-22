@@ -218,3 +218,71 @@
     transition-duration: 1ms;
   }
 }
+
+.result-overlay--gaming,
+.result-overlay--gaming::backdrop {
+  background: #254e61;
+}
+
+.result-overlay--gaming .result-overlay__content--gaming-winner {
+  gap: clamp(14px, 2.5vh, 24px);
+  transform: translateY(-22px);
+}
+
+.result-overlay--gaming .result-overlay__winner-title--gaming {
+  width: min(62vw, 233px);
+}
+
+.result-overlay--gaming .result-overlay__winner-name-image {
+  width: auto;
+  max-width: min(calc(100vw - 40px), 575px);
+  max-height: 72px;
+}
+
+.result-overlay--gaming.result-overlay--blue
+  .result-overlay__winner-name-image {
+  width: min(calc(100vw - 40px), 466px);
+}
+
+.result-overlay--gaming.result-overlay--orange
+  .result-overlay__winner-name-image {
+  width: min(calc(100vw - 40px), 575px);
+}
+
+.result-overlay--gaming .result-overlay__trophy {
+  display: block;
+  width: clamp(190px, 25vw, 308px);
+  height: auto;
+  object-fit: contain;
+}
+
+@media (max-width: 768px) {
+  .result-overlay--gaming .result-overlay__content--gaming-winner {
+    gap: 14px;
+    transform: translateY(-16px);
+  }
+
+  .result-overlay--gaming .result-overlay__winner-title--gaming {
+    width: min(56vw, 210px);
+  }
+
+  .result-overlay--gaming .result-overlay__winner-name-image {
+    max-width: calc(100vw - 32px);
+    max-height: 58px;
+  }
+
+  .result-overlay--gaming .result-overlay__trophy {
+    width: clamp(160px, 46vw, 230px);
+  }
+
+  .result-overlay--gaming .result-overlay__back-button {
+    width: min(calc(100vw - 40px), 164px);
+  }
+}
+
+@media (max-height: 650px) {
+  .result-overlay--gaming .result-overlay__content--gaming-winner {
+    transform: scale(0.78) translateY(-18px);
+  }
+}
+

@@ -331,7 +331,10 @@ function closeGameOver(app: HTMLDivElement): void {
 function openResultOverlay(app: HTMLDivElement): void {
   if (app.querySelector('.result-overlay')) return;
 
-  app.insertAdjacentHTML('beforeend', renderResultOverlay(scores));
+  app.insertAdjacentHTML(
+    'beforeend',
+    renderResultOverlay(scores, currentTheme),
+  );
 
   const dialog =
     app.querySelector<HTMLDialogElement>('.result-overlay');
