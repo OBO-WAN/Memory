@@ -1,6 +1,10 @@
 import type { GameSettings } from '../types/settings.types';
 
-export const appState: { settings: GameSettings } = {
+interface AppState {
+  settings: GameSettings;
+}
+
+export const appState: AppState = {
   settings: {
     theme: 'code-vibes',
     player: 'blue',

@@ -3,28 +3,71 @@ import markerUrl from '../../assets/icons/line-with-diamond.svg';
 import paletteIconUrl from '../../assets/icons/palette.svg';
 import styleIconUrl from '../../assets/icons/style.svg';
 
-import daThemeUrl from '../../assets/images/themes/DAtheme.svg';
 import codingVibesUrl from '../../assets/images/themes/coding-vibes.svg';
+import daThemeUrl from '../../assets/images/themes/DAtheme.svg';
 import foodsThemeUrl from '../../assets/images/themes/foodsTheme.svg';
 import gamingThemeUrl from '../../assets/images/themes/gameTheme.svg';
 
-export type ThemeOption = 'code-vibes' | 'gaming' | 'da-projects' | 'foods';
+export type ThemeOption =
+  | 'code-vibes'
+  | 'gaming'
+  | 'da-projects'
+  | 'foods';
+
+type SettingName = 'theme' | 'player' | 'boardSize';
+type SettingsOption = readonly [value: string, label: string];
 
 interface ThemePreview {
   src: string;
   alt: string;
 }
 
-type SettingsOption = [value: string, label: string];
-
 interface SettingsGroupConfig {
   icon: string;
   title: string;
-  name: string;
-  options: SettingsOption[];
+  name: SettingName;
+  options: readonly SettingsOption[];
 }
 
-export const themePreviewMap: Record<ThemeOption, ThemePreview> = {
+const DEFAULT_THEME: ThemeOption = 'code-vibes';
+
+const SETTINGS_GROUPS: readonly SettingsGroupConfig[] = [
+  {
+    icon: paletteIconUrl,
+    title: 'Game themes',
+    name: 'theme',
+    options: [
+      ['code-vibes', 'Code vibes theme'],
+      ['gaming', 'Gaming theme'],
+      ['da-projects', 'DA Projects theme'],
+      ['foods', 'Foods theme'],
+    ],
+  },
+  {
+    icon: chessPawnIconUrl,
+    title: 'Choose player',
+    name: 'player',
+    options: [
+      ['blue', 'Blue'],
+      ['orange', 'Orange'],
+    ],
+  },
+  {
+    icon: styleIconUrl,
+    title: 'Board size',
+    name: 'boardSize',
+    options: [
+      ['16', '16 cards'],
+      ['24', '24 cards'],
+      ['36', '36 cards'],
+    ],
+  },
+];
+
+export const themePreviewMap: Record<
+  ThemeOption,
+  ThemePreview
+> = {
   'code-vibes': {
     src: codingVibesUrl,
     alt: 'Coding vibes theme preview',
@@ -43,101 +86,109 @@ export const themePreviewMap: Record<ThemeOption, ThemePreview> = {
   },
 };
 
+/** Renders the complete settings screen. */
 export function renderSettingsScreen(): string {
-  const initialTheme = themePreviewMap['code-vibes'];
-
   return `
     <main class="settings-screen">
       <section class="settings-screen__panel">
-        <div class="settings-screen__left">
-          <header class="settings-screen__header">
-            <h1 class="settings-screen__title">Settings</h1>
-            <span
-              class="settings-screen__title-line"
-              aria-hidden="true"
-            ></span>
-          </header>
-
-          ${renderSettingsGroup({
-            icon: paletteIconUrl,
-            title: 'Game themes',
-            name: 'theme',
-            options: [
-              ['code-vibes', 'Code vibes theme'],
-              ['gaming', 'Gaming theme'],
-              ['da-projects', 'DA Projects theme'],
-              ['foods', 'Foods theme'],
-            ],
-          })}
-
-          ${renderSettingsGroup({
-            icon: chessPawnIconUrl,
-            title: 'Choose player',
-            name: 'player',
-            options: [
-              ['blue', 'Blue'],
-              ['orange', 'Orange'],
-            ],
-          })}
-
-          ${renderSettingsGroup({
-            icon: styleIconUrl,
-            title: 'Board size',
-            name: 'boardSize',
-            options: [
-              ['16', '16 cards'],
-              ['24', '24 cards'],
-              ['36', '36 cards'],
-            ],
-          })}
-        </div>
-
-        <div class="settings-screen__right">
-          <img
-            class="settings-screen__preview"
-            src="${initialTheme.src}"
-            alt="${initialTheme.alt}"
-          />
-
-          <div class="settings-summary">
-            <span class="settings-summary__item" data-summary="theme">
-              Game theme
-            </span>
-
-            <span
-              class="settings-summary__separator"
-              aria-hidden="true"
-            ></span>
-
-            <span class="settings-summary__item" data-summary="player">
-              Player
-            </span>
-
-            <span
-              class="settings-summary__separator"
-              aria-hidden="true"
-            ></span>
-
-            <span class="settings-summary__item" data-summary="boardSize">
-              Board size
-            </span>
-
-            <button
-              class="settings-summary__start"
-              type="button"
-              data-action="start-game"
-              disabled
-            >
-              ${renderStartIcon()}
-              <span class="settings-summary__start-label">Start</span>
-            </button>
-          </div>
-        </div>
+        ${renderSettingsColumn()}
+        ${renderPreviewColumn()}
       </section>
     </main>
   `;
 }
 
+/** Renders the settings controls column. */
+function renderSettingsColumn(): string {
+  return `
+    <div class="settings-screen__left">
+      ${renderSettingsHeader()}
+      ${SETTINGS_GROUPS.map(renderSettingsGroup).join('')}
+    </div>
+  `;
+}
+
+/** Renders the settings page heading. */
+function renderSettingsHeader(): string {
+  return `
+    <header class="settings-screen__header">
+      <h1 class="settings-screen__title">Settings</h1>
+      <span
+        class="settings-screen__title-line"
+        aria-hidden="true"
+      ></span>
+    </header>
+  `;
+}
+
+/** Renders the preview and settings summary column. */
+function renderPreviewColumn(): string {
+  const initialTheme = themePreviewMap[DEFAULT_THEME];
+
+  return `
+    <div class="settings-screen__right">
+      <img
+        class="settings-screen__preview"
+        src="${initialTheme.src}"
+        alt="${initialTheme.alt}"
+      />
+      ${renderSettingsSummary()}
+    </div>
+  `;
+}
+
+/** Renders the selected-settings summary and start button. */
+function renderSettingsSummary(): string {
+  return `
+    <div class="settings-summary">
+      ${renderSummaryItem('theme', 'Game theme')}
+      ${renderSummarySeparator()}
+      ${renderSummaryItem('player', 'Player')}
+      ${renderSummarySeparator()}
+      ${renderSummaryItem('boardSize', 'Board size')}
+      ${renderStartButton()}
+    </div>
+  `;
+}
+
+/** Renders one settings summary item. */
+function renderSummaryItem(
+  name: SettingName,
+  label: string,
+): string {
+  return `
+    <span class="settings-summary__item" data-summary="${name}">
+      ${label}
+    </span>
+  `;
+}
+
+/** Renders a decorative summary separator. */
+function renderSummarySeparator(): string {
+  return `
+    <span
+      class="settings-summary__separator"
+      aria-hidden="true"
+    ></span>
+  `;
+}
+
+/** Renders the disabled start button. */
+function renderStartButton(): string {
+  return `
+    <button
+      class="settings-summary__start"
+      type="button"
+      data-action="start-game"
+      disabled
+    >
+      ${renderStartIcon()}
+      <span class="settings-summary__start-label">Start</span>
+    </button>
+  `;
+}
+
+/** Renders the icon used by the start button. */
 function renderStartIcon(): string {
   return `
     <svg
@@ -154,20 +205,17 @@ function renderStartIcon(): string {
   `;
 }
 
-function renderSettingsGroup(config: SettingsGroupConfig): string {
+/** Renders one settings fieldset. */
+function renderSettingsGroup(
+  config: SettingsGroupConfig,
+): string {
   return `
     <fieldset class="settings-group">
-      <legend class="settings-group__legend">
-        <span class="settings-group__icon">
-          <img src="${config.icon}" alt="" aria-hidden="true" />
-        </span>
-        <span>${config.title}</span>
-      </legend>
-
+      ${renderSettingsLegend(config)}
       <div class="settings-group__options">
         ${config.options
-          .map(([value, label]) =>
-            renderRadioOption(config.name, value, label),
+          .map((option) =>
+            renderRadioOption(config.name, ...option),
           )
           .join('')}
       </div>
@@ -175,8 +223,23 @@ function renderSettingsGroup(config: SettingsGroupConfig): string {
   `;
 }
 
+/** Renders the legend for one settings group. */
+function renderSettingsLegend(
+  config: SettingsGroupConfig,
+): string {
+  return `
+    <legend class="settings-group__legend">
+      <span class="settings-group__icon">
+        <img src="${config.icon}" alt="" aria-hidden="true" />
+      </span>
+      <span>${config.title}</span>
+    </legend>
+  `;
+}
+
+/** Renders one radio option. */
 function renderRadioOption(
-  name: string,
+  name: SettingName,
   value: string,
   label: string,
 ): string {

@@ -1,10 +1,10 @@
 import backButtonUrl from '../../assets/images/result-overlay/back-button.svg';
-import codeVibesDrawTitleUrl from '../../assets/images/result-overlay/draw-green.svg';
 import codeVibesBluePlayerTitleUrl from '../../assets/images/result-overlay/blue-player.svg';
-import codeVibesBluePlayerIconUrl from '../../assets/images/result-overlay/player-blue.svg';
 import codeVibesConfettiUrl from '../../assets/images/result-overlay/confetti.svg';
+import codeVibesDrawTitleUrl from '../../assets/images/result-overlay/draw-green.svg';
 import codeVibesItsATitleUrl from '../../assets/images/result-overlay/its-a.svg';
 import codeVibesOrangePlayerTitleUrl from '../../assets/images/result-overlay/orange-player.svg';
+import codeVibesBluePlayerIconUrl from '../../assets/images/result-overlay/player-blue.svg';
 import codeVibesOrangePlayerIconUrl from '../../assets/images/result-overlay/player.svg';
 import codeVibesScaleIconUrl from '../../assets/images/result-overlay/scale-icon.svg';
 import codeVibesWinnerTitleUrl from '../../assets/images/result-overlay/winner-title.svg';
@@ -22,6 +22,19 @@ type Player = 'blue' | 'orange';
 type Scores = Record<Player, number>;
 type Result = Player | 'draw';
 
+interface WinnerAssets {
+  playerIcon?: string;
+  playerTitle: string;
+  winnerTitle: string;
+}
+
+interface DrawAssets {
+  eyebrowTitle: string;
+  mainTitle: string;
+  scaleIcon: string;
+}
+
+/** Renders the final winner or draw overlay. */
 export function renderResultOverlay(
   scores: Scores,
   theme: ThemeOption,
@@ -39,23 +52,64 @@ export function renderResultOverlay(
   `;
 }
 
+/** Renders the result content for the current outcome. */
 function renderResult(
   result: Result,
   theme: ThemeOption,
 ): string {
   if (result === 'draw') return renderDrawResult(theme);
 
-  return theme === 'gaming'
-    ? renderGamingWinnerResult(result)
-    : renderCodeVibesWinnerResult(result);
+  return renderWinnerResult(result, theme);
 }
 
-function renderCodeVibesWinnerResult(winner: Player): string {
-  const playerIcon =
-    winner === 'orange'
-      ? codeVibesOrangePlayerIconUrl
-      : codeVibesBluePlayerIconUrl;
+/** Renders a winner result for the selected theme. */
+function renderWinnerResult(
+  winner: Player,
+  theme: ThemeOption,
+): string {
+  const assets = getWinnerAssets(winner, theme);
 
+  return theme === 'gaming'
+    ? renderGamingWinner(assets, winner)
+    : renderCodeVibesWinner(assets, winner);
+}
+
+/** Returns the winner assets for one theme and player. */
+function getWinnerAssets(
+  winner: Player,
+  theme: ThemeOption,
+): WinnerAssets {
+  return theme === 'gaming'
+    ? getGamingWinnerAssets(winner)
+    : getCodeVibesWinnerAssets(winner);
+}
+
+/** Returns the Code Vibes winner assets. */
+function getCodeVibesWinnerAssets(
+  winner: Player,
+): WinnerAssets {
+  return {
+    playerIcon: getCodeVibesPlayerIcon(winner),
+    playerTitle: getCodeVibesPlayerTitle(winner),
+    winnerTitle: codeVibesWinnerTitleUrl,
+  };
+}
+
+/** Returns the Gaming winner assets. */
+function getGamingWinnerAssets(
+  winner: Player,
+): WinnerAssets {
+  return {
+    playerTitle: getGamingPlayerTitle(winner),
+    winnerTitle: gamingWinnerTitleUrl,
+  };
+}
+
+/** Renders the Code Vibes winner layout. */
+function renderCodeVibesWinner(
+  assets: WinnerAssets,
+  winner: Player,
+): string {
   return `
     <img
       class="result-overlay__confetti"
@@ -65,36 +119,27 @@ function renderCodeVibesWinnerResult(winner: Player): string {
     />
 
     <section class="result-overlay__content">
-      <img
-        class="result-overlay__winner-title"
-        src="${codeVibesWinnerTitleUrl}"
-        alt="The winner is"
-      />
-
-      ${renderCodeVibesWinnerName(winner)}
-
-      <img
-        class="result-overlay__player-icon"
-        src="${playerIcon}"
-        alt=""
-        aria-hidden="true"
-      />
+      ${renderWinnerTitle(assets.winnerTitle)}
+      ${renderWinnerName(assets.playerTitle, winner)}
+      ${renderPlayerIcon(assets.playerIcon)}
     </section>
   `;
 }
 
-function renderGamingWinnerResult(winner: Player): string {
+/** Renders the Gaming winner layout. */
+function renderGamingWinner(
+  assets: WinnerAssets,
+  winner: Player,
+): string {
   return `
     <section
       class="result-overlay__content result-overlay__content--gaming-winner"
     >
-      <img
-        class="result-overlay__winner-title result-overlay__winner-title--gaming"
-        src="${gamingWinnerTitleUrl}"
-        alt="The winner is"
-      />
-
-      ${renderGamingWinnerName(winner)}
+      ${renderWinnerTitle(
+        assets.winnerTitle,
+        ' result-overlay__winner-title--gaming',
+      )}
+      ${renderWinnerName(assets.playerTitle, winner)}
 
       <img
         class="result-overlay__trophy"
@@ -106,95 +151,148 @@ function renderGamingWinnerResult(winner: Player): string {
   `;
 }
 
-function renderCodeVibesWinnerName(winner: Player): string {
-  const titleUrl =
-    winner === 'orange'
-      ? codeVibesOrangePlayerTitleUrl
-      : codeVibesBluePlayerTitleUrl;
-
-  return renderWinnerName(titleUrl, winner);
+/** Renders the winner title image. */
+function renderWinnerTitle(
+  source: string,
+  modifierClass = '',
+): string {
+  return `
+    <img
+      class="result-overlay__winner-title${modifierClass}"
+      src="${source}"
+      alt="The winner is"
+    />
+  `;
 }
 
-function renderGamingWinnerName(winner: Player): string {
-  const titleUrl =
-    winner === 'orange'
-      ? gamingOrangePlayerTitleUrl
-      : gamingBluePlayerTitleUrl;
-
-  return renderWinnerName(titleUrl, winner);
-}
-
+/** Renders the winning player name image. */
 function renderWinnerName(
-  titleUrl: string,
+  source: string,
   winner: Player,
 ): string {
   return `
     <img
       id="result-overlay-title"
       class="result-overlay__winner-name-image"
-      src="${titleUrl}"
+      src="${source}"
       alt="${capitalize(winner)} player"
     />
   `;
 }
 
+/** Renders the Code Vibes player icon when available. */
+function renderPlayerIcon(source?: string): string {
+  if (!source) return '';
+
+  return `
+    <img
+      class="result-overlay__player-icon"
+      src="${source}"
+      alt=""
+      aria-hidden="true"
+    />
+  `;
+}
+
+/** Returns the Code Vibes player title image. */
+function getCodeVibesPlayerTitle(winner: Player): string {
+  return winner === 'orange'
+    ? codeVibesOrangePlayerTitleUrl
+    : codeVibesBluePlayerTitleUrl;
+}
+
+/** Returns the Code Vibes player icon image. */
+function getCodeVibesPlayerIcon(winner: Player): string {
+  return winner === 'orange'
+    ? codeVibesOrangePlayerIconUrl
+    : codeVibesBluePlayerIconUrl;
+}
+
+/** Returns the Gaming player title image. */
+function getGamingPlayerTitle(winner: Player): string {
+  return winner === 'orange'
+    ? gamingOrangePlayerTitleUrl
+    : gamingBluePlayerTitleUrl;
+}
+
+/** Renders a draw result for the selected theme. */
 function renderDrawResult(theme: ThemeOption): string {
+  const assets = getDrawAssets(theme);
+  const modifierClass = getDrawModifierClass(theme);
+
+  return renderDrawContent(assets, modifierClass);
+}
+
+/** Returns the draw assets for the selected theme. */
+function getDrawAssets(theme: ThemeOption): DrawAssets {
+  if (theme === 'gaming') {
+    return {
+      eyebrowTitle: gamingItsATitleUrl,
+      mainTitle: gamingDrawTitleUrl,
+      scaleIcon: gamingScaleIconUrl,
+    };
+  }
+
+  return {
+    eyebrowTitle: codeVibesItsATitleUrl,
+    mainTitle: codeVibesDrawTitleUrl,
+    scaleIcon: codeVibesScaleIconUrl,
+  };
+}
+
+/** Returns the Gaming draw layout modifier. */
+function getDrawModifierClass(theme: ThemeOption): string {
   return theme === 'gaming'
-    ? renderGamingDrawResult()
-    : renderCodeVibesDrawResult();
+    ? ' result-overlay__content--gaming-draw'
+    : '';
 }
 
-function renderCodeVibesDrawResult(): string {
-  return renderDrawContent(
-    codeVibesItsATitleUrl,
-    codeVibesDrawTitleUrl,
-    codeVibesScaleIconUrl,
-    '',
-  );
-}
-
-function renderGamingDrawResult(): string {
-  return renderDrawContent(
-    gamingItsATitleUrl,
-    gamingDrawTitleUrl,
-    gamingScaleIconUrl,
-    ' result-overlay__content--gaming-draw',
-  );
-}
-
+/** Renders the complete draw layout. */
 function renderDrawContent(
-  eyebrowUrl: string,
-  titleUrl: string,
-  scaleUrl: string,
+  assets: DrawAssets,
   modifierClass: string,
 ): string {
   return `
     <section
       class="result-overlay__content result-overlay__content--draw${modifierClass}"
     >
-      <img
-        class="result-overlay__draw-eyebrow"
-        src="${eyebrowUrl}"
-        alt="It’s a"
-      />
-
-      <img
-        id="result-overlay-title"
-        class="result-overlay__draw-title"
-        src="${titleUrl}"
-        alt="Draw"
-      />
-
-      <img
-        class="result-overlay__scale-icon"
-        src="${scaleUrl}"
-        alt=""
-        aria-hidden="true"
-      />
+      ${renderDrawTitleImages(assets)}
+      ${renderScaleIcon(assets.scaleIcon)}
     </section>
   `;
 }
 
+/** Renders the draw eyebrow and main title images. */
+function renderDrawTitleImages(assets: DrawAssets): string {
+  return `
+    <img
+      class="result-overlay__draw-eyebrow"
+      src="${assets.eyebrowTitle}"
+      alt="It’s a"
+    />
+
+    <img
+      id="result-overlay-title"
+      class="result-overlay__draw-title"
+      src="${assets.mainTitle}"
+      alt="Draw"
+    />
+  `;
+}
+
+/** Renders the decorative scale icon. */
+function renderScaleIcon(source: string): string {
+  return `
+    <img
+      class="result-overlay__scale-icon"
+      src="${source}"
+      alt=""
+      aria-hidden="true"
+    />
+  `;
+}
+
+/** Renders the button that returns to the start screen. */
 function renderBackButton(): string {
   return `
     <button
@@ -208,12 +306,14 @@ function renderBackButton(): string {
   `;
 }
 
+/** Returns the winning player or a draw result. */
 function getResult(scores: Scores): Result {
   if (scores.blue === scores.orange) return 'draw';
 
   return scores.blue > scores.orange ? 'blue' : 'orange';
 }
 
+/** Capitalizes the first character of a value. */
 function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }

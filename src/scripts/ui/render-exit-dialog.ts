@@ -2,15 +2,16 @@ import gamingExitTitleUrl from '../../assets/popup/game-theme/Are you sure you w
 
 import type { ThemeOption } from './render-settings-screen';
 
+type DialogButtonModifier = 'back' | 'confirm';
+type DialogAction = 'close-exit-dialog' | 'confirm-exit';
+
+/** Renders the exit confirmation dialog for the selected theme. */
 export function renderExitDialog(
   theme: ThemeOption = 'code-vibes',
 ): string {
-  const themeClass =
-    theme === 'gaming' ? ' exit-dialog--gaming' : '';
-
   return `
     <dialog
-      class="exit-dialog${themeClass}"
+      class="exit-dialog${getThemeClass(theme)}"
       aria-labelledby="exit-dialog-title"
     >
       <section class="exit-dialog__panel">
@@ -21,6 +22,12 @@ export function renderExitDialog(
   `;
 }
 
+/** Returns the theme modifier used by the dialog. */
+function getThemeClass(theme: ThemeOption): string {
+  return theme === 'gaming' ? ' exit-dialog--gaming' : '';
+}
+
+/** Renders the dialog title for the selected theme. */
 function renderExitDialogTitle(theme: ThemeOption): string {
   if (theme === 'gaming') {
     return `
@@ -42,6 +49,7 @@ function renderExitDialogTitle(theme: ThemeOption): string {
   `;
 }
 
+/** Renders both exit-dialog action buttons. */
 function renderExitDialogActions(theme: ThemeOption): string {
   const isGaming = theme === 'gaming';
   const backLabel = isGaming ? 'No, back to game' : 'Back to game';
@@ -49,15 +57,24 @@ function renderExitDialogActions(theme: ThemeOption): string {
 
   return `
     <div class="exit-dialog__actions">
-      ${renderDialogButton('back', 'close-exit-dialog', backLabel)}
-      ${renderDialogButton('confirm', 'confirm-exit', exitLabel)}
+      ${renderDialogButton(
+        'back',
+        'close-exit-dialog',
+        backLabel,
+      )}
+      ${renderDialogButton(
+        'confirm',
+        'confirm-exit',
+        exitLabel,
+      )}
     </div>
   `;
 }
 
+/** Renders one exit-dialog action button. */
 function renderDialogButton(
-  modifier: string,
-  action: string,
+  modifier: DialogButtonModifier,
+  action: DialogAction,
   label: string,
 ): string {
   return `

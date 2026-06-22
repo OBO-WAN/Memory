@@ -8,7 +8,11 @@ import gamingCurrentPlayerTitleUrl from '../../assets/icons/game-theme/headline.
 
 import type { ThemeOption } from './render-settings-screen';
 
+const DEFAULT_SCORE_ORDER = ['blue', 'orange'] as const;
+const GAMING_SCORE_ORDER = ['orange', 'blue'] as const;
+
 type Player = 'blue' | 'orange';
+type Scores = Record<Player, number>;
 
 interface GameInfoSettings {
   theme: ThemeOption;
@@ -17,14 +21,16 @@ interface GameInfoSettings {
   orangePoints?: number;
 }
 
-export function renderGameInfo(settings: GameInfoSettings): string {
-  const bluePoints = settings.bluePoints ?? 0;
-  const orangePoints = settings.orangePoints ?? 0;
+/** Renders the score, active player, and exit control. */
+export function renderGameInfo(
+  settings: GameInfoSettings,
+): string {
+  const scores = getScores(settings);
 
   return `
     <header class="game-info">
       <div class="game-info__points">
-        ${renderScores(settings.theme, bluePoints, orangePoints)}
+        ${renderScores(settings.theme, scores)}
       </div>
 
       ${renderCurrentPlayer(settings.theme, settings.player)}
@@ -33,25 +39,45 @@ export function renderGameInfo(settings: GameInfoSettings): string {
   `;
 }
 
-function renderScores(
-  theme: ThemeOption,
-  bluePoints: number,
-  orangePoints: number,
-): string {
-  const blueScore = renderScore(theme, 'blue', bluePoints);
-  const orangeScore = renderScore(theme, 'orange', orangePoints);
-
-  return theme === 'gaming'
-    ? `${orangeScore}${blueScore}`
-    : `${blueScore}${orangeScore}`;
+/** Returns normalized score values for both players. */
+function getScores(settings: GameInfoSettings): Scores {
+  return {
+    blue: settings.bluePoints ?? 0,
+    orange: settings.orangePoints ?? 0,
+  };
 }
 
+/** Renders both scores in the theme-specific order. */
+function renderScores(
+  theme: ThemeOption,
+  scores: Scores,
+): string {
+  return getScoreOrder(theme)
+    .map((player) => renderScore(theme, player, scores[player]))
+    .join('');
+}
+
+/** Returns the score order used by the selected theme. */
+function getScoreOrder(
+  theme: ThemeOption,
+): readonly Player[] {
+  return theme === 'gaming'
+    ? GAMING_SCORE_ORDER
+    : DEFAULT_SCORE_ORDER;
+}
+
+/** Renders the current-player area for the selected theme. */
 function renderCurrentPlayer(
   theme: ThemeOption,
   player: Player,
 ): string {
-  if (theme === 'gaming') return renderGamingCurrentPlayer(player);
+  return theme === 'gaming'
+    ? renderGamingCurrentPlayer(player)
+    : renderCodeVibesCurrentPlayer(player);
+}
 
+/** Renders the Code Vibes current-player marker. */
+function renderCodeVibesCurrentPlayer(player: Player): string {
   return `
     <div class="game-info__current-player">
       <span>Current player:</span>
@@ -64,6 +90,7 @@ function renderCurrentPlayer(
   `;
 }
 
+/** Renders the Gaming current-player marker. */
 function renderGamingCurrentPlayer(player: Player): string {
   return `
     <div class="game-info__current-player">
@@ -84,6 +111,7 @@ function renderGamingCurrentPlayer(player: Player): string {
   `;
 }
 
+/** Renders the exit-game button. */
 function renderExitButton(): string {
   return `
     <button
@@ -100,10 +128,12 @@ function renderExitButton(): string {
   `;
 }
 
+/** Returns the Code Vibes marker for one player. */
 function getPlayerMarker(player: Player): string {
   return player === 'orange' ? orangeMarkerUrl : blueMarkerUrl;
 }
 
+/** Returns the score marker for the selected theme. */
 function getScoreMarker(
   theme: ThemeOption,
   player: Player,
@@ -115,6 +145,7 @@ function getScoreMarker(
     : gamingBlueMarkerUrl;
 }
 
+/** Renders one player's score. */
 function renderScore(
   theme: ThemeOption,
   player: Player,

@@ -21,21 +21,45 @@ import type { CardDefinition } from '../types/card.types';
 
 export const gamingCards: CardDefinition[] = [
   { id: 'arcade-chase', label: 'Arcade chase', image: arcadeChaseUrl },
-  { id: 'arcade-chomper', label: 'Arcade chomper', image: arcadeChomperUrl },
+  {
+    id: 'arcade-chomper',
+    label: 'Arcade chomper',
+    image: arcadeChomperUrl,
+  },
   { id: 'circle-token', label: 'Circle token', image: circleTokenUrl },
   { id: 'colorful-dice', label: 'Colorful dice', image: colorfulDiceUrl },
   { id: 'cool-banana', label: 'Cool banana', image: coolBananaUrl },
-  { id: 'game-controller', label: 'Game controller', image: gameControllerUrl },
-  { id: 'handheld-console', label: 'Handheld console', image: handheldConsoleUrl },
+  {
+    id: 'game-controller',
+    label: 'Game controller',
+    image: gameControllerUrl,
+  },
+  {
+    id: 'handheld-console',
+    label: 'Handheld console',
+    image: handheldConsoleUrl,
+  },
   { id: 'level-up-badge', label: 'Level-up badge', image: levelUpBadgeUrl },
   { id: 'mario-mushroom', label: 'Mario mushroom', image: marioMushroomUrl },
   { id: 'maze', label: 'Maze', image: mazeUrl },
-  { id: 'minecraft-creeper', label: 'Minecraft creeper', image: minecraftCreeperUrl },
+  {
+    id: 'minecraft-creeper',
+    label: 'Minecraft creeper',
+    image: minecraftCreeperUrl,
+  },
   { id: 'play', label: 'Play', image: playUrl },
   { id: 'playing-card', label: 'Playing card', image: playingCardUrl },
-  { id: 'puzzle-pieces', label: 'Puzzle pieces', image: puzzlePiecesUrl },
+  {
+    id: 'puzzle-pieces',
+    label: 'Puzzle pieces',
+    image: puzzlePiecesUrl,
+  },
   { id: 'snake-game', label: 'Snake game', image: snakeGameUrl },
   { id: 'square-token', label: 'Square token', image: squareTokenUrl },
   { id: 'star-coin', label: 'Star coin', image: starCoinUrl },
-  { id: 'triangle-token', label: 'Triangle token', image: triangleTokenUrl },
+  {
+    id: 'triangle-token',
+    label: 'Triangle token',
+    image: triangleTokenUrl,
+  },
 ];
