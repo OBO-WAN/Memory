@@ -19,6 +19,11 @@ import triangleTokenUrl from '../../assets/images/cards/game-theme/logos/triangl
 
 import type { CardDefinition } from '../types/card.types';
 
+/**
+ * Gaming card definitions used to build matching pairs.
+ *
+ * The exported data is consumed when creating theme-specific memory card pairs.
+ */
 export const gamingCards: CardDefinition[] = [
   { id: 'arcade-chase', label: 'Arcade chase', image: arcadeChaseUrl },
   {

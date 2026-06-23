@@ -24,7 +24,14 @@ interface ThemeCardAssets {
   definitions: readonly CardDefinition[];
 }
 
-/** Renders the complete game screen for the selected settings. */
+/**
+ * Builds the full game view for the selected theme, player, and board size.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param settings - Selected game settings used to initialize state or render UI.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 export function renderGameScreen(
   settings: GameScreenSettings,
 ): string {
@@ -50,7 +57,14 @@ export function renderGameScreen(
   `;
 }
 
-/** Returns the card definitions and card back for one theme. */
+/**
+ * Selects the card faces and back image used by a theme.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns Card definitions and back artwork used to render the selected theme.
+ */
 function getThemeCardAssets(
   theme: ThemeOption,
 ): ThemeCardAssets {
@@ -67,7 +81,16 @@ function getThemeCardAssets(
   };
 }
 
-/** Renders the game board and all shuffled cards. */
+/**
+ * Builds the accessible board region containing every shuffled card.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param cards - Card collection rendered, shuffled, validated, or reordered for play.
+ * @param boardSize - Number of cards requested for the board and used to calculate pair count.
+ * @param cardBackUrl - Value used by this declaration to produce its documented behavior.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderGameBoard(
   cards: readonly MemoryCard[],
   boardSize: number,
@@ -83,7 +106,15 @@ function renderGameBoard(
   `;
 }
 
-/** Renders every card in the supplied deck. */
+/**
+ * Joins the rendered card buttons for a shuffled deck.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param cards - Card collection rendered, shuffled, validated, or reordered for play.
+ * @param cardBackUrl - Value used by this declaration to produce its documented behavior.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderGameCards(
   cards: readonly MemoryCard[],
   cardBackUrl: string,
@@ -95,7 +126,16 @@ function renderGameCards(
     .join('');
 }
 
-/** Renders one playable memory card. */
+/**
+ * Builds one card button with pair metadata and accessible label.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param card - Rendered card or card data used to update the board markup or state.
+ * @param index - Value used by this declaration to produce its documented behavior.
+ * @param cardBackUrl - Value used by this declaration to produce its documented behavior.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderGameCard(
   card: MemoryCard,
   index: number,
@@ -119,7 +159,14 @@ function renderGameCard(
   `;
 }
 
-/** Renders the hidden card face. */
+/**
+ * Builds the decorative back face shown before a card is flipped.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param cardBackUrl - Value used by this declaration to produce its documented behavior.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderCardBack(cardBackUrl: string): string {
   return `
     <span class="game-card__face game-card__face--back">
@@ -133,7 +180,14 @@ function renderCardBack(cardBackUrl: string): string {
   `;
 }
 
-/** Renders the visible card face. */
+/**
+ * Builds the front face that reveals the card image and label.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param card - Rendered card or card data used to update the board markup or state.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderCardFront(card: MemoryCard): string {
   return `
     <span class="game-card__face game-card__face--front">

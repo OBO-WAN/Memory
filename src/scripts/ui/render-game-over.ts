@@ -19,7 +19,15 @@ interface GameOverAssets {
   gameOverTitle: string;
 }
 
-/** Renders the Game Over dialog for the selected theme. */
+/**
+ * Builds the transient Game Over dialog for the selected theme.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param scores - Current score values used to render or calculate the game result.
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 export function renderGameOver(
   scores: Scores,
   theme: ThemeOption,
@@ -30,7 +38,17 @@ export function renderGameOver(
   return renderGameOverDialog(scores, result, theme, assets);
 }
 
-/** Renders the complete Game Over dialog markup. */
+/**
+ * Builds the modal shell containing Game Over and final score content.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param scores - Current score values used to render or calculate the game result.
+ * @param result - Computed final outcome used to choose labels, classes, or winner styling.
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @param assets - Theme-specific artwork consumed by the rendered result section.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderGameOverDialog(
   scores: Scores,
   result: Result,
@@ -47,7 +65,17 @@ function renderGameOverDialog(
   `;
 }
 
-/** Renders the title and final score content. */
+/**
+ * Builds the themed Game Over title and score summary content.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param scores - Current score values used to render or calculate the game result.
+ * @param result - Computed final outcome used to choose labels, classes, or winner styling.
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @param assets - Theme-specific artwork consumed by the rendered result section.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderGameOverContent(
   scores: Scores,
   result: Result,
@@ -74,7 +102,16 @@ function renderGameOverContent(
   `;
 }
 
-/** Renders one decorative title image. */
+/**
+ * Builds one themed title image with supplied accessible text.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param className - CSS class applied to the generated title image.
+ * @param source - Asset URL inserted into the rendered image markup.
+ * @param alternativeText - Accessible text assigned to the rendered image when it is meaningful.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderTitleImage(
   className: string,
   source: string,
@@ -89,7 +126,14 @@ function renderTitleImage(
   `;
 }
 
-/** Returns the Game Over assets for the selected theme. */
+/**
+ * Selects the title artwork used by the Game Over dialog.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns Theme-specific artwork required by the Game Over dialog.
+ */
 function getGameOverAssets(theme: ThemeOption): GameOverAssets {
   if (theme === 'gaming') {
     return {
@@ -104,7 +148,16 @@ function getGameOverAssets(theme: ThemeOption): GameOverAssets {
   };
 }
 
-/** Renders the accessible final score container. */
+/**
+ * Builds the final score region with a screen-reader score label.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param scores - Current score values used to render or calculate the game result.
+ * @param result - Computed final outcome used to choose labels, classes, or winner styling.
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderScore(
   scores: Scores,
   result: Result,
@@ -120,12 +173,29 @@ function renderScore(
   `;
 }
 
-/** Returns the accessible final score label. */
+/**
+ * Builds a readable score and winner announcement for assistive tech.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param scores - Current score values used to render or calculate the game result.
+ * @param result - Computed final outcome used to choose labels, classes, or winner styling.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function getScoreLabel(scores: Scores, result: Result): string {
   return `Blue ${scores.blue}, Orange ${scores.orange}. ${getResultText(result)}`;
 }
 
-/** Renders both player scores in theme-specific order. */
+/**
+ * Builds both score values in the order expected by the theme.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param scores - Current score values used to render or calculate the game result.
+ * @param result - Computed final outcome used to choose labels, classes, or winner styling.
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderScoreContent(
   scores: Scores,
   result: Result,
@@ -145,28 +215,59 @@ function renderScoreContent(
   `;
 }
 
-/** Returns the player order used by the selected theme. */
+/**
+ * Returns the display order for final scores in the selected theme.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns Ordered player identifiers used while rendering score displays.
+ */
 function getScoreOrder(theme: ThemeOption): readonly Player[] {
   return theme === 'gaming'
     ? GAMING_SCORE_ORDER
     : CODE_VIBES_SCORE_ORDER;
 }
 
-/** Returns the winning player or a draw result. */
+/**
+ * Compares final scores and returns the winning player or draw state.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param scores - Current score values used to render or calculate the game result.
+ * @returns Final outcome identifier derived from the two player scores.
+ */
 function getResult(scores: Scores): Result {
   if (scores.blue === scores.orange) return 'draw';
 
   return scores.blue > scores.orange ? 'blue' : 'orange';
 }
 
-/** Returns a readable result announcement. */
+/**
+ * Converts a result into text suitable for the score announcement.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param result - Computed final outcome used to choose labels, classes, or winner styling.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function getResultText(result: Result): string {
   if (result === 'draw') return "It's a draw.";
 
   return `${capitalize(result)} wins.`;
 }
 
-/** Renders one player's final score. */
+/**
+ * Builds a single final score entry using the active theme style.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @param score - Final score value displayed for one player.
+ * @param result - Computed final outcome used to choose labels, classes, or winner styling.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderPlayerScore(
   theme: ThemeOption,
   player: Player,
@@ -178,7 +279,16 @@ function renderPlayerScore(
     : renderCodeVibesPlayerScore(player, score, result);
 }
 
-/** Renders one Code Vibes player score. */
+/**
+ * Builds a Code Vibes final score entry and winner marker.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @param score - Final score value displayed for one player.
+ * @param result - Computed final outcome used to choose labels, classes, or winner styling.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderCodeVibesPlayerScore(
   player: Player,
   score: number,
@@ -195,7 +305,16 @@ function renderCodeVibesPlayerScore(
   `;
 }
 
-/** Renders one Gaming player score. */
+/**
+ * Builds a Gaming final score entry with pawn artwork.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @param score - Final score value displayed for one player.
+ * @param result - Computed final outcome used to choose labels, classes, or winner styling.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderGamingPlayerScore(
   player: Player,
   score: number,
@@ -216,17 +335,39 @@ function renderGamingPlayerScore(
   `;
 }
 
-/** Returns the winner modifier for one player. */
+/**
+ * Returns the CSS modifier when the supplied player won.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @param result - Computed final outcome used to choose labels, classes, or winner styling.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function getWinnerClass(player: Player, result: Result): string {
   return result === player ? ' is-winner' : '';
 }
 
-/** Returns the Gaming pawn image for one player. */
+/**
+ * Selects the Gaming pawn image associated with a player.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function getPawnUrl(player: Player): string {
   return player === 'orange' ? orangePawnUrl : bluePawnUrl;
 }
 
-/** Capitalizes the first character of a value. */
+/**
+ * Formats a lowercase player value for visible result text.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param value - String value being validated or formatted for display.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }

@@ -21,7 +21,14 @@ interface GameInfoSettings {
   orangePoints?: number;
 }
 
-/** Renders the score, active player, and exit control. */
+/**
+ * Builds the in-game header containing scores, current player, and exit control.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param settings - Selected game settings used to initialize state or render UI.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 export function renderGameInfo(
   settings: GameInfoSettings,
 ): string {
@@ -39,7 +46,14 @@ export function renderGameInfo(
   `;
 }
 
-/** Returns normalized score values for both players. */
+/**
+ * Returns score values for both players, defaulting missing scores to zero.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param settings - Selected game settings used to initialize state or render UI.
+ * @returns Score record with values for both players.
+ */
 function getScores(settings: GameInfoSettings): Scores {
   return {
     blue: settings.bluePoints ?? 0,
@@ -47,7 +61,15 @@ function getScores(settings: GameInfoSettings): Scores {
   };
 }
 
-/** Renders both scores in the theme-specific order. */
+/**
+ * Builds the live score markers in the order expected by the theme.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @param scores - Current score values used to render or calculate the game result.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderScores(
   theme: ThemeOption,
   scores: Scores,
@@ -57,7 +79,14 @@ function renderScores(
     .join('');
 }
 
-/** Returns the score order used by the selected theme. */
+/**
+ * Returns the live score display order for the active theme.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns Ordered player identifiers used while rendering score displays.
+ */
 function getScoreOrder(
   theme: ThemeOption,
 ): readonly Player[] {
@@ -66,7 +95,15 @@ function getScoreOrder(
     : DEFAULT_SCORE_ORDER;
 }
 
-/** Renders the current-player area for the selected theme. */
+/**
+ * Builds the current-player indicator appropriate for the theme.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderCurrentPlayer(
   theme: ThemeOption,
   player: Player,
@@ -76,7 +113,14 @@ function renderCurrentPlayer(
     : renderCodeVibesCurrentPlayer(player);
 }
 
-/** Renders the Code Vibes current-player marker. */
+/**
+ * Builds the Code Vibes current-player label and marker image.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderCodeVibesCurrentPlayer(player: Player): string {
   return `
     <div class="game-info__current-player">
@@ -90,7 +134,14 @@ function renderCodeVibesCurrentPlayer(player: Player): string {
   `;
 }
 
-/** Renders the Gaming current-player marker. */
+/**
+ * Builds the Gaming current-player artwork and dataset marker.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderGamingCurrentPlayer(player: Player): string {
   return `
     <div class="game-info__current-player">
@@ -111,7 +162,13 @@ function renderGamingCurrentPlayer(player: Player): string {
   `;
 }
 
-/** Renders the exit-game button. */
+/**
+ * Builds the in-game exit button that opens confirmation.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderExitButton(): string {
   return `
     <button
@@ -128,12 +185,27 @@ function renderExitButton(): string {
   `;
 }
 
-/** Returns the Code Vibes marker for one player. */
+/**
+ * Selects the Code Vibes marker image associated with a player.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function getPlayerMarker(player: Player): string {
   return player === 'orange' ? orangeMarkerUrl : blueMarkerUrl;
 }
 
-/** Returns the score marker for the selected theme. */
+/**
+ * Selects the live score marker artwork for a theme and player.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function getScoreMarker(
   theme: ThemeOption,
   player: Player,
@@ -145,7 +217,16 @@ function getScoreMarker(
     : gamingBlueMarkerUrl;
 }
 
-/** Renders one player's score. */
+/**
+ * Builds one live score display with marker artwork and point value.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @param player - Player identifier used to choose artwork, order, or score values.
+ * @param points - Score value displayed for the player.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderScore(
   theme: ThemeOption,
   player: Player,

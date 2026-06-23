@@ -24,7 +24,14 @@ let flipBackTimer: number | null = null;
 let gameOverTimer: number | null = null;
 let resultOverlayTimer: number | null = null;
 
-/** Starts a new game with the selected settings. */
+/**
+ * Resets game state and renders a board for the selected settings.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ * @param settings - Selected game settings used to initialize state or render UI.
+ */
 export function startGame(
   app: HTMLDivElement,
   settings: SelectedSettings,
@@ -33,7 +40,14 @@ export function startGame(
   app.innerHTML = renderGameScreen(settings);
 }
 
-/** Handles a delegated card-flip action. */
+/**
+ * Validates a delegated card button before revealing it.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ * @param actionElement - Clicked element carrying the delegated action metadata to handle.
+ */
 export function handleCardFlip(
   app: HTMLDivElement,
   actionElement: HTMLElement,
@@ -44,17 +58,34 @@ export function handleCardFlip(
   flipCard(app, actionElement);
 }
 
-/** Resets all game state and active timers. */
+/**
+ * Clears timers, turn state, scores, and theme/player defaults.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ */
 export function resetGame(): void {
   resetGameState();
 }
 
-/** Returns the theme used by the current game. */
+/**
+ * Returns the theme currently controlling dialogs and markers.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns Theme currently used by game dialogs and markers.
+ */
 export function getCurrentTheme(): ThemeOption {
   return currentTheme;
 }
 
-/** Reveals a card and resolves a pair when possible. */
+/**
+ * Reveals a selected card and compares it once two cards are face up.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ * @param card - Rendered card or card data used to update the board markup or state.
+ */
 function flipCard(
   app: HTMLDivElement,
   card: HTMLButtonElement,
@@ -69,7 +100,14 @@ function flipCard(
   resolveCardPair(app, firstFlippedCard, card);
 }
 
-/** Checks whether the selected card can be flipped. */
+/**
+ * Reports whether a card is eligible for the current turn.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param card - Rendered card or card data used to update the board markup or state.
+ * @returns Whether the supplied value satisfies the documented condition.
+ */
 function canFlipCard(card: HTMLButtonElement): boolean {
   return (
     !isCheckingPair &&
@@ -79,13 +117,27 @@ function canFlipCard(card: HTMLButtonElement): boolean {
   );
 }
 
-/** Reveals a memory card. */
+/**
+ * Marks a card as face up for styling and assistive state.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param card - Rendered card or card data used to update the board markup or state.
+ */
 function revealCard(card: HTMLButtonElement): void {
   card.classList.add('is-flipped');
   card.setAttribute('aria-pressed', 'true');
 }
 
-/** Resolves the two currently revealed cards. */
+/**
+ * Resolves a completed turn as either a match or delayed mismatch.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ * @param firstCard - First revealed card in the current turn comparison.
+ * @param secondCard - Second revealed card in the current turn comparison.
+ */
 function resolveCardPair(
   app: HTMLDivElement,
   firstCard: HTMLButtonElement,
@@ -101,7 +153,15 @@ function resolveCardPair(
   scheduleCardsToFlipBack(firstCard, secondCard);
 }
 
-/** Checks whether two cards belong to the same pair. */
+/**
+ * Compares two rendered cards by their shared pair identifier.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param firstCard - First revealed card in the current turn comparison.
+ * @param secondCard - Second revealed card in the current turn comparison.
+ * @returns Whether the supplied value satisfies the documented condition.
+ */
 function cardsMatch(
   firstCard: HTMLButtonElement,
   secondCard: HTMLButtonElement,
@@ -109,7 +169,15 @@ function cardsMatch(
   return firstCard.dataset.pairId === secondCard.dataset.pairId;
 }
 
-/** Handles a matching pair and checks for game completion. */
+/**
+ * Scores a matching pair and schedules game completion when all pairs match.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ * @param firstCard - First revealed card in the current turn comparison.
+ * @param secondCard - Second revealed card in the current turn comparison.
+ */
 function handleMatchingPair(
   app: HTMLDivElement,
   firstCard: HTMLButtonElement,
@@ -123,7 +191,14 @@ function handleMatchingPair(
   if (matchedPairs === totalPairs) scheduleGameOver(app);
 }
 
-/** Marks two matching cards as completed. */
+/**
+ * Applies matched state to both cards in a successful pair.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param firstCard - First revealed card in the current turn comparison.
+ * @param secondCard - Second revealed card in the current turn comparison.
+ */
 function markCardsAsMatched(
   firstCard: HTMLButtonElement,
   secondCard: HTMLButtonElement,
@@ -131,13 +206,23 @@ function markCardsAsMatched(
   [firstCard, secondCard].forEach(markCardAsMatched);
 }
 
-/** Marks one card as matched and disables it. */
+/**
+ * Disables a matched card so it cannot be selected again.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param card - Rendered card or card data used to update the board markup or state.
+ */
 function markCardAsMatched(card: HTMLButtonElement): void {
   card.classList.add('is-matched');
   card.disabled = true;
 }
 
-/** Increments and displays the active player's score. */
+/**
+ * Adds one point for the active player and updates the visible score.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ */
 function incrementCurrentPlayerScore(): void {
   scores[currentPlayer] += 1;
 
@@ -148,14 +233,27 @@ function incrementCurrentPlayerScore(): void {
   scoreElement.textContent = String(scores[currentPlayer]);
 }
 
-/** Returns the score element for the active player. */
+/**
+ * Finds the score element associated with the active player.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns Matching element, or null when the event target cannot provide one.
+ */
 function getCurrentScoreElement(): HTMLElement | null {
   return document.querySelector<HTMLElement>(
     `[data-score="${currentPlayer}"]`,
   );
 }
 
-/** Schedules mismatched cards to turn face down. */
+/**
+ * Delays hiding mismatched cards so players can see their selection.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param firstCard - First revealed card in the current turn comparison.
+ * @param secondCard - Second revealed card in the current turn comparison.
+ */
 function scheduleCardsToFlipBack(
   firstCard: HTMLButtonElement,
   secondCard: HTMLButtonElement,
@@ -168,7 +266,14 @@ function scheduleCardsToFlipBack(
   );
 }
 
-/** Completes a mismatched turn. */
+/**
+ * Hides mismatched cards, changes turns, and unlocks card selection.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param firstCard - First revealed card in the current turn comparison.
+ * @param secondCard - Second revealed card in the current turn comparison.
+ */
 function completeMismatch(
   firstCard: HTMLButtonElement,
   secondCard: HTMLButtonElement,
@@ -180,19 +285,33 @@ function completeMismatch(
   resetCardTurn();
 }
 
-/** Hides a revealed card. */
+/**
+ * Returns a card to its face-down visual and pressed state.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param card - Rendered card or card data used to update the board markup or state.
+ */
 function hideCard(card: HTMLButtonElement): void {
   card.classList.remove('is-flipped');
   card.setAttribute('aria-pressed', 'false');
 }
 
-/** Switches the active player after a mismatch. */
+/**
+ * Alternates the active player and refreshes the current-player marker.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ */
 function switchCurrentPlayer(): void {
   currentPlayer = currentPlayer === 'blue' ? 'orange' : 'blue';
   updateCurrentPlayerMarker();
 }
 
-/** Updates the current-player marker for the active theme. */
+/**
+ * Refreshes the current-player marker for image and Gaming variants.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ */
 function updateCurrentPlayerMarker(): void {
   const currentMarker = document.querySelector<HTMLElement>(
     '.game-info__current-marker',
@@ -208,7 +327,13 @@ function updateCurrentPlayerMarker(): void {
   updateGamingPlayerMarker(currentMarker);
 }
 
-/** Updates the image-based current-player marker. */
+/**
+ * Copies the active player image and alt text into the current marker.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param currentMarker - Current-player marker element that receives the active player state.
+ */
 function updateImagePlayerMarker(
   currentMarker: HTMLImageElement,
 ): void {
@@ -220,14 +345,26 @@ function updateImagePlayerMarker(
   currentMarker.alt = `${currentPlayer} player`;
 }
 
-/** Returns the active player's score marker image. */
+/**
+ * Finds the marker image displayed beside the active player score.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns Matching marker image, or null when it is not rendered.
+ */
 function getPlayerMarkerImage(): HTMLImageElement | null {
   return document.querySelector<HTMLImageElement>(
     `.game-info__score--${currentPlayer} .game-info__player-marker`,
   );
 }
 
-/** Updates the CSS-based Gaming current-player marker. */
+/**
+ * Updates the Gaming marker dataset and accessible player label.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param currentMarker - Current-player marker element that receives the active player state.
+ */
 function updateGamingPlayerMarker(
   currentMarker: HTMLElement,
 ): void {
@@ -238,7 +375,13 @@ function updateGamingPlayerMarker(
   );
 }
 
-/** Schedules the Game Over dialog. */
+/**
+ * Delays the Game Over dialog after the final match.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ */
 function scheduleGameOver(app: HTMLDivElement): void {
   gameOverTimer = window.setTimeout(
     openGameOver,
@@ -247,7 +390,13 @@ function scheduleGameOver(app: HTMLDivElement): void {
   );
 }
 
-/** Opens the Game Over dialog. */
+/**
+ * Inserts the Game Over dialog if absent and starts its display flow.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ */
 function openGameOver(app: HTMLDivElement): void {
   gameOverTimer = null;
 
@@ -261,7 +410,13 @@ function openGameOver(app: HTMLDivElement): void {
   showGameOverDialog(app);
 }
 
-/** Shows the Game Over dialog and schedules results. */
+/**
+ * Displays Game Over modally before transitioning to the result overlay.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ */
 function showGameOverDialog(app: HTMLDivElement): void {
   const dialog = app.querySelector<HTMLDialogElement>('.game-over');
 
@@ -272,19 +427,37 @@ function showGameOverDialog(app: HTMLDivElement): void {
   scheduleResultOverlay(app);
 }
 
-/** Prevents a dialog from being closed with Escape. */
+/**
+ * Keeps transient game dialogs open until the scripted transition completes.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param dialog - Dialog element being configured, focused, or protected from cancellation.
+ */
 function preventDialogCancellation(
   dialog: HTMLDialogElement,
 ): void {
   dialog.addEventListener('cancel', preventDefault);
 }
 
-/** Prevents the default behavior of an event. */
+/**
+ * Cancels a dialog event without changing application state.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param event - Browser event whose target or default behavior drives the interaction.
+ */
 function preventDefault(event: Event): void {
   event.preventDefault();
 }
 
-/** Schedules the final result overlay. */
+/**
+ * Delays the result overlay until the Game Over dialog has been shown.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ */
 function scheduleResultOverlay(app: HTMLDivElement): void {
   resultOverlayTimer = window.setTimeout(
     showResultOverlay,
@@ -293,14 +466,26 @@ function scheduleResultOverlay(app: HTMLDivElement): void {
   );
 }
 
-/** Replaces Game Over with the final result overlay. */
+/**
+ * Removes Game Over and opens the final result overlay.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ */
 function showResultOverlay(app: HTMLDivElement): void {
   resultOverlayTimer = null;
   closeGameOver(app);
   openResultOverlay(app);
 }
 
-/** Closes and removes the Game Over dialog. */
+/**
+ * Closes the transient Game Over dialog and removes it from the DOM.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ */
 function closeGameOver(app: HTMLDivElement): void {
   const dialog = app.querySelector<HTMLDialogElement>('.game-over');
 
@@ -310,7 +495,13 @@ function closeGameOver(app: HTMLDivElement): void {
   dialog.remove();
 }
 
-/** Opens the final result overlay. */
+/**
+ * Inserts the result overlay once and displays the final score outcome.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ */
 function openResultOverlay(app: HTMLDivElement): void {
   if (app.querySelector('.result-overlay')) return;
 
@@ -322,7 +513,13 @@ function openResultOverlay(app: HTMLDivElement): void {
   showResultDialog(app);
 }
 
-/** Shows the final result dialog. */
+/**
+ * Displays the result overlay modally and focuses its back button.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param app - Root application container whose visible screen or dialog content is updated.
+ */
 function showResultDialog(app: HTMLDivElement): void {
   const dialog =
     app.querySelector<HTMLDialogElement>('.result-overlay');
@@ -334,7 +531,13 @@ function showResultDialog(app: HTMLDivElement): void {
   focusBackToStartButton(dialog);
 }
 
-/** Focuses the result overlay's back button. */
+/**
+ * Moves focus to the result overlay action that returns to start.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param dialog - Dialog element being configured, focused, or protected from cancellation.
+ */
 function focusBackToStartButton(
   dialog: HTMLDialogElement,
 ): void {
@@ -343,13 +546,21 @@ function focusBackToStartButton(
     ?.focus();
 }
 
-/** Resets the state of the current card turn. */
+/**
+ * Clears the selected card and allows the next turn to proceed.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ */
 function resetCardTurn(): void {
   firstFlippedCard = null;
   isCheckingPair = false;
 }
 
-/** Clears every active game timer. */
+/**
+ * Cancels pending game timers and resets in-progress card selection.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ */
 function resetGameInteraction(): void {
   flipBackTimer = clearTimer(flipBackTimer);
   gameOverTimer = clearTimer(gameOverTimer);
@@ -357,14 +568,27 @@ function resetGameInteraction(): void {
   resetCardTurn();
 }
 
-/** Clears a timer and returns its reset value. */
+/**
+ * Cancels a pending timer and returns the null state used by timer fields.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param timer - Pending timeout identifier that should be cancelled when present.
+ * @returns Always returns null after clearing the stored timer reference.
+ */
 function clearTimer(timer: number | null): null {
   if (timer !== null) window.clearTimeout(timer);
 
   return null;
 }
 
-/** Resets the complete game state. */
+/**
+ * Reinitializes scores, turn state, theme, player, and pair counts.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param settings - Selected game settings used to initialize state or render UI.
+ */
 function resetGameState(settings?: SelectedSettings): void {
   resetGameInteraction();
   currentPlayer = settings?.player ?? 'blue';
@@ -374,7 +598,13 @@ function resetGameState(settings?: SelectedSettings): void {
   totalPairs = settings ? settings.boardSize / 2 : 0;
 }
 
-/** Creates an empty score record. */
+/**
+ * Creates a zeroed score record for both players.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns Score record with values for both players.
+ */
 function createEmptyScores(): Scores {
   return {
     blue: 0,

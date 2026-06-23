@@ -19,6 +19,11 @@ import vueUrl from '../../assets/images/cards/code-vibes/logos/vue.svg';
 
 import type { CardDefinition } from '../types/card.types';
 
+/**
+ * Code Vibes card definitions used to build matching pairs.
+ *
+ * The exported data is consumed when creating theme-specific memory card pairs.
+ */
 export const codeVibesCards: CardDefinition[] = [
   { id: 'angular', label: 'Angular', image: angularUrl },
   { id: 'typescript', label: 'TypeScript', image: typescriptUrl },
