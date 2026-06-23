@@ -86,7 +86,13 @@ export const themePreviewMap: Record<
   },
 };
 
-/** Renders the complete settings screen. */
+/**
+ * Builds the settings view with controls, preview, and summary.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 export function renderSettingsScreen(): string {
   return `
     <main class="settings-screen">
@@ -98,7 +104,13 @@ export function renderSettingsScreen(): string {
   `;
 }
 
-/** Renders the settings controls column. */
+/**
+ * Builds the column containing all settings radio groups.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderSettingsColumn(): string {
   return `
     <div class="settings-screen__left">
@@ -108,7 +120,13 @@ function renderSettingsColumn(): string {
   `;
 }
 
-/** Renders the settings page heading. */
+/**
+ * Builds the settings heading and decorative underline.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderSettingsHeader(): string {
   return `
     <header class="settings-screen__header">
@@ -121,7 +139,13 @@ function renderSettingsHeader(): string {
   `;
 }
 
-/** Renders the preview and settings summary column. */
+/**
+ * Builds the theme preview and selected-settings summary column.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderPreviewColumn(): string {
   const initialTheme = themePreviewMap[DEFAULT_THEME];
 
@@ -137,7 +161,13 @@ function renderPreviewColumn(): string {
   `;
 }
 
-/** Renders the selected-settings summary and start button. */
+/**
+ * Builds the summary placeholders and disabled start action.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderSettingsSummary(): string {
   return `
     <div class="settings-summary">
@@ -151,7 +181,15 @@ function renderSettingsSummary(): string {
   `;
 }
 
-/** Renders one settings summary item. */
+/**
+ * Builds one summary slot updated by the settings controller.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param name - Settings group or action name used to locate related DOM or summary content.
+ * @param label - Visible label rendered for a control or summary item.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderSummaryItem(
   name: SettingName,
   label: string,
@@ -163,7 +201,13 @@ function renderSummaryItem(
   `;
 }
 
-/** Renders a decorative summary separator. */
+/**
+ * Builds the non-interactive divider between summary values.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderSummarySeparator(): string {
   return `
     <span
@@ -173,7 +217,13 @@ function renderSummarySeparator(): string {
   `;
 }
 
-/** Renders the disabled start button. */
+/**
+ * Builds the start button that becomes enabled after valid selections.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderStartButton(): string {
   return `
     <button
@@ -188,7 +238,13 @@ function renderStartButton(): string {
   `;
 }
 
-/** Renders the icon used by the start button. */
+/**
+ * Builds the inline arrow icon displayed in the start button.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderStartIcon(): string {
   return `
     <svg
@@ -205,7 +261,14 @@ function renderStartIcon(): string {
   `;
 }
 
-/** Renders one settings fieldset. */
+/**
+ * Builds a fieldset for one settings group and its options.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param config - Settings group configuration used to render its legend and options.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderSettingsGroup(
   config: SettingsGroupConfig,
 ): string {
@@ -223,7 +286,14 @@ function renderSettingsGroup(
   `;
 }
 
-/** Renders the legend for one settings group. */
+/**
+ * Builds the labeled legend and icon for a settings group.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param config - Settings group configuration used to render its legend and options.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderSettingsLegend(
   config: SettingsGroupConfig,
 ): string {
@@ -237,7 +307,16 @@ function renderSettingsLegend(
   `;
 }
 
-/** Renders one radio option. */
+/**
+ * Builds one labeled radio option for the settings form.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param name - Settings group or action name used to locate related DOM or summary content.
+ * @param value - String value being validated or formatted for display.
+ * @param label - Visible label rendered for a control or summary item.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderRadioOption(
   name: SettingName,
   value: string,

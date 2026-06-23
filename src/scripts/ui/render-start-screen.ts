@@ -2,7 +2,13 @@ import primaryButtonHoverUrl from '../../assets/images/primary-button-hover.png'
 import primaryButtonUrl from '../../assets/images/primary-button.png';
 import controllerUrl from '../../assets/images/stadia-controller.png';
 
-/** Renders the initial game start screen. */
+/**
+ * Builds the initial screen that invites the user to start setup.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 export function renderStartScreen(): string {
   return `
     <main class="start-screen">
@@ -12,7 +18,13 @@ export function renderStartScreen(): string {
   `;
 }
 
-/** Renders the decorative controller image. */
+/**
+ * Builds the decorative controller image for the start screen.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderControllerImage(): string {
   return `
     <img
@@ -24,7 +36,13 @@ function renderControllerImage(): string {
   `;
 }
 
-/** Renders the start screen text and play button. */
+/**
+ * Builds the start-screen copy and action that opens settings.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderStartContent(): string {
   return `
     <section class="start-screen__content">
@@ -35,7 +53,13 @@ function renderStartContent(): string {
   `;
 }
 
-/** Renders the button that opens the settings screen. */
+/**
+ * Builds the start button with hover and default visual states.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderPlayButton(): string {
   return `
     <button
@@ -58,7 +82,16 @@ function renderPlayButton(): string {
   `;
 }
 
-/** Renders one visual state of the play button. */
+/**
+ * Builds one layered image used by the start button visual states.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param source - Asset URL inserted into the rendered image markup.
+ * @param modifierClass - Optional CSS modifier appended to generated markup.
+ * @param alternativeText - Accessible text assigned to the rendered image when it is meaningful.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderPlayButtonImage(
   source: string,
   modifierClass: string,

@@ -5,7 +5,14 @@ import type { ThemeOption } from './render-settings-screen';
 type DialogButtonModifier = 'back' | 'confirm';
 type DialogAction = 'close-exit-dialog' | 'confirm-exit';
 
-/** Renders the exit confirmation dialog for the selected theme. */
+/**
+ * Builds the themed confirmation dialog shown before leaving a game.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 export function renderExitDialog(
   theme: ThemeOption = 'code-vibes',
 ): string {
@@ -22,12 +29,26 @@ export function renderExitDialog(
   `;
 }
 
-/** Returns the theme modifier used by the dialog. */
+/**
+ * Returns the CSS modifier needed for the selected exit-dialog theme.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function getThemeClass(theme: ThemeOption): string {
   return theme === 'gaming' ? ' exit-dialog--gaming' : '';
 }
 
-/** Renders the dialog title for the selected theme. */
+/**
+ * Builds the themed exit-dialog title while preserving accessible text.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderExitDialogTitle(theme: ThemeOption): string {
   if (theme === 'gaming') {
     return `
@@ -49,7 +70,14 @@ function renderExitDialogTitle(theme: ThemeOption): string {
   `;
 }
 
-/** Renders both exit-dialog action buttons. */
+/**
+ * Builds the cancel and confirm actions for the exit dialog.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderExitDialogActions(theme: ThemeOption): string {
   const isGaming = theme === 'gaming';
   const backLabel = isGaming ? 'No, back to game' : 'Back to game';
@@ -71,7 +99,16 @@ function renderExitDialogActions(theme: ThemeOption): string {
   `;
 }
 
-/** Renders one exit-dialog action button. */
+/**
+ * Builds one exit-dialog button with its action and optional style modifier.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param modifier - Value used by this declaration to produce its documented behavior.
+ * @param action - Value used by this declaration to produce its documented behavior.
+ * @param label - Visible label rendered for a control or summary item.
+ * @returns HTML markup or display text consumed by the caller.
+ */
 function renderDialogButton(
   modifier: DialogButtonModifier,
   action: DialogAction,
