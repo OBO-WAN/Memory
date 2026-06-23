@@ -3,11 +3,10 @@ import primaryButtonUrl from '../../assets/images/primary-button.png';
 import controllerUrl from '../../assets/images/stadia-controller.png';
 
 /**
- * Builds the initial screen that invites the user to start setup.
+ * Builds the complete start screen shown before game configuration begins.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @returns HTML markup or display text consumed by the caller.
+ * @returns Main landmark markup containing the decorative artwork, page heading,
+ * and button that opens the settings screen.
  */
 export function renderStartScreen(): string {
   return `
@@ -19,11 +18,12 @@ export function renderStartScreen(): string {
 }
 
 /**
- * Builds the decorative controller image for the start screen.
+ * Builds the decorative controller artwork displayed beside the start content.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
+ * The empty alternative text keeps the purely visual image out of the
+ * accessible name and reading order.
  *
- * @returns HTML markup or display text consumed by the caller.
+ * @returns Decorative controller image markup for the start screen.
  */
 function renderControllerImage(): string {
   return `
@@ -31,17 +31,17 @@ function renderControllerImage(): string {
       class="start-screen__controller"
       src="${controllerUrl}"
       alt=""
-      aria-hidden="true"
     />
   `;
 }
 
 /**
- * Builds the start-screen copy and action that opens settings.
+ * Builds the introductory copy and primary action for the start screen.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
+ * The section is identified by its level-one heading and groups the text with
+ * the control that continues to game configuration.
  *
- * @returns HTML markup or display text consumed by the caller.
+ * @returns Section markup containing the eyebrow, heading, and play button.
  */
 function renderStartContent(): string {
   return `
@@ -54,11 +54,12 @@ function renderStartContent(): string {
 }
 
 /**
- * Builds the start button with hover and default visual states.
+ * Builds the button that opens the game settings screen.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
+ * Its accessible name starts with the visible word “Play” and also describes
+ * the configuration step triggered by the interaction.
  *
- * @returns HTML markup or display text consumed by the caller.
+ * @returns Button markup containing the default and hover-state image layers.
  */
 function renderPlayButton(): string {
   return `
@@ -66,46 +67,39 @@ function renderPlayButton(): string {
       class="start-screen__button"
       type="button"
       data-action="open-settings"
-      aria-label="Start game"
+      aria-label="Play – open game settings"
     >
       ${renderPlayButtonImage(
         primaryButtonUrl,
         'start-screen__button-img--default',
-        'Play',
       )}
       ${renderPlayButtonImage(
         primaryButtonHoverUrl,
         'start-screen__button-img--hover',
-        '',
       )}
     </button>
   `;
 }
 
 /**
- * Builds one layered image used by the start button visual states.
+ * Builds one decorative image layer used by the start button.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
+ * The surrounding button supplies the accessible name, so each visual state
+ * uses empty alternative text and is ignored by screen readers.
  *
- * @param source - Asset URL inserted into the rendered image markup.
- * @param modifierClass - Optional CSS modifier appended to generated markup.
- * @param alternativeText - Accessible text assigned to the rendered image when it is meaningful.
- * @returns HTML markup or display text consumed by the caller.
+ * @param source - Imported asset URL for the requested button state.
+ * @param modifierClass - CSS modifier that positions the image as a visual state.
+ * @returns Decorative image markup for the start button.
  */
 function renderPlayButtonImage(
   source: string,
   modifierClass: string,
-  alternativeText: string,
 ): string {
-  const accessibilityAttributes = alternativeText
-    ? `alt="${alternativeText}"`
-    : 'alt="" aria-hidden="true"';
-
   return `
     <img
       class="start-screen__button-img ${modifierClass}"
       src="${source}"
-      ${accessibilityAttributes}
+      alt=""
     />
   `;
 }

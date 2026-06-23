@@ -3,15 +3,20 @@
 $button-transition: 560ms cubic-bezier(0.22, 1, 0.36, 1);
 $button-move-transition: 320ms cubic-bezier(0.22, 1, 0.36, 1);
 
+body {
+  margin: 0;
+}
+
 .start-screen {
   position: relative;
-  min-height: 100svh;
+  height: 100svh;
+  box-sizing: border-box;
   display: grid;
   place-items: center;
   padding: clamp(24px, 5vw, 64px);
-  overflow: hidden;
+  overflow-y: clip;
   isolation: isolate;
-  background: $color-page-bg;
+  background: #282c2b;
 }
 
 .start-screen__content {
