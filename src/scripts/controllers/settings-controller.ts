@@ -1,4 +1,4 @@
-import { themePreviewMap } from '../ui/render-settings-screen';
+import { DEFAULT_THEME, themePreviewMap } from '../ui/render-settings-screen';
 import type { ThemeOption } from '../ui/render-settings-screen';
 
 const SETTING_NAMES = {
@@ -50,6 +50,86 @@ export function handleSettingsChange(event: Event): void {
   }
 
   updateSettingsSummary();
+}
+
+
+/**
+ * Temporarily previews a theme while a pointer hovers a theme radio option.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param event - Pointer event whose target determines the theme option being previewed.
+ */
+export function handleThemePreviewPointerOver(
+  event: PointerEvent,
+): void {
+  if (event.pointerType === 'touch') return;
+
+  const option = getThemePreviewOption(event.target);
+
+  if (!option || isMovingWithinOption(option, event.relatedTarget)) {
+    return;
+  }
+
+  const input = getThemeInputFromOption(option);
+
+  if (!input || !isThemeOption(input.value)) return;
+
+  applyThemePreview(input.value);
+}
+
+/**
+ * Restores the selected or default theme preview after pointer hover ends.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param event - Pointer event whose target determines whether hover truly left the option.
+ */
+export function handleThemePreviewPointerOut(
+  event: PointerEvent,
+): void {
+  if (event.pointerType === 'touch') return;
+
+  const option = getThemePreviewOption(event.target);
+
+  if (!option || isMovingWithinOption(option, event.relatedTarget)) {
+    return;
+  }
+
+  restoreSelectedThemePreview();
+}
+
+/**
+ * Temporarily previews a theme when keyboard focus enters a theme radio option.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param event - Focus event whose target determines the theme option being previewed.
+ */
+export function handleThemePreviewFocusIn(event: FocusEvent): void {
+  const option = getThemePreviewOption(event.target);
+  const input = option ? getThemeInputFromOption(option) : null;
+
+  if (!input || !isThemeOption(input.value)) return;
+
+  applyThemePreview(input.value);
+}
+
+/**
+ * Restores the selected or default theme preview after keyboard focus leaves a theme option.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param event - Focus event whose target determines whether focus truly left the option.
+ */
+export function handleThemePreviewFocusOut(event: FocusEvent): void {
+  const option = getThemePreviewOption(event.target);
+
+  if (!option || isMovingWithinOption(option, event.relatedTarget)) {
+    return;
+  }
+
+  restoreSelectedThemePreview();
 }
 
 /**
@@ -105,15 +185,77 @@ function getChangedInput(event: Event): HTMLInputElement | null {
 function updateThemePreview(input: HTMLInputElement): void {
   if (!isThemeOption(input.value)) return;
 
+  applyThemePreview(input.value);
+}
+
+/**
+ * Applies the configured image source and alt text for a theme preview.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ *
+ * @param theme - Theme option whose configured preview image is shown.
+ */
+function applyThemePreview(theme: ThemeOption): void {
   const previewImage = document.querySelector<HTMLImageElement>(
     '.settings-screen__preview',
   );
-  const selectedPreview = themePreviewMap[input.value];
+  const selectedPreview = themePreviewMap[theme];
 
   if (!previewImage) return;
 
   previewImage.src = selectedPreview.src;
   previewImage.alt = selectedPreview.alt;
+}
+
+/**
+ * Restores the preview for the checked theme or the default theme when none is selected.
+ *
+ * It performs the required DOM, focus, timer, or game-state side effect without returning data.
+ */
+function restoreSelectedThemePreview(): void {
+  applyThemePreview(getSelectedTheme() ?? DEFAULT_THEME);
+}
+
+/**
+ * Finds a radio option from a delegated preview event target.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param target - Event target used to find the nearest radio option.
+ * @returns Matching radio option, or null when the target is outside one.
+ */
+function getThemePreviewOption(target: EventTarget | null): HTMLElement | null {
+  if (!(target instanceof Element)) return null;
+
+  return target.closest<HTMLElement>('.radio-option');
+}
+
+/**
+ * Finds the theme radio input contained by a radio option.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param option - Radio option that may contain a theme input.
+ * @returns Theme radio input, or null when the option is not for theme selection.
+ */
+function getThemeInputFromOption(option: HTMLElement): HTMLInputElement | null {
+  return option.querySelector<HTMLInputElement>('input[name="theme"]');
+}
+
+/**
+ * Detects delegated pointer or focus movement that remains inside one option.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param option - Radio option currently handling a delegated preview event.
+ * @param relatedTarget - Element receiving pointer or focus after the current event.
+ * @returns Whether the event represents movement within the same option.
+ */
+function isMovingWithinOption(
+  option: HTMLElement,
+  relatedTarget: EventTarget | null,
+): boolean {
+  return relatedTarget instanceof Node && option.contains(relatedTarget);
 }
 
 /**

@@ -12,6 +12,10 @@ import {
 import {
   getSelectedSettings,
   handleSettingsChange,
+  handleThemePreviewFocusIn,
+  handleThemePreviewFocusOut,
+  handleThemePreviewPointerOut,
+  handleThemePreviewPointerOver,
   updateSettingsSummary,
 } from './controllers/settings-controller';
 import { renderSettingsScreen } from './ui/render-settings-screen';
@@ -59,6 +63,10 @@ export function initApp(): void {
   renderStartView(app);
   app.addEventListener('click', handleAppClick);
   app.addEventListener('change', handleSettingsChange);
+  app.addEventListener('pointerover', handleThemePreviewPointerOver);
+  app.addEventListener('pointerout', handleThemePreviewPointerOut);
+  app.addEventListener('focusin', handleThemePreviewFocusIn);
+  app.addEventListener('focusout', handleThemePreviewFocusOut);
 }
 
 /**

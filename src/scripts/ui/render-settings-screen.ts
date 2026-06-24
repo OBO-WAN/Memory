@@ -29,7 +29,7 @@ interface SettingsGroupConfig {
   options: readonly SettingsOption[];
 }
 
-const DEFAULT_THEME: ThemeOption = 'code-vibes';
+export const DEFAULT_THEME: ThemeOption = 'code-vibes';
 
 const SETTINGS_GROUPS: readonly SettingsGroupConfig[] = [
   {
