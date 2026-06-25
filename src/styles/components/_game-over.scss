@@ -251,3 +251,137 @@
   }
 }
 
+.game-over--da-projects,
+.game-over--da-projects::backdrop {
+  background: #0b7296;
+}
+
+.game-over--da-projects .game-over__content {
+  width: min(calc(100% - 32px), 969px);
+  margin-inline: auto;
+  padding-block: clamp(48px, 8vh, 88px);
+  gap: clamp(108px, 16vh, 150px);
+  font-family: 'Figtree', sans-serif;
+}
+
+.game-over--da-projects .game-over__title--text {
+  width: auto;
+  margin: 0;
+  color: #fd5b4f;
+  font-family: 'Figtree', sans-serif;
+  font-size: clamp(76px, 10vw, 126px);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.035em;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.game-over--da-projects .game-over__summary {
+  gap: 16px;
+}
+
+.game-over--da-projects .game-over__final-score-title--text {
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  color: #ffffff;
+  font-family: 'Figtree', sans-serif;
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.game-over--da-projects .game-over__score {
+  width: auto;
+  min-width: 221px;
+  min-height: 76px;
+  padding: 16px 32px;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+.game-over--da-projects .game-over__score-content {
+  width: auto;
+  justify-content: center;
+  gap: 32px;
+}
+
+.game-over--da-projects .game-over__player {
+  gap: 8px;
+  font-family: 'Figtree', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  opacity: 1;
+  transform: none;
+}
+
+.game-over--da-projects .game-over__player--orange {
+  color: #ea6900;
+}
+
+.game-over--da-projects .game-over__player--blue {
+  color: #097fc5;
+}
+
+.game-over--da-projects .game-over__pawn {
+  width: 28px;
+  height: 36px;
+  flex: 0 0 auto;
+}
+
+@media (max-width: 768px) {
+  .game-over--da-projects .game-over__content {
+    padding-block: 40px;
+    gap: clamp(72px, 13vh, 108px);
+  }
+
+  .game-over--da-projects .game-over__title--text {
+    font-size: clamp(48px, 14vw, 88px);
+  }
+
+  .game-over--da-projects .game-over__final-score-title--text {
+    font-size: 30px;
+  }
+
+  .game-over--da-projects .game-over__score {
+    min-width: 190px;
+    min-height: 66px;
+    padding: 14px 24px;
+  }
+
+  .game-over--da-projects .game-over__score-content {
+    gap: 26px;
+  }
+
+  .game-over--da-projects .game-over__player {
+    font-size: 34px;
+  }
+
+  .game-over--da-projects .game-over__pawn {
+    width: 24px;
+    height: 31px;
+  }
+}
+
+@media (max-height: 620px) {
+  .game-over--da-projects .game-over__content {
+    padding-block: 24px;
+    gap: 40px;
+  }
+
+  .game-over--da-projects .game-over__title--text {
+    font-size: clamp(52px, 13vh, 82px);
+  }
+
+  .game-over--da-projects .game-over__final-score-title--text {
+    font-size: 28px;
+  }
+
+  .game-over--da-projects .game-over__score {
+    min-height: 60px;
+    padding-block: 12px;
+  }
+}
+

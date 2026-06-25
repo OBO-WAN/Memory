@@ -1,47 +1,31 @@
 import backButtonUrl from '../../assets/images/result-overlay/back-button.svg';
-import codeVibesBluePlayerTitleUrl from '../../assets/images/result-overlay/blue-player.svg';
-import codeVibesConfettiUrl from '../../assets/images/result-overlay/confetti.svg';
-import codeVibesDrawTitleUrl from '../../assets/images/result-overlay/draw-green.svg';
-import codeVibesItsATitleUrl from '../../assets/images/result-overlay/its-a.svg';
-import codeVibesOrangePlayerTitleUrl from '../../assets/images/result-overlay/orange-player.svg';
-import codeVibesBluePlayerIconUrl from '../../assets/images/result-overlay/player-blue.svg';
-import codeVibesOrangePlayerIconUrl from '../../assets/images/result-overlay/player.svg';
-import codeVibesScaleIconUrl from '../../assets/images/result-overlay/scale-icon.svg';
-import codeVibesWinnerTitleUrl from '../../assets/images/result-overlay/winner-title.svg';
-import gamingBluePlayerTitleUrl from '../../assets/images/result-overlay/game-theme/blue-player.svg';
-import gamingDrawTitleUrl from '../../assets/images/result-overlay/game-theme/draw.svg';
-import gamingItsATitleUrl from '../../assets/images/result-overlay/game-theme/its-a.svg';
-import gamingOrangePlayerTitleUrl from '../../assets/images/result-overlay/game-theme/orange-player.svg';
-import gamingScaleIconUrl from '../../assets/images/result-overlay/game-theme/scale-icon.svg';
-import gamingTrophyUrl from '../../assets/images/result-overlay/game-theme/trophy.svg';
-import gamingWinnerTitleUrl from '../../assets/images/result-overlay/game-theme/winner-title.svg';
 
+import {
+  DA_HOME_BUTTON_URL,
+  renderDaDrawResult,
+  renderDaWinnerResult,
+} from './render-da-result-content';
+import {
+  CODE_VIBES_CONFETTI_URL,
+  GAMING_TROPHY_URL,
+  getStandardDrawAssets,
+  getStandardWinnerAssets,
+} from './result-overlay-theme-assets';
+import type {
+  DrawAssets,
+  WinnerAssets,
+} from './result-overlay-theme-assets';
 import type { ThemeOption } from './render-settings-screen';
 
 type Player = 'blue' | 'orange';
 type Scores = Record<Player, number>;
 type Result = Player | 'draw';
 
-interface WinnerAssets {
-  playerIcon?: string;
-  playerTitle: string;
-  winnerTitle: string;
-}
-
-interface DrawAssets {
-  eyebrowTitle: string;
-  mainTitle: string;
-  scaleIcon: string;
-}
-
 /**
- * Builds the final modal overlay for the winning player or draw.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param scores - Current score values used to render or calculate the game result.
- * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the final result dialog for a winner or draw.
+ * @param scores - Final scores used to determine the result.
+ * @param theme - Active theme used to select artwork and layout.
+ * @returns Complete result-dialog markup.
  */
 export function renderResultOverlay(
   scores: Scores,
@@ -55,43 +39,38 @@ export function renderResultOverlay(
       aria-labelledby="result-overlay-title"
     >
       ${renderResult(result, theme)}
-      ${renderBackButton()}
+      ${renderHomeButton(theme)}
     </dialog>
   `;
 }
 
 /**
  * Chooses the winner or draw layout for the computed result.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param result - Computed final outcome used to choose labels, classes, or winner styling.
- * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
- * @returns HTML markup or display text consumed by the caller.
+ * @param result - Winning player or draw state.
+ * @param theme - Theme used to select the presentation.
+ * @returns Theme-specific result content.
  */
-function renderResult(
-  result: Result,
-  theme: ThemeOption,
-): string {
-  if (result === 'draw') return renderDrawResult(theme);
-
-  return renderWinnerResult(result, theme);
+function renderResult(result: Result, theme: ThemeOption): string {
+  return result === 'draw'
+    ? renderDrawResult(theme)
+    : renderWinnerResult(result, theme);
 }
 
 /**
- * Builds the themed winner announcement for one player.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param winner - Winning player used to select artwork and accessible labels.
- * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the winner layout required by the active theme.
+ * @param winner - Player announced as the winner.
+ * @param theme - Theme used to select the layout.
+ * @returns Winner announcement markup.
  */
 function renderWinnerResult(
   winner: Player,
   theme: ThemeOption,
 ): string {
-  const assets = getWinnerAssets(winner, theme);
+  if (theme === 'da-projects') {
+    return renderDaWinnerResult(winner);
+  }
+
+  const assets = getStandardWinnerAssets(winner, theme);
 
   return theme === 'gaming'
     ? renderGamingWinner(assets, winner)
@@ -99,66 +78,10 @@ function renderWinnerResult(
 }
 
 /**
- * Selects the title and player artwork for a winner announcement.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param winner - Winning player used to select artwork and accessible labels.
- * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
- * @returns Theme-specific artwork required to announce the winner.
- */
-function getWinnerAssets(
-  winner: Player,
-  theme: ThemeOption,
-): WinnerAssets {
-  return theme === 'gaming'
-    ? getGamingWinnerAssets(winner)
-    : getCodeVibesWinnerAssets(winner);
-}
-
-/**
- * Selects the Code Vibes artwork for the winning player.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param winner - Winning player used to select artwork and accessible labels.
- * @returns Theme-specific artwork required to announce the winner.
- */
-function getCodeVibesWinnerAssets(
-  winner: Player,
-): WinnerAssets {
-  return {
-    playerIcon: getCodeVibesPlayerIcon(winner),
-    playerTitle: getCodeVibesPlayerTitle(winner),
-    winnerTitle: codeVibesWinnerTitleUrl,
-  };
-}
-
-/**
- * Selects the Gaming title artwork for the winning player.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param winner - Winning player used to select artwork and accessible labels.
- * @returns Theme-specific artwork required to announce the winner.
- */
-function getGamingWinnerAssets(
-  winner: Player,
-): WinnerAssets {
-  return {
-    playerTitle: getGamingPlayerTitle(winner),
-    winnerTitle: gamingWinnerTitleUrl,
-  };
-}
-
-/**
- * Builds the Code Vibes winner layout with confetti and player icon.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param assets - Theme-specific artwork consumed by the rendered result section.
- * @param winner - Winning player used to select artwork and accessible labels.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the Code Vibes winner layout with confetti.
+ * @param assets - Artwork used by the announcement.
+ * @param winner - Player announced as the winner.
+ * @returns Code Vibes winner markup.
  */
 function renderCodeVibesWinner(
   assets: WinnerAssets,
@@ -167,9 +90,8 @@ function renderCodeVibesWinner(
   return `
     <img
       class="result-overlay__confetti"
-      src="${codeVibesConfettiUrl}"
+      src="${CODE_VIBES_CONFETTI_URL}"
       alt=""
-      aria-hidden="true"
     />
 
     <section class="result-overlay__content">
@@ -181,13 +103,10 @@ function renderCodeVibesWinner(
 }
 
 /**
- * Builds the Gaming winner layout with themed title artwork.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param assets - Theme-specific artwork consumed by the rendered result section.
- * @param winner - Winning player used to select artwork and accessible labels.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the Gaming winner layout with its trophy.
+ * @param assets - Artwork used by the announcement.
+ * @param winner - Player announced as the winner.
+ * @returns Gaming winner markup.
  */
 function renderGamingWinner(
   assets: WinnerAssets,
@@ -205,21 +124,18 @@ function renderGamingWinner(
 
       <img
         class="result-overlay__trophy"
-        src="${gamingTrophyUrl}"
+        src="${GAMING_TROPHY_URL}"
         alt=""
-        aria-hidden="true"
       />
     </section>
   `;
 }
 
 /**
- * Builds the decorative winner-title image with an optional modifier.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param source - Asset URL inserted into the rendered image markup.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the decorative winner-introduction image.
+ * @param source - Imported winner-title asset URL.
+ * @param modifierClass - Optional theme-specific class suffix.
+ * @returns Winner-title image markup.
  */
 function renderWinnerTitle(
   source: string,
@@ -235,18 +151,12 @@ function renderWinnerTitle(
 }
 
 /**
- * Builds the accessible image naming the winning player.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param source - Asset URL inserted into the rendered image markup.
- * @param winner - Winning player used to select artwork and accessible labels.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the image that names the winning player.
+ * @param source - Imported player-title asset URL.
+ * @param winner - Player named by the artwork.
+ * @returns Accessible winner-name image markup.
  */
-function renderWinnerName(
-  source: string,
-  winner: Player,
-): string {
+function renderWinnerName(source: string, winner: Player): string {
   return `
     <img
       id="result-overlay-title"
@@ -258,12 +168,9 @@ function renderWinnerName(
 }
 
 /**
- * Builds the Code Vibes winner icon when that asset exists.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param source - Asset URL inserted into the rendered image markup.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the decorative Code Vibes player icon.
+ * @param source - Optional player-icon asset URL.
+ * @returns Player-icon markup, or an empty string.
  */
 function renderPlayerIcon(source?: string): string {
   if (!source) return '';
@@ -273,99 +180,28 @@ function renderPlayerIcon(source?: string): string {
       class="result-overlay__player-icon"
       src="${source}"
       alt=""
-      aria-hidden="true"
     />
   `;
 }
 
 /**
- * Selects the Code Vibes title image for the winning player.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param winner - Winning player used to select artwork and accessible labels.
- * @returns HTML markup or display text consumed by the caller.
- */
-function getCodeVibesPlayerTitle(winner: Player): string {
-  return winner === 'orange'
-    ? codeVibesOrangePlayerTitleUrl
-    : codeVibesBluePlayerTitleUrl;
-}
-
-/**
- * Selects the Code Vibes icon image for the winning player.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param winner - Winning player used to select artwork and accessible labels.
- * @returns HTML markup or display text consumed by the caller.
- */
-function getCodeVibesPlayerIcon(winner: Player): string {
-  return winner === 'orange'
-    ? codeVibesOrangePlayerIconUrl
-    : codeVibesBluePlayerIconUrl;
-}
-
-/**
- * Selects the Gaming title image for the winning player.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param winner - Winning player used to select artwork and accessible labels.
- * @returns HTML markup or display text consumed by the caller.
- */
-function getGamingPlayerTitle(winner: Player): string {
-  return winner === 'orange'
-    ? gamingOrangePlayerTitleUrl
-    : gamingBluePlayerTitleUrl;
-}
-
-/**
- * Builds the draw layout using assets for the active theme.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the draw layout using theme-specific artwork.
+ * @param theme - Theme used to select draw assets.
+ * @returns Draw-result markup.
  */
 function renderDrawResult(theme: ThemeOption): string {
-  const assets = getDrawAssets(theme);
-  const modifierClass = getDrawModifierClass(theme);
+  if (theme === 'da-projects') return renderDaDrawResult();
 
-  return renderDrawContent(assets, modifierClass);
+  return renderDrawContent(
+    getStandardDrawAssets(theme),
+    getDrawModifierClass(theme),
+  );
 }
 
 /**
- * Selects title and icon assets for a draw result.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
- * @returns Theme-specific artwork required to announce a draw.
- */
-function getDrawAssets(theme: ThemeOption): DrawAssets {
-  if (theme === 'gaming') {
-    return {
-      eyebrowTitle: gamingItsATitleUrl,
-      mainTitle: gamingDrawTitleUrl,
-      scaleIcon: gamingScaleIconUrl,
-    };
-  }
-
-  return {
-    eyebrowTitle: codeVibesItsATitleUrl,
-    mainTitle: codeVibesDrawTitleUrl,
-    scaleIcon: codeVibesScaleIconUrl,
-  };
-}
-
-/**
- * Returns the extra draw-layout modifier required by the Gaming theme.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
- * @returns HTML markup or display text consumed by the caller.
+ * Returns the additional Gaming draw-layout class.
+ * @param theme - Theme whose modifier is required.
+ * @returns Gaming class suffix, or an empty string.
  */
 function getDrawModifierClass(theme: ThemeOption): string {
   return theme === 'gaming'
@@ -374,13 +210,10 @@ function getDrawModifierClass(theme: ThemeOption): string {
 }
 
 /**
- * Builds the shared draw result layout with theme-specific modifiers.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param assets - Theme-specific artwork consumed by the rendered result section.
- * @param modifierClass - Optional CSS modifier appended to generated markup.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the shared draw layout from supplied artwork.
+ * @param assets - Artwork used by the draw announcement.
+ * @param modifierClass - Optional theme-specific class suffix.
+ * @returns Draw content markup.
  */
 function renderDrawContent(
   assets: DrawAssets,
@@ -397,12 +230,9 @@ function renderDrawContent(
 }
 
 /**
- * Builds the accessible title images used by the draw result.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param assets - Theme-specific artwork consumed by the rendered result section.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the two title images used by a draw.
+ * @param assets - Draw-title assets for the active theme.
+ * @returns Eyebrow and main draw-title markup.
  */
 function renderDrawTitleImages(assets: DrawAssets): string {
   return `
@@ -422,12 +252,9 @@ function renderDrawTitleImages(assets: DrawAssets): string {
 }
 
 /**
- * Builds the decorative scale icon shown for a draw.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param source - Asset URL inserted into the rendered image markup.
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the decorative scale image displayed for a draw.
+ * @param source - Imported scale asset URL.
+ * @returns Decorative scale image markup.
  */
 function renderScaleIcon(source: string): string {
   return `
@@ -435,38 +262,36 @@ function renderScaleIcon(source: string): string {
       class="result-overlay__scale-icon"
       src="${source}"
       alt=""
-      aria-hidden="true"
     />
   `;
 }
 
 /**
- * Builds the result action that returns the user to the start screen.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @returns HTML markup or display text consumed by the caller.
+ * Builds the action that returns to the start screen.
+ * @param theme - Theme used to select button artwork and label.
+ * @returns Home or back-button markup.
  */
-function renderBackButton(): string {
+function renderHomeButton(theme: ThemeOption): string {
+  const isDaProjects = theme === 'da-projects';
+  const source = isDaProjects ? DA_HOME_BUTTON_URL : backButtonUrl;
+  const label = isDaProjects ? 'Home' : 'Back to start';
+
   return `
     <button
       class="result-overlay__back-button"
       type="button"
       data-action="back-to-start"
-      aria-label="Back to start"
+      aria-label="${label}"
     >
-      <img src="${backButtonUrl}" alt="" aria-hidden="true" />
+      <img src="${source}" alt="" />
     </button>
   `;
 }
 
 /**
- * Compares final scores and returns the winning player or draw state.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param scores - Current score values used to render or calculate the game result.
- * @returns Final outcome identifier derived from the two player scores.
+ * Compares final scores and returns the game result.
+ * @param scores - Final scores for both players.
+ * @returns Winning player, or `draw` for equal scores.
  */
 function getResult(scores: Scores): Result {
   if (scores.blue === scores.orange) return 'draw';
@@ -475,12 +300,9 @@ function getResult(scores: Scores): Result {
 }
 
 /**
- * Formats a lowercase player value for visible result text.
- *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param value - String value being validated or formatted for display.
- * @returns HTML markup or display text consumed by the caller.
+ * Formats a lowercase player value for visible text.
+ * @param value - Player value to capitalize.
+ * @returns Value with its first character capitalized.
  */
 function capitalize(value: string): string {
   return value.charAt(0).toUpperCase() + value.slice(1);

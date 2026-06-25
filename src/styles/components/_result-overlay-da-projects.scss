@@ -1,0 +1,112 @@
+.result-overlay.result-overlay--da-projects,
+.result-overlay.result-overlay--da-projects::backdrop {
+  background: #0b7296;
+}
+
+.result-overlay--da-projects .result-overlay__content--da-winner {
+  width: min(calc(100vw - 32px), 522px);
+  gap: 0;
+  transform: translateY(-20px);
+}
+
+.result-overlay--da-projects .result-overlay__winner-title--da {
+  width: min(45vw, 233px);
+  margin-bottom: 10px;
+}
+
+.result-overlay--da-projects .result-overlay__winner-name-image {
+  height: auto;
+  object-fit: contain;
+}
+
+.result-overlay--da-projects.result-overlay--orange
+  .result-overlay__winner-name-image {
+  width: min(calc(100vw - 32px), 518px);
+}
+
+.result-overlay--da-projects.result-overlay--blue
+  .result-overlay__winner-name-image {
+  width: min(calc(100vw - 32px), 400px);
+}
+
+.result-overlay--da-projects .result-overlay__da-pawn {
+  display: block;
+  width: min(42vw, 212px);
+  height: auto;
+  margin-top: clamp(38px, 6vh, 58px);
+  object-fit: contain;
+}
+
+.result-overlay--da-projects .result-overlay__content--da-draw {
+  gap: 0;
+  transform: translateY(-18px);
+}
+
+.result-overlay--da-projects
+  .result-overlay__content--da-draw
+  .result-overlay__draw-eyebrow {
+  width: min(22vw, 74px);
+  min-width: 0;
+  margin-bottom: 10px;
+}
+
+.result-overlay--da-projects
+  .result-overlay__content--da-draw
+  .result-overlay__draw-title {
+  width: min(calc(100vw - 40px), 384px);
+  margin-bottom: clamp(12px, 2vh, 20px);
+}
+
+.result-overlay--da-projects
+  .result-overlay__content--da-draw
+  .result-overlay__scale-icon {
+  width: min(55vw, 348px);
+}
+
+.result-overlay--da-projects .result-overlay__back-button {
+  width: 96px;
+  bottom: clamp(26px, 5vh, 48px);
+}
+
+@media (max-width: 600px) {
+  .result-overlay--da-projects .result-overlay__content--da-winner {
+    transform: translateY(-12px);
+  }
+
+  .result-overlay--da-projects .result-overlay__winner-title--da {
+    width: min(48vw, 210px);
+    margin-bottom: 8px;
+  }
+
+  .result-overlay--da-projects .result-overlay__da-pawn {
+    width: min(48vw, 190px);
+    margin-top: clamp(28px, 5vh, 44px);
+  }
+
+  .result-overlay--da-projects .result-overlay__content--da-draw {
+    transform: translateY(-10px);
+  }
+
+  .result-overlay--da-projects
+    .result-overlay__content--da-draw
+    .result-overlay__draw-title {
+    width: min(calc(100vw - 32px), 330px);
+  }
+
+  .result-overlay--da-projects
+    .result-overlay__content--da-draw
+    .result-overlay__scale-icon {
+    width: min(62vw, 290px);
+  }
+}
+
+@media (max-height: 650px) {
+  .result-overlay--da-projects .result-overlay__content--da-winner,
+  .result-overlay--da-projects .result-overlay__content--da-draw {
+    transform: scale(0.76) translateY(-12px);
+  }
+
+  .result-overlay--da-projects .result-overlay__back-button {
+    bottom: 18px;
+  }
+}
