@@ -62,8 +62,13 @@
   background: #08cdb7;
 }
 
-.game-screen--gaming .game-card__face--back {
+.game-screen--gaming .game-card__face--back,
+.game-screen--da-projects .game-card__face--back {
   background: transparent;
+}
+
+.game-screen--da-projects .game-card {
+  aspect-ratio: 6 / 5;
 }
 
 .game-card__face--front {
@@ -88,6 +93,16 @@
   height: 72%;
 }
 
+.game-screen--da-projects .game-card__face--front {
+  padding: 0;
+  background: transparent;
+}
+
+.game-screen--da-projects .game-card__logo {
+  width: 100%;
+  height: 100%;
+}
+
 .game-card.is-flipped .game-card__inner,
 .game-card.is-matched .game-card__inner {
   transform: rotateY(180deg);
@@ -107,9 +122,19 @@
     6px 6px 8px rgba(237, 27, 118, 0.3);
 }
 
+.game-screen--da-projects .game-card.is-matched .game-card__face--front {
+  border-radius: 13px;
+  background: transparent;
+  box-shadow: inset 0 0 0 2px #1e7594;
+}
+
 .game-card:focus-visible {
   outline: 3px solid #ffffff;
   outline-offset: 4px;
+}
+
+.game-screen--da-projects .game-card:focus-visible {
+  outline-color: #1e7594;
 }
 
 @media (hover: hover) and (pointer: fine) {

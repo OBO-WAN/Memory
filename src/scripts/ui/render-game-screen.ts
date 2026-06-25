@@ -1,7 +1,9 @@
 import codeVibesCardBackUrl from '../../assets/images/cards/code-vibes/card-back.svg';
+import daProjectsCardBackUrl from '../../assets/images/cards/da-theme/card-back.svg';
 import gamingCardBackUrl from '../../assets/images/cards/game-theme/card-back.svg';
 
 import { codeVibesCards } from '../data/code-vibes-cards';
+import { daProjectsCards } from '../data/da-projects-cards';
 import { gamingCards } from '../data/gaming-cards';
 import { createCardDeck } from '../game/create-card-deck';
 import type {
@@ -25,12 +27,11 @@ interface ThemeCardAssets {
 }
 
 /**
- * Builds the full game view for the selected theme, player, and board size.
+ * Builds the complete game screen from the selected theme and board settings.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param settings - Selected game settings used to initialize state or render UI.
- * @returns HTML markup or display text consumed by the caller.
+ * @param settings - Confirmed settings used to choose assets, create the deck,
+ * and identify the active player.
+ * @returns Main game markup containing the information header and card board.
  */
 export function renderGameScreen(
   settings: GameScreenSettings,
@@ -58,12 +59,13 @@ export function renderGameScreen(
 }
 
 /**
- * Selects the card faces and back image used by a theme.
+ * Selects the card definitions and back artwork assigned to a theme.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
+ * Themes without dedicated game assets continue to use the Code Vibes deck
+ * until their own card set is implemented.
  *
- * @param theme - Active theme used to choose ordering, artwork, or theme-specific markup.
- * @returns Card definitions and back artwork used to render the selected theme.
+ * @param theme - Active theme selected on the settings screen.
+ * @returns Card definitions and back artwork used to build the selected deck.
  */
 function getThemeCardAssets(
   theme: ThemeOption,
@@ -75,6 +77,13 @@ function getThemeCardAssets(
     };
   }
 
+  if (theme === 'da-projects') {
+    return {
+      cardBackUrl: daProjectsCardBackUrl,
+      definitions: daProjectsCards,
+    };
+  }
+
   return {
     cardBackUrl: codeVibesCardBackUrl,
     definitions: codeVibesCards,
@@ -82,14 +91,12 @@ function getThemeCardAssets(
 }
 
 /**
- * Builds the accessible board region containing every shuffled card.
+ * Builds the labelled board region containing the shuffled card buttons.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param cards - Card collection rendered, shuffled, validated, or reordered for play.
- * @param boardSize - Number of cards requested for the board and used to calculate pair count.
- * @param cardBackUrl - Value used by this declaration to produce its documented behavior.
- * @returns HTML markup or display text consumed by the caller.
+ * @param cards - Shuffled card instances rendered as playable buttons.
+ * @param boardSize - Selected card count used by the responsive board class.
+ * @param cardBackUrl - Theme-specific artwork shown on every concealed card.
+ * @returns Section markup containing the complete playable memory board.
  */
 function renderGameBoard(
   cards: readonly MemoryCard[],
@@ -107,13 +114,11 @@ function renderGameBoard(
 }
 
 /**
- * Joins the rendered card buttons for a shuffled deck.
+ * Converts every shuffled card instance into its button markup.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param cards - Card collection rendered, shuffled, validated, or reordered for play.
- * @param cardBackUrl - Value used by this declaration to produce its documented behavior.
- * @returns HTML markup or display text consumed by the caller.
+ * @param cards - Card instances created for the selected board size.
+ * @param cardBackUrl - Theme-specific artwork shared by all card backs.
+ * @returns Concatenated card button markup in shuffled board order.
  */
 function renderGameCards(
   cards: readonly MemoryCard[],
@@ -127,14 +132,12 @@ function renderGameCards(
 }
 
 /**
- * Builds one card button with pair metadata and accessible label.
+ * Builds one accessible card button with its pair and instance metadata.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param card - Rendered card or card data used to update the board markup or state.
- * @param index - Value used by this declaration to produce its documented behavior.
- * @param cardBackUrl - Value used by this declaration to produce its documented behavior.
- * @returns HTML markup or display text consumed by the caller.
+ * @param card - Card data used for matching and rendering the revealed face.
+ * @param index - Zero-based board position used in the accessible card label.
+ * @param cardBackUrl - Theme-specific artwork displayed while the card is hidden.
+ * @returns Button markup containing the card's concealed and revealed faces.
  */
 function renderGameCard(
   card: MemoryCard,
@@ -160,12 +163,10 @@ function renderGameCard(
 }
 
 /**
- * Builds the decorative back face shown before a card is flipped.
+ * Builds the decorative back face displayed before a card is revealed.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param cardBackUrl - Value used by this declaration to produce its documented behavior.
- * @returns HTML markup or display text consumed by the caller.
+ * @param cardBackUrl - Imported theme artwork used for the concealed card state.
+ * @returns Back-face markup with an image ignored by assistive technology.
  */
 function renderCardBack(cardBackUrl: string): string {
   return `
@@ -174,19 +175,16 @@ function renderCardBack(cardBackUrl: string): string {
         class="game-card__back-image"
         src="${cardBackUrl}"
         alt=""
-        aria-hidden="true"
       />
     </span>
   `;
 }
 
 /**
- * Builds the front face that reveals the card image and label.
+ * Builds the revealed face containing the card's meaningful illustration.
  *
- * Callers use the result to render markup, validate state, or choose the next UI step.
- *
- * @param card - Rendered card or card data used to update the board markup or state.
- * @returns HTML markup or display text consumed by the caller.
+ * @param card - Card definition providing the image source and accessible label.
+ * @returns Front-face markup displayed when the card is flipped or matched.
  */
 function renderCardFront(card: MemoryCard): string {
   return `
