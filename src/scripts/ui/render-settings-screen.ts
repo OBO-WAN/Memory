@@ -40,7 +40,7 @@ const SETTINGS_GROUPS: readonly SettingsGroupConfig[] = [
       ['code-vibes', 'Code vibes theme'],
       ['gaming', 'Gaming theme'],
       ['da-projects', 'DA Projects theme'],
-      ['foods', 'Foods theme'],
+      //['foods', 'Foods theme'],
     ],
   },
   {
