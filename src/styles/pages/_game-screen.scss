@@ -16,6 +16,10 @@
   --game-screen-bg: #254e61;
 }
 
+.game-screen--da-projects {
+  --game-screen-bg: #ffffff;
+}
+
 @media (max-width: 620px) {
   .game-screen {
     padding: 20px 12px 32px;
