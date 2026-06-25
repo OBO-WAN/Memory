@@ -124,8 +124,20 @@
 
 .game-screen--da-projects .game-card.is-matched .game-card__face--front {
   border-radius: 13px;
-  background: transparent;
-  box-shadow: inset 0 0 0 2px #1e7594;
+  background: #f0fbff;
+  box-shadow: none;
+}
+
+.game-screen--da-projects
+  .game-card.is-matched
+  .game-card__face--front::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border: 2px solid #1e7594;
+  border-radius: 13px;
+  pointer-events: none;
 }
 
 .game-card:focus-visible {
