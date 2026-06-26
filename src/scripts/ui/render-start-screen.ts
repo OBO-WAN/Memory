@@ -1,5 +1,5 @@
-import primaryButtonHoverUrl from '../../assets/images/primary-button-hover.svg';
-import primaryButtonUrl from '../../assets/images/primary-button.svg';
+import playButtonDecorationHoverUrl from '../../assets/images/play-button-decoration-hover.svg';
+import playButtonDecorationUrl from '../../assets/images/play-button-decoration.svg';
 import controllerUrl from '../../assets/images/stadia-controller.svg';
 
 /**
@@ -41,7 +41,7 @@ function renderControllerImage(): string {
  * The section is identified by its level-one heading and groups the text with
  * the control that continues to game configuration.
  *
- * @returns Section markup containing the eyebrow, heading, and play button.
+ * @returns Section markup containing the eyebrow, heading, and Play button.
  */
 function renderStartContent(): string {
   return `
@@ -56,10 +56,10 @@ function renderStartContent(): string {
 /**
  * Builds the button that opens the game settings screen.
  *
- * Its accessible name starts with the visible word “Play” and also describes
- * the configuration step triggered by the interaction.
+ * The visible label remains semantic text while the controller and arrow
+ * artwork crossfade between the supplied default and hover designs.
  *
- * @returns Button markup containing the default and hover-state image layers.
+ * @returns Play button markup with live text and decorative state artwork.
  */
 function renderPlayButton(): string {
   return `
@@ -69,35 +69,39 @@ function renderPlayButton(): string {
       data-action="open-settings"
       aria-label="Play – open game settings"
     >
-      ${renderPlayButtonImage(
-        primaryButtonUrl,
-        'start-screen__button-img--default',
-      )}
-      ${renderPlayButtonImage(
-        primaryButtonHoverUrl,
-        'start-screen__button-img--hover',
-      )}
+      <span
+        class="start-screen__button-artwork"
+        aria-hidden="true"
+      >
+        ${renderPlayButtonArtwork(
+          playButtonDecorationUrl,
+          'start-screen__button-artwork-img--default',
+        )}
+        ${renderPlayButtonArtwork(
+          playButtonDecorationHoverUrl,
+          'start-screen__button-artwork-img--hover',
+        )}
+      </span>
+
+      <span class="start-screen__button-label">Play</span>
     </button>
   `;
 }
 
 /**
- * Builds one decorative image layer used by the start button.
+ * Builds one decorative artwork layer used by the Play button.
  *
- * The surrounding button supplies the accessible name, so each visual state
- * uses empty alternative text and is ignored by screen readers.
- *
- * @param source - Imported asset URL for the requested button state.
- * @param modifierClass - CSS modifier that positions the image as a visual state.
- * @returns Decorative image markup for the start button.
+ * @param source - Imported controller-and-arrow asset URL.
+ * @param modifierClass - State class used to position and crossfade the artwork.
+ * @returns Decorative image markup for one button state.
  */
-function renderPlayButtonImage(
+function renderPlayButtonArtwork(
   source: string,
   modifierClass: string,
 ): string {
   return `
     <img
-      class="start-screen__button-img ${modifierClass}"
+      class="start-screen__button-artwork-img ${modifierClass}"
       src="${source}"
       alt=""
     />
