@@ -8,6 +8,8 @@ import daOrangePawnUrl from '../../assets/images/result-overlay/da-theme/orange-
 import daOrangePlayerTitleUrl from '../../assets/images/result-overlay/da-theme/orange-player-title.svg';
 import daWinnerTitleUrl from '../../assets/images/result-overlay/da-theme/winner-title.svg';
 
+import { formatPlayerLabel } from '../utils/format-player-label';
+
 type Player = 'blue' | 'orange';
 
 /**
@@ -37,7 +39,7 @@ export function renderDaWinnerResult(winner: Player): string {
         id="result-overlay-title"
         class="result-overlay__winner-name-image"
         src="${getPlayerTitle(winner)}"
-        alt="${capitalize(winner)} player"
+        alt="${formatPlayerLabel(winner)} player"
       />
 
       <img
@@ -103,14 +105,4 @@ function getPlayerTitle(winner: Player): string {
  */
 function getPlayerPawn(winner: Player): string {
   return winner === 'orange' ? daOrangePawnUrl : daBluePawnUrl;
-}
-
-/**
- * Formats a player identifier for accessible text.
- *
- * @param value - Player value to capitalize.
- * @returns Value with its first character capitalized.
- */
-function capitalize(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1);
 }

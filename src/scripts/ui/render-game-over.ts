@@ -4,6 +4,7 @@ import codeVibesFinalScoreTitleUrl from '../../assets/images/game-over/final-sco
 import codeVibesGameOverTitleUrl from '../../assets/images/game-over/game-over-title.svg';
 import gamingFinalScoreTitleUrl from '../../assets/images/game-over/game-theme/final-score-title.svg';
 import gamingGameOverTitleUrl from '../../assets/images/game-over/game-theme/game-over-title.svg';
+import { formatPlayerLabel } from '../utils/format-player-label';
 
 import type { ThemeOption } from './render-settings-screen';
 
@@ -13,6 +14,7 @@ const ORANGE_FIRST_SCORE_ORDER = ['orange', 'blue'] as const;
 type Player = 'blue' | 'orange';
 type Scores = Record<Player, number>;
 type Result = Player | 'draw';
+type ImageGameOverTheme = Exclude<ThemeOption, 'da-projects'>;
 
 interface GameOverAssets {
   finalScoreTitle: string;
@@ -166,14 +168,14 @@ function renderTitleImage(
 }
 
 /**
- * Selects the exported title artwork for image-based themes.
+ * Selects the exported title artwork for an image-based theme.
  *
- * Foods currently follows the Code Vibes fallback until its own Game Over
- * design is implemented.
- * @param theme - Active theme used to choose the title asset set.
+ * @param theme - Active image-based theme used to choose the title assets.
  * @returns Imported Game Over and final-score title URLs.
  */
-function getGameOverAssets(theme: ThemeOption): GameOverAssets {
+function getGameOverAssets(
+  theme: ImageGameOverTheme,
+): GameOverAssets {
   if (theme === 'gaming') {
     return {
       finalScoreTitle: gamingFinalScoreTitleUrl,
@@ -277,14 +279,15 @@ function getResult(scores: Scores): Result {
 function getResultText(result: Result): string {
   if (result === 'draw') return "It's a draw.";
 
-  return `${capitalize(result)} wins.`;
+  return `${formatPlayerLabel(result)} wins.`;
 }
 
 /**
  * Builds one score entry using the presentation required by the theme.
  *
- * Gaming and DA Projects reuse the pawn artwork, while Code Vibes and the
- * current Foods fallback retain the labelled marker style.
+ * Gaming and DA Projects use pawn artwork, while Code Vibes retains its
+ * labelled marker style.
+ *
  * @param theme - Active theme used to choose the score presentation.
  * @param player - Player represented by the score entry.
  * @param score - Final point total displayed for the player.
@@ -329,7 +332,7 @@ function renderCodeVibesPlayerScore(
         game-over__player--${player}${getWinnerClass(player, result)}"
     >
       <span class="game-over__marker"></span>
-      <span>${capitalize(player)}</span>
+      <span>${formatPlayerLabel(player)}</span>
       <strong>${score}</strong>
     </span>
   `;
@@ -382,13 +385,4 @@ function getWinnerClass(player: Player, result: Result): string {
  */
 function getPawnUrl(player: Player): string {
   return player === 'orange' ? orangePawnUrl : bluePawnUrl;
-}
-
-/**
- * Converts a lowercase player identifier into visible title case.
- * @param value - Player value to format.
- * @returns The supplied string with its first character capitalized.
- */
-function capitalize(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1);
 }

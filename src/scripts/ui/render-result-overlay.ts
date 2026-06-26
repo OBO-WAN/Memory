@@ -1,4 +1,5 @@
 import backButtonUrl from '../../assets/images/result-overlay/back-button.svg';
+import { formatPlayerLabel } from '../utils/format-player-label';
 
 import {
   DA_HOME_BUTTON_URL,
@@ -20,6 +21,7 @@ import type { ThemeOption } from './render-settings-screen';
 type Player = 'blue' | 'orange';
 type Scores = Record<Player, number>;
 type Result = Player | 'draw';
+type StandardResultTheme = Exclude<ThemeOption, 'da-projects'>;
 
 /**
  * Builds the final result dialog for a winner or draw.
@@ -152,6 +154,7 @@ function renderWinnerTitle(
 
 /**
  * Builds the image that names the winning player.
+ *
  * @param source - Imported player-title asset URL.
  * @param winner - Player named by the artwork.
  * @returns Accessible winner-name image markup.
@@ -162,7 +165,7 @@ function renderWinnerName(source: string, winner: Player): string {
       id="result-overlay-title"
       class="result-overlay__winner-name-image"
       src="${source}"
-      alt="${capitalize(winner)} player"
+      alt="${formatPlayerLabel(winner)} player"
     />
   `;
 }
@@ -186,6 +189,7 @@ function renderPlayerIcon(source?: string): string {
 
 /**
  * Builds the draw layout using theme-specific artwork.
+ *
  * @param theme - Theme used to select draw assets.
  * @returns Draw-result markup.
  */
@@ -200,10 +204,13 @@ function renderDrawResult(theme: ThemeOption): string {
 
 /**
  * Returns the additional Gaming draw-layout class.
- * @param theme - Theme whose modifier is required.
+ *
+ * @param theme - Standard result theme whose modifier is required.
  * @returns Gaming class suffix, or an empty string.
  */
-function getDrawModifierClass(theme: ThemeOption): string {
+function getDrawModifierClass(
+  theme: StandardResultTheme,
+): string {
   return theme === 'gaming'
     ? ' result-overlay__content--gaming-draw'
     : '';
@@ -297,13 +304,4 @@ function getResult(scores: Scores): Result {
   if (scores.blue === scores.orange) return 'draw';
 
   return scores.blue > scores.orange ? 'blue' : 'orange';
-}
-
-/**
- * Formats a lowercase player value for visible text.
- * @param value - Player value to capitalize.
- * @returns Value with its first character capitalized.
- */
-function capitalize(value: string): string {
-  return value.charAt(0).toUpperCase() + value.slice(1);
 }
