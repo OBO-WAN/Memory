@@ -1,5 +1,16 @@
 @use '../abstracts/variables' as *;
 
+@mixin filled-radio-control {
+  background: $color-ui-dark;
+  box-shadow: inset 0 0 0 5px $color-settings-panel;
+}
+
+@mixin visible-radio-marker {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
 .settings-group {
   margin: 0 0 clamp(40px, 5vw, 56px);
   padding: 0;
@@ -73,9 +84,9 @@
     box-shadow 160ms ease;
 }
 
-.radio-option__input:checked + .radio-option__control {
-  background: $color-ui-dark;
-  box-shadow: inset 0 0 0 5px $color-settings-panel;
+.radio-option__input:checked + .radio-option__control,
+.radio-option:focus-within:has(.radio-option__input[name='theme']) .radio-option__control {
+  @include filled-radio-control;
 }
 
 .radio-option__input:focus-visible + .radio-option__control {
@@ -101,10 +112,19 @@
     transform 180ms ease;
 }
 
-.radio-option__input:checked ~ .radio-option__marker {
-  opacity: 1;
-  visibility: visible;
-  transform: translateX(0);
+.radio-option__input:checked ~ .radio-option__marker,
+.radio-option:focus-within:has(.radio-option__input[name='theme']) .radio-option__marker {
+  @include visible-radio-marker;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .radio-option:hover:has(.radio-option__input[name='theme']) .radio-option__control {
+    @include filled-radio-control;
+  }
+
+  .radio-option:hover:has(.radio-option__input[name='theme']) .radio-option__marker {
+    @include visible-radio-marker;
+  }
 }
 
 @media (max-width: 1080px) {
