@@ -92,7 +92,7 @@ export function handleThemePreviewPointerOut(
 
   const option = getThemePreviewOption(event.target);
 
-  if (!option || isMovingWithinOption(option, event.relatedTarget)) {
+  if (!option || isMovingWithinThemeOptions(option, event.relatedTarget)) {
     return;
   }
 
@@ -125,7 +125,7 @@ export function handleThemePreviewFocusIn(event: FocusEvent): void {
 export function handleThemePreviewFocusOut(event: FocusEvent): void {
   const option = getThemePreviewOption(event.target);
 
-  if (!option || isMovingWithinOption(option, event.relatedTarget)) {
+  if (!option || isMovingWithinThemeOptions(option, event.relatedTarget)) {
     return;
   }
 
@@ -256,6 +256,28 @@ function isMovingWithinOption(
   relatedTarget: EventTarget | null,
 ): boolean {
   return relatedTarget instanceof Node && option.contains(relatedTarget);
+}
+
+/**
+ * Detects delegated pointer or focus movement that remains inside the same theme options container.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param option - Theme radio option currently handling a delegated preview exit event.
+ * @param relatedTarget - Element receiving pointer or focus after the current event.
+ * @returns Whether the event remains inside the same complete theme-options container.
+ */
+function isMovingWithinThemeOptions(
+  option: HTMLElement,
+  relatedTarget: EventTarget | null,
+): boolean {
+  const options = option.closest<HTMLElement>('.settings-group__options');
+
+  return (
+    relatedTarget instanceof Node &&
+    options !== null &&
+    options.contains(relatedTarget)
+  );
 }
 
 /**
