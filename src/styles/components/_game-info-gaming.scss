@@ -88,6 +88,14 @@
   font-size: clamp(20px, 2vw, 26px);
   font-weight: 700;
   line-height: 1;
+  transition:
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 260ms ease;
+}
+
+.game-screen--gaming .game-info__exit-icon {
+  color: #ffffff;
+  transition: color 220ms ease;
 }
 
 .game-screen--gaming .game-info__exit-icon,
@@ -96,16 +104,14 @@
   height: 30px;
 }
 
-.game-screen--gaming .game-info__exit-label {
-  line-height: 1;
-  white-space: nowrap;
+.game-screen--gaming .game-info__exit-icon svg {
+  color: inherit;
 }
 
-.game-screen--gaming .game-info__exit {
-  transition:
-    color 220ms ease,
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
-    filter 260ms ease;
+.game-screen--gaming .game-info__exit-label {
+  color: #ffffff;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -115,7 +121,9 @@
       drop-shadow(0 6px 10px rgba(231, 28, 79, 0.22));
   }
 
-  .game-screen--gaming .game-info__exit:hover {
+  .game-screen--gaming
+    .game-info__exit:hover
+    .game-info__exit-icon {
     color: #e71c4f;
   }
 }
