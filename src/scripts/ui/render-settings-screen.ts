@@ -164,11 +164,13 @@ function renderPreviewColumn(): string {
 function renderSettingsSummary(): string {
   return `
     <div class="settings-summary">
-      ${renderSummaryItem('theme', 'Game theme')}
-      ${renderSummarySeparator()}
-      ${renderSummaryItem('player', 'Player')}
-      ${renderSummarySeparator()}
-      ${renderSummaryItem('boardSize', 'Board size')}
+      <div class="settings-summary__values">
+        ${renderSummaryItem('theme', 'Game theme')}
+        ${renderSummarySeparator()}
+        ${renderSummaryItem('player', 'Player')}
+        ${renderSummarySeparator()}
+        ${renderSummaryItem('boardSize', 'Board size')}
+      </div>
       ${renderStartButton()}
     </div>
   `;
