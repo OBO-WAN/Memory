@@ -3,7 +3,7 @@
  *
  * This keeps supported values explicit wherever the option is passed between modules.
  */
-export type GameTheme = 'code-vibes' | 'gaming' | 'da-projects' | 'foods';
+export type GameTheme = 'code-vibes' | 'gaming' | 'da-projects';
 
 /**
  * Player colors that can start the first turn.
