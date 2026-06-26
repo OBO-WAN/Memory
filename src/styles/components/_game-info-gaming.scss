@@ -79,28 +79,33 @@
   fill: currentColor;
 }
 
-.game-screen--gaming
-  .game-info__exit-image
-  > svg
-  > rect:first-of-type {
-  fill: #ed1b76;
-  fill-opacity: 0.08;
+.game-screen--gaming .game-info__exit {
+  border: 2px solid #e71c4f;
+  border-radius: 8px;
+  background: rgba(237, 27, 118, 0.08);
+  color: #ffffff;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 700;
+  line-height: 1;
 }
 
-.game-screen--gaming
-  .game-info__exit-image
-  > svg
-  > rect:nth-of-type(2) {
-  stroke: #e71c4f;
-  stroke-width: 2;
+.game-screen--gaming .game-info__exit-icon,
+.game-screen--gaming .game-info__exit-icon svg {
+  width: 30px;
+  height: 30px;
 }
 
-.game-screen--gaming
-  .game-info__exit-image
-  > svg
-  > g
-  > path {
-  transition: fill 220ms ease;
+.game-screen--gaming .game-info__exit-label {
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.game-screen--gaming .game-info__exit {
+  transition:
+    color 220ms ease,
+    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
+    filter 260ms ease;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -110,13 +115,8 @@
       drop-shadow(0 6px 10px rgba(231, 28, 79, 0.22));
   }
 
-  .game-screen--gaming
-    .game-info__exit:hover
-    .game-info__exit-image
-    > svg
-    > g
-    > path {
-    fill: #e71c4f;
+  .game-screen--gaming .game-info__exit:hover {
+    color: #e71c4f;
   }
 }
 

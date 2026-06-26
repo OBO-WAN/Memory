@@ -100,27 +100,43 @@
   width: var(--game-info-exit-width);
   max-width: 100%;
   aspect-ratio: 207 / 62;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
   padding: 0;
   border: 0;
   appearance: none;
-  background: transparent;
   cursor: pointer;
+  color: var(--game-info-text);
   transition:
     transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
     filter 260ms ease;
 }
 
-.game-info__exit-image,
-.game-info__exit-image svg {
+.game-info__exit-icon,
+.game-info__exit-icon svg {
   display: block;
-  width: 100%;
-  height: 100%;
+  flex-shrink: 0;
 }
 
-.game-info__exit-image {
-  transition:
-    transform 260ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 260ms ease;
+.game-screen--code-vibes .game-info__exit {
+  border: 1px solid var(--game-info-border);
+  background: rgba(73, 102, 95, 0.72);
+  font-family: $font-body;
+  font-size: clamp(20px, 2vw, 26px);
+  font-weight: 700;
+}
+
+.game-screen--code-vibes .game-info__exit-icon,
+.game-screen--code-vibes .game-info__exit-icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+.game-screen--code-vibes .game-info__exit-label {
+  line-height: 1;
+  white-space: nowrap;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -129,10 +145,6 @@
     filter:
       brightness(1.12)
       drop-shadow(0 6px 10px rgba(0, 216, 189, 0.18));
-  }
-
-  .game-info__exit:hover .game-info__exit-image {
-    transform: scale(1.015);
   }
 }
 
@@ -214,8 +226,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .game-info__exit,
-  .game-info__exit-image {
+  .game-info__exit {
     transition-duration: 1ms;
   }
 }
