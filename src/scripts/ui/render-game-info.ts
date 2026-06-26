@@ -1,6 +1,5 @@
 import blueMarkerUrl from '../../assets/icons/player-marker-blue.svg';
 import orangeMarkerUrl from '../../assets/icons/player-marker-orange.svg';
-import exitButtonSvg from '../../assets/icons/exit.svg?raw';
 import gamingBlueMarkerUrl from '../../assets/icons/chess-pawn-blue.svg';
 import gamingOrangeMarkerUrl from '../../assets/icons/chess-pawn-orange.svg';
 import gamingCurrentPlayerSvg from '../../assets/icons/game-theme/chess-pawn-blue.svg?raw';
@@ -194,8 +193,8 @@ function renderPawnCurrentPlayerMarker(player: Player): string {
 /**
  * Builds the exit control used by the active theme.
  *
- * DA Projects uses a semantic text button, while existing themes retain their
- * original SVG button artwork and accessible label.
+ * DA Projects keeps its dedicated text button, while Code Vibes and Gaming
+ * share the standard semantic text button.
  *
  * @param theme - Theme that determines the exit button presentation.
  * @returns Exit button markup that opens the confirmation dialog.
@@ -203,28 +202,38 @@ function renderPawnCurrentPlayerMarker(player: Player): string {
 function renderExitButton(theme: ThemeOption): string {
   return theme === 'da-projects'
     ? renderDaProjectsExitButton()
-    : renderImageExitButton();
+    : renderStandardExitButton();
 }
 
 /**
- * Builds the original image-based exit control used by existing themes.
+ * Builds the standard text exit button used by Code Vibes and Gaming.
  *
- * @returns Accessible icon button markup containing the imported SVG artwork.
+ * @returns Semantic exit button markup with a decorative icon and live label.
  */
-function renderImageExitButton(): string {
+function renderStandardExitButton(): string {
   return `
     <button
       class="game-info__exit"
       type="button"
       data-action="open-exit-dialog"
-      aria-label="Exit game"
       aria-haspopup="dialog"
     >
-      <span class="game-info__exit-image" aria-hidden="true">
-        ${exitButtonSvg}
+      <span class="game-info__exit-icon" aria-hidden="true">
+        ${renderExitIcon()}
       </span>
+
+      <span class="game-info__exit-label">Exit game</span>
     </button>
   `;
+}
+
+/**
+ * Builds the shared decorative exit icon for labelled exit buttons.
+ *
+ * @returns Inline SVG markup that inherits the surrounding button color.
+ */
+function renderExitIcon(): string {
+  return renderDaProjectsExitIcon();
 }
 
 /**
