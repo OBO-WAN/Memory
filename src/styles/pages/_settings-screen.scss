@@ -85,17 +85,25 @@
 
 .settings-summary__values {
   min-width: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.35fr)
+    auto
+    minmax(0, 1fr)
+    auto
+    minmax(0, 1.1fr);
   align-items: center;
-  gap: 8px;
+  column-gap: 8px;
 }
 
 .settings-summary__item {
+  min-width: 0;
   font-family: $font-body;
-  font-size: clamp(16px, 1.6vw, 20px);
+  font-size: clamp(15px, 1.35vw, 20px);
   font-weight: 400;
   line-height: normal;
   color: $color-ui-dark;
+  text-align: center;
   white-space: nowrap;
 }
 
@@ -173,17 +181,19 @@
     padding-inline: clamp(32px, 4vw, 48px);
   }
 
-  @media (min-width: 1081px) and (max-width: 1220px) {
-    .settings-summary {
-      width: max-content;
-      max-width: 100%;
-      gap: clamp(8px, 1vw, 12px);
-      padding-inline: 14px;
-    }
+  .settings-summary {
+    width: max-content;
+    max-width: 100%;
+    gap: clamp(8px, 1vw, 12px);
+    padding-inline: 14px;
+  }
+
+  .settings-summary__values {
+    column-gap: 6px;
   }
 
   .settings-summary__item {
-    font-size: clamp(15px, 1.45vw, 18px);
+    font-size: clamp(14px, 1.3vw, 16px);
   }
 
   .settings-summary__separator {
@@ -195,6 +205,16 @@
     min-width: 112px;
     padding-inline: 16px;
     font-size: 18px;
+  }
+}
+
+@media (min-width: 1221px) and (max-width: 1360px) {
+  .settings-summary__values {
+    column-gap: 6px;
+  }
+
+  .settings-summary__item {
+    font-size: clamp(15px, 1.25vw, 17px);
   }
 }
 
@@ -261,8 +281,10 @@
   }
 
   .settings-summary__values {
+    display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    gap: 8px;
   }
 }
 
