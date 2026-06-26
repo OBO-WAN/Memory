@@ -44,7 +44,14 @@
 }
 
 .game-screen--gaming .game-info__current-title {
-  max-width: calc(100% - 55px);
+  min-width: 0;
+  display: inline-block;
+  font-family: 'Orbitron', sans-serif;
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-weight: 500;
+  line-height: 1;
+  color: #ffffff;
+  white-space: nowrap;
 }
 
 .game-screen--gaming .game-info__current-marker {
@@ -144,9 +151,8 @@
   }
 
   .game-screen--gaming .game-info__current-title {
-    width: 235px;
     max-width: calc(100vw - 92px);
-    height: 26px;
+    font-size: clamp(22px, 7vw, 28px);
   }
 
   .game-screen--gaming .game-info__current-marker {

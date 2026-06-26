@@ -87,14 +87,6 @@
   white-space: nowrap;
 }
 
-.game-info__current-title {
-  display: block;
-  width: 300px;
-  height: 33px;
-  flex-shrink: 1;
-  object-fit: contain;
-}
-
 .game-info__current-marker {
   width: 42px;
   height: 34px;
@@ -209,11 +201,6 @@
   .game-info__current-player {
     gap: 12px;
     font-size: 22px;
-  }
-
-  .game-info__current-title {
-    width: 235px;
-    height: 26px;
   }
 
   .game-info__current-marker {

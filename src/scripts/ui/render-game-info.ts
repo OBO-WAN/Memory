@@ -4,7 +4,6 @@ import exitButtonSvg from '../../assets/icons/exit.svg?raw';
 import gamingBlueMarkerUrl from '../../assets/icons/chess-pawn-blue.svg';
 import gamingOrangeMarkerUrl from '../../assets/icons/chess-pawn-orange.svg';
 import gamingCurrentPlayerSvg from '../../assets/icons/game-theme/chess-pawn-blue.svg?raw';
-import gamingCurrentPlayerTitleUrl from '../../assets/icons/game-theme/headline.svg';
 
 import type { ThemeOption } from './render-settings-screen';
 
@@ -138,7 +137,7 @@ function renderCodeVibesCurrentPlayer(player: Player): string {
 }
 
 /**
- * Builds the Gaming current-player artwork and color-controlled pawn marker.
+ * Builds the Gaming current-player label and color-controlled pawn marker.
  *
  * The player identifier is stored as data so the controller can update the
  * marker color and accessible label after each turn.
@@ -149,11 +148,7 @@ function renderCodeVibesCurrentPlayer(player: Player): string {
 function renderGamingCurrentPlayer(player: Player): string {
   return `
     <div class="game-info__current-player">
-      <img
-        class="game-info__current-title"
-        src="${gamingCurrentPlayerTitleUrl}"
-        alt="Current player:"
-      />
+      <span class="game-info__current-title">Current player:</span>
       ${renderPawnCurrentPlayerMarker(player)}
     </div>
   `;
