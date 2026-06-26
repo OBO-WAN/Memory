@@ -1,6 +1,6 @@
-import primaryButtonHoverUrl from '../../assets/images/primary-button-hover.png';
-import primaryButtonUrl from '../../assets/images/primary-button.png';
-import controllerUrl from '../../assets/images/stadia-controller.png';
+import primaryButtonHoverUrl from '../../assets/images/primary-button-hover.svg';
+import primaryButtonUrl from '../../assets/images/primary-button.svg';
+import controllerUrl from '../../assets/images/stadia-controller.svg';
 
 /**
  * Builds the complete start screen shown before game configuration begins.
