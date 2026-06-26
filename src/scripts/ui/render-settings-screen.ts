@@ -5,14 +5,12 @@ import styleIconUrl from '../../assets/icons/style.svg';
 
 import codingVibesUrl from '../../assets/images/themes/coding-vibes.svg';
 import daThemeUrl from '../../assets/images/themes/DAtheme.svg';
-import foodsThemeUrl from '../../assets/images/themes/foodsTheme.svg';
 import gamingThemeUrl from '../../assets/images/themes/gameTheme.svg';
 
 export type ThemeOption =
   | 'code-vibes'
   | 'gaming'
   | 'da-projects'
-  | 'foods';
 
 type SettingName = 'theme' | 'player' | 'boardSize';
 type SettingsOption = readonly [value: string, label: string];
@@ -40,7 +38,6 @@ const SETTINGS_GROUPS: readonly SettingsGroupConfig[] = [
       ['code-vibes', 'Code vibes theme'],
       ['gaming', 'Gaming theme'],
       ['da-projects', 'DA Projects theme'],
-      //['foods', 'Foods theme'],
     ],
   },
   {
@@ -79,10 +76,6 @@ export const themePreviewMap: Record<
   'da-projects': {
     src: daThemeUrl,
     alt: 'DA Projects theme preview',
-  },
-  foods: {
-    src: foodsThemeUrl,
-    alt: 'Foods theme preview',
   },
 };
 
