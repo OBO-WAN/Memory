@@ -1,7 +1,7 @@
 @use '../abstracts/variables' as *;
 
-$button-transition: 360ms cubic-bezier(0.4, 0, 0.2, 1);
-$button-icon-transition: 700ms cubic-bezier(0.4, 0, 0.2, 1);
+$button-transition: 560ms cubic-bezier(0.22, 1, 0.36, 1);
+$button-move-transition: 320ms cubic-bezier(0.22, 1, 0.36, 1);
 
 body {
   margin: 0;
@@ -53,72 +53,58 @@ body {
   position: relative;
   width: clamp(220px, 18vw, 270px);
   aspect-ratio: 270 / 102;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(18px, 2vw, 26px);
-  padding-inline: clamp(24px, 3vw, 34px);
+  padding: 0;
   border: 0;
   appearance: none;
-  background: $color-accent;
-  color: $color-button-text;
+  background: transparent;
   cursor: pointer;
-  overflow: hidden;
-  transform: translateY(0) scale(1);
+  transform: translateY(0);
   transform-origin: center;
-  transition:
-    transform $button-transition,
-    box-shadow $button-transition;
+  transition: transform $button-move-transition;
 }
 
-.start-screen__button-icon {
-  display: block;
-  flex-shrink: 0;
-  width: clamp(40px, 4vw, 52px);
-  aspect-ratio: 1;
-  transform: rotate(0deg) translate(0);
-  transform-origin: center;
-  transition: transform $button-icon-transition;
-}
-
-.start-screen__button-icon svg {
+.start-screen__button-img {
+  position: absolute;
+  inset: 0;
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  transition: opacity $button-transition;
+  will-change: opacity;
 }
 
-.start-screen__button-label {
-  display: block;
-  font-family: $font-body;
-  font-size: clamp(44px, 4.6vw, 66px);
-  font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: -0.04em;
-  color: currentColor;
+.start-screen__button-img--default {
+  opacity: 1;
+}
+
+.start-screen__button-img--hover {
+  opacity: 0;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .start-screen__button:hover {
-    transform: translateY(-2px) scale(1.02);
+    transform: translateY(-2px);
   }
 
-  .start-screen__button:hover .start-screen__button-icon {
-    transform: rotate(-24deg) translate(-2px, -1px);
+  .start-screen__button:hover .start-screen__button-img--default {
+    opacity: 0;
+  }
+
+  .start-screen__button:hover .start-screen__button-img--hover {
+    opacity: 1;
   }
 }
 
 .start-screen__button:active {
-  transform: translateY(0) scale(0.98);
+  transform: translateY(0);
 }
 
 .start-screen__button:focus-visible {
   outline: 3px solid $color-text-primary;
   outline-offset: 6px;
-  transform: translateY(-2px) scale(1.02);
-}
-
-.start-screen__button:focus-visible .start-screen__button-icon {
-  transform: rotate(-24deg) translate(-2px, -1px);
 }
 
 .start-screen__controller {
@@ -144,12 +130,6 @@ body {
 
   .start-screen__button {
     width: clamp(200px, 58vw, 240px);
-    gap: clamp(14px, 4vw, 20px);
-    padding-inline: clamp(20px, 6vw, 28px);
-  }
-
-  .start-screen__button-label {
-    font-size: clamp(40px, 14vw, 58px);
   }
 
   .start-screen__controller {
@@ -171,7 +151,7 @@ body {
 
 @media (prefers-reduced-motion: reduce) {
   .start-screen__button,
-  .start-screen__button-icon {
-    transition: none;
+  .start-screen__button-img {
+    transition-duration: 1ms;
   }
 }
