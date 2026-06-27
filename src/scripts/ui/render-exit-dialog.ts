@@ -1,6 +1,6 @@
 import gamingExitTitleUrl from '../../assets/popup/game-theme/Are you sure you want to quit the game_.svg';
 
-import type { ThemeOption } from './render-settings-screen';
+import type { GameTheme } from '../types/settings.types';
 
 type DialogButtonModifier = 'back' | 'confirm';
 type DialogAction = 'close-exit-dialog' | 'confirm-exit';
@@ -15,7 +15,7 @@ type DialogAction = 'close-exit-dialog' | 'confirm-exit';
  * @returns Complete dialog markup ready to be inserted into the game screen.
  */
 export function renderExitDialog(
-  theme: ThemeOption = 'code-vibes',
+  theme: GameTheme = 'code-vibes',
 ): string {
   return `
     <dialog
@@ -39,7 +39,7 @@ export function renderExitDialog(
  * @param theme - Active game theme whose modifier should be applied.
  * @returns A leading-space class modifier, or an empty string for the base style.
  */
-function getThemeClass(theme: ThemeOption): string {
+function getThemeClass(theme: GameTheme): string {
   if (theme === 'gaming') return ' exit-dialog--gaming';
   if (theme === 'da-projects') return ' exit-dialog--da-projects';
 
@@ -55,7 +55,7 @@ function getThemeClass(theme: ThemeOption): string {
  * @param theme - Active game theme used to choose the heading treatment.
  * @returns Accessible level-two heading markup for the confirmation dialog.
  */
-function renderExitDialogTitle(theme: ThemeOption): string {
+function renderExitDialogTitle(theme: GameTheme): string {
   if (theme === 'gaming') {
     return `
       <h2 id="exit-dialog-title" class="exit-dialog__title">
@@ -94,7 +94,7 @@ function renderExitDialogTitle(theme: ThemeOption): string {
  * @param theme - Active game theme used to choose the visible button labels.
  * @returns Action-group markup containing the cancel and confirmation buttons.
  */
-function renderExitDialogActions(theme: ThemeOption): string {
+function renderExitDialogActions(theme: GameTheme): string {
   const isGaming = theme === 'gaming';
   const backLabel = isGaming ? 'No, back to game' : 'Back to game';
   const exitLabel = isGaming ? 'Yes, quit game' : 'Exit game';

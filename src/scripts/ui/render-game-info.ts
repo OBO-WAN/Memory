@@ -4,17 +4,16 @@ import gamingBlueMarkerUrl from '../../assets/icons/chess-pawn-blue.svg';
 import gamingOrangeMarkerUrl from '../../assets/icons/chess-pawn-orange.svg';
 import gamingCurrentPlayerSvg from '../../assets/icons/game-theme/chess-pawn-blue.svg?raw';
 
-import type { ThemeOption } from './render-settings-screen';
+import type { Scores } from '../types/game.types';
+import type { GameTheme, PlayerColor } from '../types/settings.types';
 
 const DEFAULT_SCORE_ORDER = ['blue', 'orange'] as const;
 const ORANGE_FIRST_SCORE_ORDER = ['orange', 'blue'] as const;
 
-type Player = 'blue' | 'orange';
-type Scores = Record<Player, number>;
 
 interface GameInfoSettings {
-  theme: ThemeOption;
-  player: Player;
+  theme: GameTheme;
+  player: PlayerColor;
   bluePoints?: number;
   orangePoints?: number;
 }
@@ -69,7 +68,7 @@ function getScores(settings: GameInfoSettings): Scores {
  * @returns Combined markup for the two live score indicators.
  */
 function renderScores(
-  theme: ThemeOption,
+  theme: GameTheme,
   scores: Scores,
 ): string {
   return getScoreOrder(theme)
@@ -87,8 +86,8 @@ function renderScores(
  * @returns Player identifiers in their required display order.
  */
 function getScoreOrder(
-  theme: ThemeOption,
-): readonly Player[] {
+  theme: GameTheme,
+): readonly PlayerColor[] {
   return theme === 'gaming' || theme === 'da-projects'
     ? ORANGE_FIRST_SCORE_ORDER
     : DEFAULT_SCORE_ORDER;
@@ -102,8 +101,8 @@ function getScoreOrder(
  * @returns Theme-specific current-player markup.
  */
 function renderCurrentPlayer(
-  theme: ThemeOption,
-  player: Player,
+  theme: GameTheme,
+  player: PlayerColor,
 ): string {
   if (theme === 'gaming') {
     return renderGamingCurrentPlayer(player);
@@ -122,7 +121,7 @@ function renderCurrentPlayer(
  * @param player - Player currently taking a turn.
  * @returns Current-player markup using the Code Vibes marker asset.
  */
-function renderCodeVibesCurrentPlayer(player: Player): string {
+function renderCodeVibesCurrentPlayer(player: PlayerColor): string {
   return `
     <div class="game-info__current-player">
       <span>Current player:</span>
@@ -144,7 +143,7 @@ function renderCodeVibesCurrentPlayer(player: Player): string {
  * @param player - Player currently taking a turn.
  * @returns Current-player markup styled for the Gaming theme.
  */
-function renderGamingCurrentPlayer(player: Player): string {
+function renderGamingCurrentPlayer(player: PlayerColor): string {
   return `
     <div class="game-info__current-player">
       <span class="game-info__current-title">Current player:</span>
@@ -159,7 +158,7 @@ function renderGamingCurrentPlayer(player: Player): string {
  * @param player - Player currently taking a turn.
  * @returns Text-and-badge markup matching the DA Projects header.
  */
-function renderDaProjectsCurrentPlayer(player: Player): string {
+function renderDaProjectsCurrentPlayer(player: PlayerColor): string {
   return `
     <div class="game-info__current-player">
       <span>Current player:</span>
@@ -177,7 +176,7 @@ function renderDaProjectsCurrentPlayer(player: Player): string {
  * @param player - Player represented by the badge.
  * @returns Accessible pawn badge markup for the current player.
  */
-function renderPawnCurrentPlayerMarker(player: Player): string {
+function renderPawnCurrentPlayerMarker(player: PlayerColor): string {
   return `
     <span
       class="game-info__current-marker"
@@ -199,7 +198,7 @@ function renderPawnCurrentPlayerMarker(player: Player): string {
  * @param theme - Theme that determines the exit button presentation.
  * @returns Exit button markup that opens the confirmation dialog.
  */
-function renderExitButton(theme: ThemeOption): string {
+function renderExitButton(theme: GameTheme): string {
   return theme === 'da-projects'
     ? renderDaProjectsExitButton()
     : renderStandardExitButton();
@@ -286,7 +285,7 @@ function renderDaProjectsExitIcon(): string {
  * @param player - Player whose marker asset is required.
  * @returns Imported blue or orange player marker URL.
  */
-function getPlayerMarker(player: Player): string {
+function getPlayerMarker(player: PlayerColor): string {
   return player === 'orange' ? orangeMarkerUrl : blueMarkerUrl;
 }
 
@@ -301,8 +300,8 @@ function getPlayerMarker(player: Player): string {
  * @returns Imported marker asset URL for the score display.
  */
 function getScoreMarker(
-  theme: ThemeOption,
-  player: Player,
+  theme: GameTheme,
+  player: PlayerColor,
 ): string {
   if (theme !== 'gaming' && theme !== 'da-projects') {
     return getPlayerMarker(player);
@@ -325,8 +324,8 @@ function getScoreMarker(
  * @returns Markup for one live score indicator.
  */
 function renderScore(
-  theme: ThemeOption,
-  player: Player,
+  theme: GameTheme,
+  player: PlayerColor,
   points: number,
 ): string {
   return `

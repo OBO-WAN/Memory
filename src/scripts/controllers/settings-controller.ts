@@ -1,5 +1,5 @@
 import { DEFAULT_THEME, themePreviewMap } from '../ui/render-settings-screen';
-import type { ThemeOption } from '../ui/render-settings-screen';
+import type { GameSettings, GameTheme, PlayerColor, BoardSize } from '../types/settings.types';
 
 const SETTING_NAMES = {
   theme: 'theme',
@@ -14,24 +14,6 @@ const SETTING_NAMES = {
  */
 type SettingName =
   (typeof SETTING_NAMES)[keyof typeof SETTING_NAMES];
-
-/**
- * Player colors supported by score and turn state.
- *
- * This keeps supported values explicit wherever the option is passed between modules.
- */
-export type Player = 'blue' | 'orange';
-
-/**
- * Valid settings collected from the form before starting a game.
- *
- * Consumers rely on these fields to keep shared data shapes consistent across modules.
- */
-export interface SelectedSettings {
-  theme: ThemeOption;
-  player: Player;
-  boardSize: number;
-}
 
 /**
  * Responds to settings form changes and refreshes dependent UI.
@@ -73,7 +55,7 @@ export function handleThemePreviewPointerOver(
 
   const input = getThemeInputFromOption(option);
 
-  if (!input || !isThemeOption(input.value)) return;
+  if (!input || !isGameTheme(input.value)) return;
 
   applyThemePreview(input.value);
 }
@@ -92,7 +74,7 @@ export function handleThemePreviewPointerOut(
 
   const option = getThemePreviewOption(event.target);
 
-  if (!option || isMovingWithinThemeOptions(option, event.relatedTarget)) {
+  if (!option || isMovingWithinGameThemes(option, event.relatedTarget)) {
     return;
   }
 
@@ -110,7 +92,7 @@ export function handleThemePreviewFocusIn(event: FocusEvent): void {
   const option = getThemePreviewOption(event.target);
   const input = option ? getThemeInputFromOption(option) : null;
 
-  if (!input || !isThemeOption(input.value)) return;
+  if (!input || !isGameTheme(input.value)) return;
 
   applyThemePreview(input.value);
 }
@@ -125,7 +107,7 @@ export function handleThemePreviewFocusIn(event: FocusEvent): void {
 export function handleThemePreviewFocusOut(event: FocusEvent): void {
   const option = getThemePreviewOption(event.target);
 
-  if (!option || isMovingWithinThemeOptions(option, event.relatedTarget)) {
+  if (!option || isMovingWithinGameThemes(option, event.relatedTarget)) {
     return;
   }
 
@@ -139,7 +121,7 @@ export function handleThemePreviewFocusOut(event: FocusEvent): void {
  *
  * @returns Validated settings object, or null until the form is complete.
  */
-export function getSelectedSettings(): SelectedSettings | null {
+export function getSelectedSettings(): GameSettings | null {
   const theme = getSelectedTheme();
   const player = getSelectedPlayer();
   const boardSize = getSelectedBoardSize();
@@ -183,7 +165,7 @@ function getChangedInput(event: Event): HTMLInputElement | null {
  * @param input - Radio input whose selected value or label updates the settings UI.
  */
 function updateThemePreview(input: HTMLInputElement): void {
-  if (!isThemeOption(input.value)) return;
+  if (!isGameTheme(input.value)) return;
 
   applyThemePreview(input.value);
 }
@@ -195,7 +177,7 @@ function updateThemePreview(input: HTMLInputElement): void {
  *
  * @param theme - Theme option whose configured preview image is shown.
  */
-function applyThemePreview(theme: ThemeOption): void {
+function applyThemePreview(theme: GameTheme): void {
   const previewImage = document.querySelector<HTMLImageElement>(
     '.settings-screen__preview',
   );
@@ -267,7 +249,7 @@ function isMovingWithinOption(
  * @param relatedTarget - Element receiving pointer or focus after the current event.
  * @returns Whether the event remains inside the same complete theme-options container.
  */
-function isMovingWithinThemeOptions(
+function isMovingWithinGameThemes(
   option: HTMLElement,
   relatedTarget: EventTarget | null,
 ): boolean {
@@ -401,10 +383,10 @@ function updateStartButtonState(): void {
  *
  * @returns Selected theme, or null when the current value is unsupported.
  */
-function getSelectedTheme(): ThemeOption | null {
+function getSelectedTheme(): GameTheme | null {
   const value = getSelectedInput(SETTING_NAMES.theme)?.value;
 
-  return value && isThemeOption(value) ? value : null;
+  return value && isGameTheme(value) ? value : null;
 }
 
 /**
@@ -414,7 +396,7 @@ function getSelectedTheme(): ThemeOption | null {
  *
  * @returns Selected player, or null when the current value is unsupported.
  */
-function getSelectedPlayer(): Player | null {
+function getSelectedPlayer(): PlayerColor | null {
   const value = getSelectedInput(SETTING_NAMES.player)?.value;
 
   return value && isPlayer(value) ? value : null;
@@ -427,13 +409,11 @@ function getSelectedPlayer(): Player | null {
  *
  * @returns Parsed board size, or null when the selection is missing or invalid.
  */
-function getSelectedBoardSize(): number | null {
+function getSelectedBoardSize(): BoardSize | null {
   const value = getSelectedInput(SETTING_NAMES.boardSize)?.value;
   const boardSize = Number(value);
 
-  return Number.isInteger(boardSize) && boardSize > 0
-    ? boardSize
-    : null;
+  return isBoardSize(boardSize) ? boardSize : null;
 }
 
 /**
@@ -444,7 +424,7 @@ function getSelectedBoardSize(): number | null {
  * @param value - String value being validated or formatted for display.
  * @returns Value produced for the caller according to the documented responsibility.
  */
-function isThemeOption(value: string): value is ThemeOption {
+function isGameTheme(value: string): value is GameTheme {
   return value in themePreviewMap;
 }
 
@@ -456,6 +436,18 @@ function isThemeOption(value: string): value is ThemeOption {
  * @param value - String value being validated or formatted for display.
  * @returns Value produced for the caller according to the documented responsibility.
  */
-function isPlayer(value: string): value is Player {
+function isPlayer(value: string): value is PlayerColor {
   return value === 'blue' || value === 'orange';
+}
+
+/**
+ * Narrows a number to one of the supported board sizes.
+ *
+ * Callers use the result to render markup, validate state, or choose the next UI step.
+ *
+ * @param value - Number value being validated or formatted for display.
+ * @returns Whether the supplied value satisfies the documented condition.
+ */
+function isBoardSize(value: number): value is BoardSize {
+  return value === 16 || value === 24 || value === 36;
 }

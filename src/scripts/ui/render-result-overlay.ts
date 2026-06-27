@@ -16,12 +16,10 @@ import type {
   DrawAssets,
   WinnerAssets,
 } from './result-overlay-theme-assets';
-import type { ThemeOption } from './render-settings-screen';
+import type { GameResult, Scores } from '../types/game.types';
+import type { GameTheme, PlayerColor } from '../types/settings.types';
 
-type Player = 'blue' | 'orange';
-type Scores = Record<Player, number>;
-type Result = Player | 'draw';
-type StandardResultTheme = Exclude<ThemeOption, 'da-projects'>;
+type StandardResultTheme = Exclude<GameTheme, 'da-projects'>;
 
 /**
  * Builds the final result dialog for a winner or draw.
@@ -31,7 +29,7 @@ type StandardResultTheme = Exclude<ThemeOption, 'da-projects'>;
  */
 export function renderResultOverlay(
   scores: Scores,
-  theme: ThemeOption,
+  theme: GameTheme,
 ): string {
   const result = getResult(scores);
 
@@ -52,7 +50,7 @@ export function renderResultOverlay(
  * @param theme - Theme used to select the presentation.
  * @returns Theme-specific result content.
  */
-function renderResult(result: Result, theme: ThemeOption): string {
+function renderResult(result: GameResult, theme: GameTheme): string {
   return result === 'draw'
     ? renderDrawResult(theme)
     : renderWinnerResult(result, theme);
@@ -65,8 +63,8 @@ function renderResult(result: Result, theme: ThemeOption): string {
  * @returns Winner announcement markup.
  */
 function renderWinnerResult(
-  winner: Player,
-  theme: ThemeOption,
+  winner: PlayerColor,
+  theme: GameTheme,
 ): string {
   if (theme === 'da-projects') {
     return renderDaWinnerResult(winner);
@@ -87,7 +85,7 @@ function renderWinnerResult(
  */
 function renderCodeVibesWinner(
   assets: WinnerAssets,
-  winner: Player,
+  winner: PlayerColor,
 ): string {
   return `
     <img
@@ -112,7 +110,7 @@ function renderCodeVibesWinner(
  */
 function renderGamingWinner(
   assets: WinnerAssets,
-  winner: Player,
+  winner: PlayerColor,
 ): string {
   return `
     <section
@@ -159,7 +157,7 @@ function renderWinnerTitle(
  * @param winner - Player named by the artwork.
  * @returns Accessible winner-name image markup.
  */
-function renderWinnerName(source: string, winner: Player): string {
+function renderWinnerName(source: string, winner: PlayerColor): string {
   return `
     <img
       id="result-overlay-title"
@@ -193,7 +191,7 @@ function renderPlayerIcon(source?: string): string {
  * @param theme - Theme used to select draw assets.
  * @returns Draw-result markup.
  */
-function renderDrawResult(theme: ThemeOption): string {
+function renderDrawResult(theme: GameTheme): string {
   if (theme === 'da-projects') return renderDaDrawResult();
 
   return renderDrawContent(
@@ -278,7 +276,7 @@ function renderScaleIcon(source: string): string {
  * @param theme - Theme used to select button artwork and label.
  * @returns Home or back-button markup.
  */
-function renderHomeButton(theme: ThemeOption): string {
+function renderHomeButton(theme: GameTheme): string {
   const isDaProjects = theme === 'da-projects';
   const source = isDaProjects ? DA_HOME_BUTTON_URL : backButtonUrl;
   const label = isDaProjects ? 'Home' : 'Back to start';
@@ -300,7 +298,7 @@ function renderHomeButton(theme: ThemeOption): string {
  * @param scores - Final scores for both players.
  * @returns Winning player, or `draw` for equal scores.
  */
-function getResult(scores: Scores): Result {
+function getResult(scores: Scores): GameResult {
   if (scores.blue === scores.orange) return 'draw';
 
   return scores.blue > scores.orange ? 'blue' : 'orange';

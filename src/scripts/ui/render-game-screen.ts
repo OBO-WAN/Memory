@@ -11,15 +11,7 @@ import type {
   MemoryCard,
 } from '../types/card.types';
 import { renderGameInfo } from './render-game-info';
-import type { ThemeOption } from './render-settings-screen';
-
-type Player = 'blue' | 'orange';
-
-interface GameScreenSettings {
-  theme: ThemeOption;
-  player: Player;
-  boardSize: number;
-}
+import type { GameTheme, GameSettings } from '../types/settings.types';
 
 interface ThemeCardAssets {
   cardBackUrl: string;
@@ -34,7 +26,7 @@ interface ThemeCardAssets {
  * @returns Main game markup containing the information header and card board.
  */
 export function renderGameScreen(
-  settings: GameScreenSettings,
+  settings: GameSettings,
 ): string {
   const assets = getThemeCardAssets(settings.theme);
   const cards = createCardDeck(
@@ -68,7 +60,7 @@ export function renderGameScreen(
  * @returns Card definitions and back artwork used to build the selected deck.
  */
 function getThemeCardAssets(
-  theme: ThemeOption,
+  theme: GameTheme,
 ): ThemeCardAssets {
   if (theme === 'gaming') {
     return {

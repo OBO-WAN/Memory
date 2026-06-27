@@ -15,9 +15,7 @@ import gamingScaleIconUrl from '../../assets/images/result-overlay/game-theme/sc
 import gamingTrophyUrl from '../../assets/images/result-overlay/game-theme/trophy.svg';
 import gamingWinnerTitleUrl from '../../assets/images/result-overlay/game-theme/winner-title.svg';
 
-import type { ThemeOption } from './render-settings-screen';
-
-type Player = 'blue' | 'orange';
+import type { GameTheme, PlayerColor } from '../types/settings.types';
 
 export interface WinnerAssets {
   playerIcon?: string;
@@ -44,8 +42,8 @@ export const GAMING_TROPHY_URL = gamingTrophyUrl;
  * @returns Artwork consumed by the shared winner renderer.
  */
 export function getStandardWinnerAssets(
-  winner: Player,
-  theme: ThemeOption,
+  winner: PlayerColor,
+  theme: GameTheme,
 ): WinnerAssets {
   if (theme === 'gaming') {
     return {
@@ -67,7 +65,7 @@ export function getStandardWinnerAssets(
  * @returns Artwork consumed by the shared draw renderer.
  */
 export function getStandardDrawAssets(
-  theme: ThemeOption,
+  theme: GameTheme,
 ): DrawAssets {
   if (theme === 'gaming') {
     return {
@@ -89,7 +87,7 @@ export function getStandardDrawAssets(
  * @param winner - Player whose title is required.
  * @returns Matching player-title URL.
  */
-function getCodeVibesPlayerTitle(winner: Player): string {
+function getCodeVibesPlayerTitle(winner: PlayerColor): string {
   return winner === 'orange'
     ? codeVibesOrangePlayerTitleUrl
     : codeVibesBluePlayerTitleUrl;
@@ -100,7 +98,7 @@ function getCodeVibesPlayerTitle(winner: Player): string {
  * @param winner - Player whose icon is required.
  * @returns Matching player-icon URL.
  */
-function getCodeVibesPlayerIcon(winner: Player): string {
+function getCodeVibesPlayerIcon(winner: PlayerColor): string {
   return winner === 'orange'
     ? codeVibesOrangePlayerIconUrl
     : codeVibesBluePlayerIconUrl;
@@ -111,7 +109,7 @@ function getCodeVibesPlayerIcon(winner: Player): string {
  * @param winner - Player whose title is required.
  * @returns Matching player-title URL.
  */
-function getGamingPlayerTitle(winner: Player): string {
+function getGamingPlayerTitle(winner: PlayerColor): string {
   return winner === 'orange'
     ? gamingOrangePlayerTitleUrl
     : gamingBluePlayerTitleUrl;
