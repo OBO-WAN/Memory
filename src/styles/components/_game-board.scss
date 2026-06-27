@@ -67,6 +67,11 @@
   background: transparent;
 }
 
+.game-screen--gaming .game-card__face--back {
+  border-radius: 12px;
+  box-shadow: 6px 6px 12px rgba(0, 0, 0, 0.25);
+}
+
 .game-screen--da-projects .game-card {
   aspect-ratio: 6 / 5;
 }
