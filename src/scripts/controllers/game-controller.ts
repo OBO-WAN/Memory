@@ -1,21 +1,16 @@
 import { renderGameOver } from '../ui/render-game-over';
 import { renderGameScreen } from '../ui/render-game-screen';
 import { renderResultOverlay } from '../ui/render-result-overlay';
-import type { ThemeOption } from '../ui/render-settings-screen';
-import type {
-  Player,
-  SelectedSettings,
-} from './settings-controller';
+import type { Scores } from '../types/game.types';
+import type { GameSettings, GameTheme, PlayerColor } from '../types/settings.types';
 
 const FLIP_BACK_DELAY = 900;
 const GAME_OVER_DELAY = 650;
 const GAME_OVER_DISPLAY_DURATION = 2500;
 
-type Scores = Record<Player, number>;
-
 let firstFlippedCard: HTMLButtonElement | null = null;
-let currentPlayer: Player = 'blue';
-let currentTheme: ThemeOption = 'code-vibes';
+let currentPlayer: PlayerColor = 'blue';
+let currentTheme: GameTheme = 'code-vibes';
 let scores: Scores = createEmptyScores();
 let matchedPairs = 0;
 let totalPairs = 0;
@@ -34,7 +29,7 @@ let resultOverlayTimer: number | null = null;
  */
 export function startGame(
   app: HTMLDivElement,
-  settings: SelectedSettings,
+  settings: GameSettings,
 ): void {
   resetGameState(settings);
   app.innerHTML = renderGameScreen(settings);
@@ -74,7 +69,7 @@ export function resetGame(): void {
  *
  * @returns Theme currently used by game dialogs and markers.
  */
-export function getCurrentTheme(): ThemeOption {
+export function getCurrentTheme(): GameTheme {
   return currentTheme;
 }
 
@@ -589,7 +584,7 @@ function clearTimer(timer: number | null): null {
  *
  * @param settings - Selected game settings used to initialize state or render UI.
  */
-function resetGameState(settings?: SelectedSettings): void {
+function resetGameState(settings?: GameSettings): void {
   resetGameInteraction();
   currentPlayer = settings?.player ?? 'blue';
   currentTheme = settings?.theme ?? 'code-vibes';

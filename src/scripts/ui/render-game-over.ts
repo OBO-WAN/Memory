@@ -6,15 +6,13 @@ import gamingFinalScoreTitleUrl from '../../assets/images/game-over/game-theme/f
 import gamingGameOverTitleUrl from '../../assets/images/game-over/game-theme/game-over-title.svg';
 import { formatPlayerLabel } from '../utils/format-player-label';
 
-import type { ThemeOption } from './render-settings-screen';
+import type { GameResult, Scores } from '../types/game.types';
+import type { GameTheme, PlayerColor } from '../types/settings.types';
 
 const CODE_VIBES_SCORE_ORDER = ['blue', 'orange'] as const;
 const ORANGE_FIRST_SCORE_ORDER = ['orange', 'blue'] as const;
 
-type Player = 'blue' | 'orange';
-type Scores = Record<Player, number>;
-type Result = Player | 'draw';
-type ImageGameOverTheme = Exclude<ThemeOption, 'da-projects'>;
+type ImageGameOverTheme = Exclude<GameTheme, 'da-projects'>;
 
 interface GameOverAssets {
   finalScoreTitle: string;
@@ -32,7 +30,7 @@ interface GameOverAssets {
  */
 export function renderGameOver(
   scores: Scores,
-  theme: ThemeOption,
+  theme: GameTheme,
 ): string {
   const result = getResult(scores);
 
@@ -51,8 +49,8 @@ export function renderGameOver(
  */
 function renderGameOverDialog(
   scores: Scores,
-  result: Result,
-  theme: ThemeOption,
+  result: GameResult,
+  theme: GameTheme,
 ): string {
   return `
     <dialog
@@ -76,8 +74,8 @@ function renderGameOverDialog(
  */
 function renderGameOverContent(
   scores: Scores,
-  result: Result,
-  theme: ThemeOption,
+  result: GameResult,
+  theme: GameTheme,
 ): string {
   return `
     <section class="game-over__content">
@@ -99,7 +97,7 @@ function renderGameOverContent(
  * @param theme - Active theme whose heading should be rendered.
  * @returns Text or image markup for the main Game Over heading.
  */
-function renderGameOverTitle(theme: ThemeOption): string {
+function renderGameOverTitle(theme: GameTheme): string {
   if (theme === 'da-projects') {
     return `
       <h2 class="game-over__title game-over__title--text">
@@ -125,7 +123,7 @@ function renderGameOverTitle(theme: ThemeOption): string {
  * @param theme - Active theme whose score label should be rendered.
  * @returns Text or image markup for the final-score label.
  */
-function renderFinalScoreTitle(theme: ThemeOption): string {
+function renderFinalScoreTitle(theme: GameTheme): string {
   if (theme === 'da-projects') {
     return `
       <p
@@ -201,8 +199,8 @@ function getGameOverAssets(
  */
 function renderScore(
   scores: Scores,
-  result: Result,
-  theme: ThemeOption,
+  result: GameResult,
+  theme: GameTheme,
 ): string {
   return `
     <div
@@ -223,7 +221,7 @@ function renderScore(
  * @param result - Winning player or draw state announced after the totals.
  * @returns Accessible score and winner sentence.
  */
-function getScoreLabel(scores: Scores, result: Result): string {
+function getScoreLabel(scores: Scores, result: GameResult): string {
   return `Blue ${scores.blue}, Orange ${scores.orange}. ${getResultText(result)}`;
 }
 
@@ -239,8 +237,8 @@ function getScoreLabel(scores: Scores, result: Result): string {
  */
 function renderScoreContent(
   scores: Scores,
-  result: Result,
-  theme: ThemeOption,
+  result: GameResult,
+  theme: GameTheme,
 ): string {
   return getScoreOrder(theme)
     .map((player) =>
@@ -254,7 +252,7 @@ function renderScoreContent(
  * @param theme - Active theme whose final-score order should be returned.
  * @returns Read-only player sequence used while rendering the score panel.
  */
-function getScoreOrder(theme: ThemeOption): readonly Player[] {
+function getScoreOrder(theme: GameTheme): readonly PlayerColor[] {
   return theme === 'gaming' || theme === 'da-projects'
     ? ORANGE_FIRST_SCORE_ORDER
     : CODE_VIBES_SCORE_ORDER;
@@ -265,7 +263,7 @@ function getScoreOrder(theme: ThemeOption): readonly Player[] {
  * @param scores - Final point totals for both players.
  * @returns The winning player, or `draw` when the totals are equal.
  */
-function getResult(scores: Scores): Result {
+function getResult(scores: Scores): GameResult {
   if (scores.blue === scores.orange) return 'draw';
 
   return scores.blue > scores.orange ? 'blue' : 'orange';
@@ -276,7 +274,7 @@ function getResult(scores: Scores): Result {
  * @param result - Winning player or draw state to describe.
  * @returns Human-readable result sentence.
  */
-function getResultText(result: Result): string {
+function getResultText(result: GameResult): string {
   if (result === 'draw') return "It's a draw.";
 
   return `${formatPlayerLabel(result)} wins.`;
@@ -295,10 +293,10 @@ function getResultText(result: Result): string {
  * @returns One visual player-score entry.
  */
 function renderPlayerScore(
-  theme: ThemeOption,
-  player: Player,
+  theme: GameTheme,
+  player: PlayerColor,
   score: number,
-  result: Result,
+  result: GameResult,
 ): string {
   return usesPawnScores(theme)
     ? renderPawnPlayerScore(player, score, result)
@@ -310,7 +308,7 @@ function renderPlayerScore(
  * @param theme - Active theme being evaluated.
  * @returns `true` for Gaming and DA Projects score presentations.
  */
-function usesPawnScores(theme: ThemeOption): boolean {
+function usesPawnScores(theme: GameTheme): boolean {
   return theme === 'gaming' || theme === 'da-projects';
 }
 
@@ -322,9 +320,9 @@ function usesPawnScores(theme: ThemeOption): boolean {
  * @returns Labelled score markup for one player.
  */
 function renderCodeVibesPlayerScore(
-  player: Player,
+  player: PlayerColor,
   score: number,
-  result: Result,
+  result: GameResult,
 ): string {
   return `
     <span
@@ -349,9 +347,9 @@ function renderCodeVibesPlayerScore(
  * @returns Pawn-based score markup for one player.
  */
 function renderPawnPlayerScore(
-  player: Player,
+  player: PlayerColor,
   score: number,
-  result: Result,
+  result: GameResult,
 ): string {
   return `
     <span
@@ -374,7 +372,7 @@ function renderPawnPlayerScore(
  * @param result - Winning player or draw state.
  * @returns Winner class suffix, or an empty string when not applicable.
  */
-function getWinnerClass(player: Player, result: Result): string {
+function getWinnerClass(player: PlayerColor, result: GameResult): string {
   return result === player ? ' is-winner' : '';
 }
 
@@ -383,6 +381,6 @@ function getWinnerClass(player: Player, result: Result): string {
  * @param player - Player whose pawn artwork is required.
  * @returns Imported orange or blue pawn asset URL.
  */
-function getPawnUrl(player: Player): string {
+function getPawnUrl(player: PlayerColor): string {
   return player === 'orange' ? orangePawnUrl : bluePawnUrl;
 }

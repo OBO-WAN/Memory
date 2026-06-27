@@ -8,9 +8,8 @@ import daOrangePawnUrl from '../../assets/images/result-overlay/da-theme/orange-
 import daOrangePlayerTitleUrl from '../../assets/images/result-overlay/da-theme/orange-player-title.svg';
 import daWinnerTitleUrl from '../../assets/images/result-overlay/da-theme/winner-title.svg';
 
+import type { PlayerColor } from '../types/settings.types';
 import { formatPlayerLabel } from '../utils/format-player-label';
-
-type Player = 'blue' | 'orange';
 
 /**
  * Exposes the DA Projects Home button used by the shared result dialog.
@@ -23,7 +22,7 @@ export const DA_HOME_BUTTON_URL = daHomeButtonUrl;
  * @param winner - Player announced as the winner.
  * @returns DA Projects winner markup.
  */
-export function renderDaWinnerResult(winner: Player): string {
+export function renderDaWinnerResult(winner: PlayerColor): string {
   return `
     <section
       class="result-overlay__content result-overlay__content--da-winner"
@@ -91,7 +90,7 @@ export function renderDaDrawResult(): string {
  * @param winner - Player whose title is required.
  * @returns Matching player-title URL.
  */
-function getPlayerTitle(winner: Player): string {
+function getPlayerTitle(winner: PlayerColor): string {
   return winner === 'orange'
     ? daOrangePlayerTitleUrl
     : daBluePlayerTitleUrl;
@@ -103,6 +102,6 @@ function getPlayerTitle(winner: Player): string {
  * @param winner - Player whose pawn is required.
  * @returns Matching pawn URL.
  */
-function getPlayerPawn(winner: Player): string {
+function getPlayerPawn(winner: PlayerColor): string {
   return winner === 'orange' ? daOrangePawnUrl : daBluePawnUrl;
 }

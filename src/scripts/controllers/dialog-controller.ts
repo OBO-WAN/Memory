@@ -1,5 +1,5 @@
 import { renderExitDialog } from '../ui/render-exit-dialog';
-import type { ThemeOption } from '../ui/render-settings-screen';
+import type { GameTheme } from '../types/settings.types';
 
 let exitDialogTrigger: HTMLElement | null = null;
 
@@ -15,7 +15,7 @@ let exitDialogTrigger: HTMLElement | null = null;
 export function openExitDialog(
   app: HTMLDivElement,
   trigger: HTMLElement,
-  theme: ThemeOption,
+  theme: GameTheme,
 ): void {
   if (app.querySelector('.exit-dialog')) return;
 

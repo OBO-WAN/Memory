@@ -7,10 +7,7 @@ import codingVibesUrl from '../../assets/images/themes/coding-vibes.svg';
 import daThemeUrl from '../../assets/images/themes/DAtheme.svg';
 import gamingThemeUrl from '../../assets/images/themes/gameTheme.svg';
 
-export type ThemeOption =
-  | 'code-vibes'
-  | 'gaming'
-  | 'da-projects'
+import type { GameTheme } from '../types/settings.types';
 
 type SettingName = 'theme' | 'player' | 'boardSize';
 type SettingsOption = readonly [value: string, label: string];
@@ -27,7 +24,7 @@ interface SettingsGroupConfig {
   options: readonly SettingsOption[];
 }
 
-export const DEFAULT_THEME: ThemeOption = 'code-vibes';
+export const DEFAULT_THEME: GameTheme = 'code-vibes';
 
 const SETTINGS_GROUPS: readonly SettingsGroupConfig[] = [
   {
@@ -62,7 +59,7 @@ const SETTINGS_GROUPS: readonly SettingsGroupConfig[] = [
 ];
 
 export const themePreviewMap: Record<
-  ThemeOption,
+  GameTheme,
   ThemePreview
 > = {
   'code-vibes': {
