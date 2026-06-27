@@ -19,13 +19,3 @@ export type PlayerColor = 'blue' | 'orange';
  */
 export type BoardSize = 16 | 24 | 36;
 
-/**
- * Complete settings chosen before a game starts.
- *
- * Consumers rely on these fields to keep shared data shapes consistent across modules.
- */
-export interface GameSettings {
-  theme: GameTheme;
-  player: PlayerColor;
-  boardSize: BoardSize;
-}

@@ -1,19 +1,14 @@
 import { DEFAULT_THEME, themePreviewMap } from '../ui/render-settings-screen';
-import type { GameSettings, GameTheme, PlayerColor, BoardSize } from '../types/settings.types';
+import type { GameSettings } from '../types/settings.interface';
+import type {
+  BoardSize,
+  GameTheme,
+  PlayerColor,
+} from '../types/settings.types';
 
-const SETTING_NAMES = {
-  theme: 'theme',
-  player: 'player',
-  boardSize: 'boardSize',
-} as const;
+import { SETTING_NAMES } from '../constants/settings.constants';
+import type { SettingName } from '../constants/settings.constants';
 
-/**
- * Names used by settings radio groups and summary slots.
- *
- * This keeps supported values explicit wherever the option is passed between modules.
- */
-type SettingName =
-  (typeof SETTING_NAMES)[keyof typeof SETTING_NAMES];
 
 /**
  * Responds to settings form changes and refreshes dependent UI.

@@ -8,8 +8,8 @@ import daThemeUrl from '../../assets/images/themes/DAtheme.svg';
 import gamingThemeUrl from '../../assets/images/themes/gameTheme.svg';
 
 import type { GameTheme } from '../types/settings.types';
+import type { SettingName } from '../constants/settings.constants';
 
-type SettingName = 'theme' | 'player' | 'boardSize';
 type SettingsOption = readonly [value: string, label: string];
 
 interface ThemePreview {

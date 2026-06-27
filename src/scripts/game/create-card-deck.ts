@@ -1,7 +1,7 @@
 import type {
   CardDefinition,
   MemoryCard,
-} from '../types/card.types';
+} from '../types/card.interface';
 
 const CARDS_PER_PAIR = 2;
 

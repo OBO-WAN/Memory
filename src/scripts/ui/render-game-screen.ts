@@ -9,10 +9,10 @@ import { createCardDeck } from '../game/create-card-deck';
 import type {
   CardDefinition,
   MemoryCard,
-} from '../types/card.types';
+} from '../types/card.interface';
 import { renderGameInfo } from './render-game-info';
-import type { GameTheme, GameSettings } from '../types/settings.types';
-
+import type { GameSettings } from '../types/settings.interface';
+import type { GameTheme } from '../types/settings.types';
 interface ThemeCardAssets {
   cardBackUrl: string;
   definitions: readonly CardDefinition[];

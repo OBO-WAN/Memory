@@ -1,4 +1,4 @@
-import type { GameSettings } from '../types/settings.types';
+import type { GameSettings } from '../types/settings.interface';
 
 interface AppState {
   settings: GameSettings;

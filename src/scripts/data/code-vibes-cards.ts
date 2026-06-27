@@ -17,7 +17,7 @@ import typescriptUrl from '../../assets/images/cards/code-vibes/logos/typescript
 import vscodeUrl from '../../assets/images/cards/code-vibes/logos/vscode.svg';
 import vueUrl from '../../assets/images/cards/code-vibes/logos/vue.svg';
 
-import type { CardDefinition } from '../types/card.types';
+import type { CardDefinition } from '../types/card.interface';
 
 /**
  * Code Vibes card definitions used to build matching pairs.

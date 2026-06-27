@@ -17,7 +17,7 @@ import sombreroUrl from '../../assets/images/cards/da-theme/logos/sombrero.svg';
 import steamingBowlUrl from '../../assets/images/cards/da-theme/logos/steaming-bowl.svg';
 import ticTacToeUrl from '../../assets/images/cards/da-theme/logos/tic-tac-toe.svg';
 
-import type { CardDefinition } from '../types/card.types';
+import type { CardDefinition } from '../types/card.interface';
 
 /**
  * Defines all card faces available to the DA Projects theme.

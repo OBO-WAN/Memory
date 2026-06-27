@@ -2,7 +2,8 @@ import { renderGameOver } from '../ui/render-game-over';
 import { renderGameScreen } from '../ui/render-game-screen';
 import { renderResultOverlay } from '../ui/render-result-overlay';
 import type { Scores } from '../types/game.types';
-import type { GameSettings, GameTheme, PlayerColor } from '../types/settings.types';
+import type { GameSettings } from '../types/settings.interface';
+import type { GameTheme, PlayerColor } from '../types/settings.types';
 
 const FLIP_BACK_DELAY = 900;
 const GAME_OVER_DELAY = 650;

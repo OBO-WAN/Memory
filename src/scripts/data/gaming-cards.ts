@@ -17,7 +17,7 @@ import squareTokenUrl from '../../assets/images/cards/game-theme/logos/square-to
 import starCoinUrl from '../../assets/images/cards/game-theme/logos/star-coin.svg';
 import triangleTokenUrl from '../../assets/images/cards/game-theme/logos/triangle-token.svg';
 
-import type { CardDefinition } from '../types/card.types';
+import type { CardDefinition } from '../types/card.interface';
 
 /**
  * Gaming card definitions used to build matching pairs.
