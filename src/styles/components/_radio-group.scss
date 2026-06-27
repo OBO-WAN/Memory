@@ -85,7 +85,7 @@
 }
 
 .radio-option__input:checked + .radio-option__control,
-.radio-option:focus-within:has(.radio-option__input[name='theme']) .radio-option__control {
+.radio-option:focus-within .radio-option__control {
   @include filled-radio-control;
 }
 
@@ -113,16 +113,16 @@
 }
 
 .radio-option__input:checked ~ .radio-option__marker,
-.radio-option:focus-within:has(.radio-option__input[name='theme']) .radio-option__marker {
+.radio-option:focus-within .radio-option__marker {
   @include visible-radio-marker;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .radio-option:hover:has(.radio-option__input[name='theme']) .radio-option__control {
+  .radio-option:hover .radio-option__control {
     @include filled-radio-control;
   }
 
-  .radio-option:hover:has(.radio-option__input[name='theme']) .radio-option__marker {
+  .radio-option:hover .radio-option__marker {
     @include visible-radio-marker;
   }
 }
