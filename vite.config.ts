@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite';
 
-export default defineConfig({
-  base: '/Memory/',
-});
+export default defineConfig(({ mode }) => ({
+  base: mode === 'github' ? '/Memory/' : '/',
+}));
